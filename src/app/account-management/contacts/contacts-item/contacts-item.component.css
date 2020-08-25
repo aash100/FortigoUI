@@ -1,0 +1,7 @@
+p {
+    color: #4d4d4d;
+}
+
+:host /deep/ .mat-tab-body-content {
+    overflow: hidden;
+}

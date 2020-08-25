@@ -1,0 +1,39 @@
+<!--
+ Created on Tue Jan 22 2019
+ Created by - 1191: Ritesh Kant
+
+ Copyright (c) 2019 Fortigo Network Logistics Pvt Ltd (4TiGO)
+-->
+<mat-sidenav-container class="mat-sidenav-container" (backdropClick)="close()">
+    <!-- material side navigation bar -->
+    <mat-sidenav #sidenav (keydown.escape)="close()" disableClose class="filter-sidenav"
+        [ngClass]="{'sidenav': userMode === 'filter-theme1', 'sidenav2': userMode === 'filter-theme2'}" position="end">
+        <!-- for back and clear button -->
+        <div class="filter-head mb-2" style="padding: 0; height: 20px !important;">
+            <button class="panel-btn pull-left border-right no-focus" [class.no-focus]=true  id="close_btn" (click)="close();" mat-button #closeButton>
+                <mat-icon style="font-size: 40px; height: 40px;">chevron_left</mat-icon>
+                <span class="display-inline-block left-gap vertical-align-top min-top-gap" style="margin-left: 13px;">
+                    Back
+                </span>
+            </button>
+            <button class="panel-btn pull-right border-left" mat-button (click)="clear(); close();">
+                <span class="display-inline-block right-gap vertical-align-top min-top-gap"> Clear </span>
+                <mat-icon style="font-size: 32px; height: 40px; width: 35px;padding-top: 3px;">autorenew</mat-icon>
+            </button>
+        </div>
+        <!-- calling app fortigo form component -->
+        <div class="container-fluid  ml-2">
+            <app-fortigo-form [fields]="fields" [mode]='"inline"' [displayClear]=false [userMode]=userMode (isClearClicked)="clear();"
+                (isSubmitClicked)="close()" (formSubmit)="onSubmit($event)" [data]="data" [(doFormClear)]="doFormClear"
+                [fieldsFontSize]="filterFontSize" [groups]="groups" [cardConfiguration]=cardConfiguration
+                [formConfiguration]=formConfiguration (isClearClicked)="clear()" (isSubmitClicked)="close()"
+                (selectChanges)="inputChanged($event)">
+            </app-fortigo-form>
+        </div>
+    </mat-sidenav>
+
+    <mat-sidenav-content style="overflow: hidden">
+        <!-- loads all the content passed inside fortigo filter component  -->
+        <ng-content></ng-content>
+    </mat-sidenav-content>
+</mat-sidenav-container>

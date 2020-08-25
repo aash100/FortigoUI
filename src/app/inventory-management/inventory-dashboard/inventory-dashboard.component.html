@@ -1,0 +1,15 @@
+<!-- head component -->
+<app-fortigo-filter>
+  <div class="container-fluid mb-3">
+    <app-fortigo-head [buttons]=headButtonList [title]="'INVENTORY MANAGEMENT'" [isFilterVisible]=false
+      (searchClicked)="onSearchClick($event)" (buttonClicked)="onHeaderButtonClick($event)"
+      (refreshClicked)="onRefreshClick()">
+    </app-fortigo-head>
+  </div>
+  <!-- table -->
+  <div class="container-fluid">
+    <app-fortigo-grid [columns]="columnsData" [rows]="rowsData" [gridConfiguration]="gridconfiguration"
+      (actionExtraButtonSelectedIndex)="onActionClick($event)">
+    </app-fortigo-grid>
+  </div>
+</app-fortigo-filter>

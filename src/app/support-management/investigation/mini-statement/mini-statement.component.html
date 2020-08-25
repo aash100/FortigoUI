@@ -1,0 +1,23 @@
+<div>
+  <div class="material-modal-header">
+    <h1 mat-dialog-title class="ml-1">MINI STATEMENT ({{vehicleNumber}})</h1>
+    <button class="material-modal-close-button" mat-button mat-dialog-close>
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+  <div class="row">
+    <div class="col-6">
+      <h6>Fastag : {{fastagNumber}}</h6>
+      <app-fortigo-grid  [columns]="columnsData" [rows]="tollMiniStatement"
+        [gridConfiguration]="tollGridconfiguration">
+      </app-fortigo-grid>
+    </div>
+
+    <div class="col-6">
+      <h6>Fuel Card: {{fuelCardNumber}}</h6>
+      <app-fortigo-grid  [columns]="columnsData" [rows]="fuelMiniStatement"
+        [gridConfiguration]="fuelGridconfiguration">
+      </app-fortigo-grid>
+    </div>
+  </div>
+</div>

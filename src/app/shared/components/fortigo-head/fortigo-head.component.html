@@ -1,0 +1,63 @@
+<!--
+ Created on Tue Jan 22 2019
+ Created by - 1191: Ritesh Kant
+
+ Copyright (c) 2019 Fortigo Network Logistics Pvt Ltd (4TiGO)
+-->
+<div class="container-fluid no-padding-lr" [ngStyle]="headerStyle">
+  <div class="search-wrapper clearfix mt-1">
+    <div class="display-inline-block">
+      <h4 class="position-relative pull-left">
+        {{title | titlecase}}
+      </h4>
+      <br>
+      <h4 class="position-relative">
+        {{subTitle}}
+      </h4>
+    </div>
+    <div *ngIf="isFilterVisible" class="p-0 mr-3 ml-3 pull-right">
+      <a class="filter" (click)="filterIsClicked()" [ngStyle]="isFilterApplied ? {'color': '#E66006'}:{'color':'#666'}">
+        <em class="fa fa-filter" [ngStyle]="isFilterApplied ? {'color': '#E66006'}:{'color':'#666'}"
+          *ngIf="fontStyleType === 'fa'"></em>
+        <mat-icon [ngStyle]="isFilterApplied ? {'color': '#E66006'}:{'color':'#666'}"
+          *ngIf="fontStyleType === 'material'">{{filterIconName}}</mat-icon>
+      </a>
+    </div>
+    <div *ngIf="isRefreshVisible" class="p-0 mr-3 ml-3 pull-right">
+      <a class="filter" (click)="refreshIsClicked()" style="color:#4d4d4d">
+        <mat-icon class="pt-1">refresh</mat-icon>
+      </a>
+    </div>
+    <div *ngIf="isSearchVisible" [class.no-border]="isSearchClicked"
+      class="custom-search position-relative pull-right more-right-gap">
+      <mat-icon>search</mat-icon>
+      <input *ngIf="!isSearchClicked" type="text" placeholder="Search" (keyup.enter)="searchIsClicked(searchInput)"
+        [(ngModel)]="searchText" [minlength]=searchTextMinLength [maxlength]=searchTextMaxLength
+        (mouseenter)="searchInput.focus()"
+        [appInputValidator]="{text:searchInput.value,pattern:pattern,allowKeyInput:false}"
+        (click)="onSearchBoxClick(true)" (paste)="onSearchBoxClick(true, $event);" #searchInput />
+      <textarea *ngIf="isSearchClicked" [minlength]=searchTextMinLength [maxlength]=searchTextMaxLength
+        placeholder="Search..." class="mat-elevation-z2" rows="10"
+        (keydown.enter)="$event.preventDefault();$event.stopPropagation(); searchIsClicked(searchTextArea)"
+        (mouseenter)="searchTextArea.focus()" (mouseout)="onSearchBoxClick(false)" [(ngModel)]="searchText"
+        #searchTextArea></textarea>
+    </div>
+
+    <span class="pull-right more-right-gap top-gap-7 bottom-gap font-size-12" style="color: #4e4e4e;">
+      {{headerMessage}}
+    </span>
+    <!-- Creates button as specified by user -->
+    <div class="position-relative pull-right" [ngStyle]="paddingButtonRight">
+      <button type="button" *ngFor="let button of buttons" (click)="buttonIsClicked(button)"
+        style="height: 30px;margin-top: 0px !important;font-weight: bold;" mat-raised-button appFortigoSubmitButton>
+        <mat-icon *ngIf=button.buttonIcon> {{ button.buttonIcon}}</mat-icon>
+        <em *ngIf=!button.buttonIcon class="fa fa-plus"></em>
+        {{ button.placeholder | uppercase }}
+      </button>
+    </div>
+  </div>
+  <span *ngFor="let item of miniNotes; let i = index" class="min-notes ml-2"
+    [class.pull-right]="item.horizontalAlign === 'right'" [class.pull-left]="item.horizontalAlign === 'left'">
+    {{item?.text}} </span>
+  <br>
+</div>

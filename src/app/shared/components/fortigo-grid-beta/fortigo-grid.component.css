@@ -1,0 +1,444 @@
+/*
+ * Created on Tue Jan 22 2019
+ * Created by - 1157: Mayur Ranjan
+ *
+ * Copyright (c) 2019 Fortigo Network Logistics Pvt Ltd (4TiGO)
+ */
+
+/* Icon Styling starts here */
+
+.mat-icon {
+    font-size: var(--icon-size) !important;
+}
+
+.mat-icon-button, .mat-icon {
+    width: var(--icon-size) !important;
+    height: var(--icon-size) !important;
+    line-height: var(--icon-size) !important;
+}
+
+/* Icon Styling ends here */
+
+/* Checkbox Styling starts here */
+
+.checkbox-first {
+    padding-right: 24px;
+    width: var(--col-min-width);
+}
+
+.checkbox-last {
+    padding-left: 28px;
+    padding-top: 11px;
+    width: var(--col-min-width);
+}
+
+/* Checkbox Styling starts here */
+
+/* Table Styling starts here */
+
+table * {
+    font-size: var(--table-font);
+    letter-spacing: normal;
+    font-style: normal;
+    font-stretch: normal;
+    font-family: swis721;
+}
+
+table {
+    width: 99.99999%;
+    ;
+    line-height: 1.2;
+    border-collapse: separate;
+}
+
+td.mat-cell:first-of-type, td.mat-footer-cell:first-of-type, th.mat-header-cell:first-of-type {
+    padding-left: 0px;
+}
+
+td.mat-cell:last-of-type, td.mat-footer-cell:last-of-type, th.mat-header-cell:last-of-type {
+    padding-right: 0px;
+}
+
+tr.mat-header-row, tr.mat-footer-row, tr.mat-row {
+    height: var(--table-row-height);
+}
+
+/* Table Styling ends here */
+
+/* Material Paginator Styling starts here */
+
+.mat-paginator {
+    display: flex;
+    justify-content: center;
+}
+
+/* Material Paginator Styling ends here */
+
+/* Material Row Styling starts here */
+
+.mat-row:nth-child(even) {
+    background-color: var(--off-white-color);
+}
+
+.mat-row:nth-child(odd) {
+    background-color: var(--white-color);
+}
+
+/* Material Row Styling ends here */
+
+.vertical-center {
+    margin: 0;
+    position: absolute;
+    /* padding-top: 6px; */
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+}
+
+.align-right {
+    text-align: right;
+}
+
+.align-left {
+    text-align: left;
+}
+
+.align-center {
+    text-align: center;
+}
+
+.text-head {
+    font-weight: bold;
+    color: #4a4a4a;
+    font-size: var(--medium-font) !important;
+    padding-left: 3px;
+    padding-right: 3px;
+}
+
+.text-subhead {
+    color: #818081;
+    font-size: var(--small-font) !important;
+    font-weight: 600;
+    padding-left: 3px;
+    padding-right: 3px;
+}
+
+.text-row {
+    color: #69656b;
+    font-size: var(--medium-font) !important;
+    font-weight: 600;
+    padding-left: 3px;
+    padding-right: 3px;
+    margin-bottom: 3px;
+}
+
+.text-subrow {
+    color: #909090;
+    font-size: var(--small-font) !important;
+    padding-left: 3px;
+    padding-right: 3px;
+}
+
+.table-container {
+    position: relative;
+    /* max-height: var(--table-height); */
+    height: calc(100% - 136px);
+    overflow: auto;
+}
+
+.hide {
+    display: none;
+}
+
+.clickable-cell {
+    cursor: pointer;
+}
+
+/* text color styling starts*/
+
+.blue-text {
+    color: var(--blue-color);
+}
+
+.red-text {
+    color: var(--red-color);
+}
+
+.maroon-text {
+    color: var(--maroon-color);
+}
+
+.black-text {
+    color: var(--black-color);
+}
+
+.orange-text {
+    color: var(--orange-color);
+}
+
+.green-text {
+    color: var(--green-color);
+}
+
+.red-shade-1-text {
+    color: var(--red-shade-1-color);
+}
+
+.red-shade-2-text {
+    color: var(--red-shade-2-color);
+}
+
+.red-shade-3-text {
+    color: var(--red-shade-3-color);
+}
+
+.red-shade-4-text {
+    color: var(--red-shade-4-color);
+}
+
+.red-shade-5-text {
+    color: var(--red-shade-5-color);
+}
+
+/* text color styling ends*/
+
+/* font weight styling starts*/
+
+.bold-font-weight {
+    font-weight: var(--bold-font-weight) !important;
+}
+
+.bolder-font-weight {
+    font-weight: var(--bolder-font-weight) !important;
+}
+
+.normal-font-weight {
+    font-weight: var(--normal-font-weight) !important;
+}
+
+.lighter-font-weight {
+    font-weight: var(--lighter-font-weight) !important;
+}
+
+/* font weight styling ends*/
+
+/* set this test */
+
+.inner-row td {
+    border: none;
+}
+
+/* margin styling */
+
+.margin-top-small {
+    margin-top: var(--margin-small);
+}
+
+.margin-top-medium {
+    margin-top: var(--margin-medium);
+}
+
+.margin-top-large {
+    margin-top: var(--margin-large);
+}
+
+.margin-right-small {
+    margin-right: var(--margin-small);
+}
+
+.margin-right-medium {
+    margin-right: var(--margin-medium);
+}
+
+.margin-right-large {
+    margin-right: var(--margin-large);
+}
+
+.margin-bottom-small {
+    margin-bottom: var(--margin-small);
+}
+
+.margin-bottom-medium {
+    margin-bottom: var(--margin-medium);
+}
+
+.margin-bottom-large {
+    margin-bottom: var(--margin-large);
+}
+
+.margin-left-small {
+    margin-left: var(--margin-small);
+}
+
+.margin-left-medium {
+    margin-left: var(--margin-medium);
+}
+
+.margin-left-large {
+    margin-left: var(--margin-large);
+}
+
+/* status styling */
+
+.suspended-text {
+    color: red;
+    font-weight: 700;
+    font-size: 16px !important;
+}
+
+.active-text {
+    color: darkgreen;
+    font-weight: 700;
+    font-size: 16px !important;
+}
+
+.eligible-text {
+    color: greenyellow;
+    font-weight: 700;
+    font-size: 16px !important;
+}
+
+.inactive-text {
+    color: aquamarine;
+    font-weight: 700;
+    font-size: 16px !important;
+}
+
+.dropped-text {
+    color: inherit;
+    font-weight: 700;
+    font-size: 16px !important;
+}
+
+.prospecting-text {
+    color: #39ff14;
+    font-weight: 700;
+    font-size: 16px !important;
+}
+
+.others-text {
+    color: inherit;
+    font-weight: 700;
+    font-size: 16px !important;
+}
+
+th>div {
+    padding: 1px 3px 0px 3px;
+}
+
+th>div>div>button {
+    margin-left: auto;
+}
+
+.expand-row {
+    background: #0a50a1;
+    border-radius: 25px;
+    color: white;
+}
+
+.collapse-row {
+    background: #E66006;
+    border-radius: 25px;
+    color: white;
+}
+
+.mat-paginator-sticky {
+    bottom: 0px;
+    z-index: 10;
+    position: sticky;
+    /* margin-top: 26%; */
+}
+
+/* Expanded Row CSS Starts here */
+
+tr.expanded-row {
+    height: 0;
+}
+
+/* Expanded Row CSS Ends here */
+
+td.ng-trigger-detailExpand {
+    height: 25px;
+}
+
+.sticky-bottom-row-confirmedDeduction {
+    bottom: 171px;
+    position: sticky;
+    background: whitesmoke !important;
+    z-index: 100;
+    font-family: swis721 !important;
+}
+
+.sticky-bottom-row-confirmedTDS {
+    bottom: 142px;
+    position: sticky;
+    background: whitesmoke !important;
+    z-index: 100;
+    font-family: swis721 !important;
+}
+
+.sticky-bottom-row-closingBalance-tdsInc {
+    bottom: 113px;
+    position: sticky;
+    z-index: 100;
+    background: #d3dce8 !important;
+    font-family: swis721 !important;
+}
+
+.sticky-bottom-row-estimatedTDS {
+    bottom: 84px;
+    position: sticky;
+    background: whitesmoke !important;
+    z-index: 100;
+    font-family: swis721 !important;
+}
+
+.sticky-bottom-row-closingBalance-tdsExc {
+    bottom: 55px;
+    position: sticky;
+    z-index: 100;
+    background: #d3dce8 !important;
+    font-family: swis721 !important;
+}
+
+/* used to position sticky bottom row to bottom when paginator not showed */
+
+.sticky-bottom-row-confirmedDeduction-without {
+    bottom: 116px;
+    position: sticky;
+    background: whitesmoke !important;
+    z-index: 100;
+    font-family: swis721 !important;
+}
+
+.sticky-bottom-row-confirmedTDS-without {
+    bottom: 87px;
+    position: sticky;
+    background: whitesmoke !important;
+    z-index: 100;
+    font-family: swis721 !important;
+}
+
+.sticky-bottom-row-closingBalance-tdsInc-without {
+    bottom: 58px;
+    position: sticky;
+    z-index: 100;
+    background: #d3dce8 !important;
+    font-family: swis721 !important;
+}
+
+.sticky-bottom-row-estimatedTDS-without {
+    bottom: 29px;
+    position: sticky;
+    background: whitesmoke !important;
+    z-index: 100;
+    font-family: swis721 !important;
+}
+
+.sticky-bottom-row-closingBalance-tdsExc-without {
+    bottom: 0px;
+    position: sticky;
+    z-index: 100;
+    background: #d3dce8 !important;
+    font-family: swis721 !important;
+}
+/* ends here */

@@ -1,0 +1,13 @@
+label {
+    font-weight: 500;
+}
+
+div.cdk-overlay-container {
+    z-index: 99999 !important;
+}
+
+.mat-tab-body-content {
+    overflow: hidden !important;
+}
+
+

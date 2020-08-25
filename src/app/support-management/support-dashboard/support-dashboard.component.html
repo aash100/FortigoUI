@@ -1,0 +1,18 @@
+<app-fortigo-filter>
+  <app-fortigo-head [buttons]=headButtonList [title]=pageTitle [isFilterVisible]=false
+    (searchClicked)="onSearch($event)" (buttonClicked)="onHeaderButtonClick($event)">
+  </app-fortigo-head>
+  <app-fortigo-tabs [tabList]=tabList (tabClicked)="tabChanged($event)"
+    [selectTab]="selectedTab">
+  </app-fortigo-tabs>
+  <ng-container [ngSwitch]="selectedTab">
+    <app-fortigo-grid *ngSwitchCase=0 [columns]="columnsData" [rows]="rowsData"
+      [gridConfiguration]="supportGridconfiguration"
+      (actionExtraButtonSelectedIndex)="onActionExtraButtonClick($event)">
+    </app-fortigo-grid>
+    <app-investigation *ngSwitchCase=1></app-investigation>
+    <app-health-check *ngSwitchCase=2></app-health-check>
+    <app-jobs *ngSwitchCase=3></app-jobs>
+    <app-support-contacts *ngSwitchCase=4></app-support-contacts>
+  </ng-container>
+</app-fortigo-filter>

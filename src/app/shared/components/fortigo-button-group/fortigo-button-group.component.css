@@ -1,0 +1,21 @@
+/*
+ * Created on Mon Feb 04 2019
+ * Created by - 1191: Ritesh Kant
+ *
+ * Copyright (c) 2019 Fortigo Network Logistics Pvt Ltd (4TiGO)
+ */
+
+.button-row button, .button-row a {
+  margin-right: 8px;
+}
+
+.button-group-bottom {
+  position: absolute;
+  bottom: 80px;
+}
+
+.mat-icon {
+  height: 18px;
+  font-size: 16px;
+  width: 19px;
+}

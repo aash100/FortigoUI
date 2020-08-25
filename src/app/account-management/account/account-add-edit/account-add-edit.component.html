@@ -1,0 +1,480 @@
+<ng-template #openM let-modal>
+  <div [ngStyle]="editMode? {'height': '468px'}:{'height': '420px'} ">
+    <div class="modal-header" style="height: 57px;">
+      <div class="col-md" style="padding-left:1px; ">
+        <p style="border-left: 10px solid #0A50A1;padding: 6px; font-size: 15px;">
+          {{ title }}
+        </p>
+      </div>
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+
+    <mat-progress-spinner *ngIf="loading" class="spinner" mode="indeterminate"></mat-progress-spinner>
+    <div [class.opaque-body]="loading" class="modal-bodyborder" style="padding: 0 1rem;">
+      <form (ngSubmit)="onSubmit();" #accountForm="ngForm">
+
+        <mat-tab-group class="fortigo-tab" [selectedIndex]="selectedTabIndex"
+          (selectedIndexChange)="setSelectedIndex($event)">
+          <!-- Profile Tab -->
+          <mat-tab label="Profile">
+            <input type="hidden" name="accountId" [ngModel]="account?.accountId" />
+            <div class="row row-sm mt-3">
+              <div class=" col-md">
+                <mat-form-field class="input-full-width">
+                  <input matInput id="name" [(ngModel)]="account.accountName" placeholder="Name" name="accountName"
+                    [disabled]="isReadOnly" required #name appAutofocus />
+                </mat-form-field>
+              </div>
+              <div class=" col-md">
+                <mat-form-field class="input-full-width">
+                  <input matInput id="alias" [(ngModel)]="account.accountAlias" placeholder="Alias" name="accountAlias"
+                    [disabled]="isReadOnly" />
+                </mat-form-field>
+              </div>
+              <div class=" col-md">
+                <mat-form-field class="input-full-width">
+                  <mat-select disableOptionCentering placeholder="Account Manager" [formControl]="mgrSelectCtrl"
+                    #singleSelect [multiple]=false required>
+                    <ngx-mat-select-search [noEntriesFoundLabel]="'No match found'" [formControl]="mgrSelectFilterCtrl"
+                      [placeholderLabel]="'search...'">
+                    </ngx-mat-select-search>
+                    <mat-option *ngFor="let field of mgrFilteredData | async" [value]="field['salesManagerId'].toString()">
+                      {{field['salesManagerName']}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="row row-sm">
+              <div class="col-md">
+                <mat-form-field class="input-full-width">
+                  <mat-select disableOptionCentering placeholder="Parent Company" [formControl]="cmpSelectCtrl"
+                    #singleSelect [multiple]=false required>
+                    <ngx-mat-select-search [noEntriesFoundLabel]="'No match found'" [formControl]="cmpSelectFilterCtrl"
+                      [placeholderLabel]="'search...'">
+                    </ngx-mat-select-search>
+                    <mat-option *ngFor="let field of cmpFilteredData | async" [value]="field['companyStringId']">
+                      {{field['companyName']}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div class=" col-md">
+                <mat-form-field class="input-full-width">
+                  <mat-select placeholder="Entity Type" [disabled]="isReadOnly" name="accountLegalEntityType"
+                    [(ngModel)]="account.accountLegalEntityType" required #legalEntity>
+                    <mat-option *ngFor="let legal of legalTypes" [value]="legal.legalEntityTypeName">
+                      {{ legal.legalEntityTypeAlias }}</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div class=" col-md">
+                <mat-form-field class="input-full-width">
+                  <mat-select placeholder="Grade" [disabled]="isReadOnly" name="accountGrade"
+                    [(ngModel)]="account.accountGrade" required>
+                    <mat-option *ngFor="let eachAccountGrade of accountGradeList" [value]="eachAccountGrade.key">
+                      {{ eachAccountGrade.displayName }}</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="row row-sm" *ngIf="editMode">
+              <div class=" col-md">
+                <mat-form-field class="input-full-width">
+                  <mat-select placeholder="Account Status" [disabled]="isReadOnly" name="accountStatus"
+                    [(ngModel)]="account.accountStatus" required>
+                    <mat-option *ngFor="let eachAccountStatus of accountStatusList" [value]="eachAccountStatus.key">
+                      {{ eachAccountStatus.displayName }}</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="row row-sm ">
+              <div class=" col-md">
+                <mat-form-field class="input-full-width">
+                  <mat-select placeholder="Group" [disabled]="isReadOnly" name="accountCategoryName"
+                    [(ngModel)]="account.accountCategoryName" required>
+                    <mat-option *ngFor="let category of companyCategory" [value]="category.accountCategoryName">
+                      {{ category.accountCategoryAlias }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div class=" col-md">
+                <mat-form-field class="input-full-width">
+                  <mat-select placeholder="Industry" [disabled]="isReadOnly" name="accountIndustryType"
+                    [(ngModel)]="account.accountIndustryType" required>
+                    <mat-option *ngFor="let industry of industryType" [value]="industry.industryTypeName">
+                      {{ industry.industryTypeAlias }}</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div class=" col-md">
+                <mat-form-field class="input-full-width">
+                  <mat-select placeholder="Commodities" [disabled]="isReadOnly" name="accountCommodityType"
+                    [(ngModel)]="account.accountCommodityType" required>
+                    <mat-option *ngFor="let commodity of commodities" [value]="commodity.commodityTypeName">
+                      {{ commodity.commodityTypeAlias }}</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div class="row row-sm">
+              <div class=" col-md">
+                <mat-form-field class="input-full-width">
+                  <mat-select placeholder="Annual Revenue" [disabled]="isReadOnly" name="accountAnnualRevenue"
+                    [(ngModel)]="account.accountAnnualRevenue" required>
+                    <mat-option *ngFor="
+                        let eachAccountAnnualRevenue of accountAnnualRevenueList
+                      " [value]="eachAccountAnnualRevenue.key">
+                      {{ eachAccountAnnualRevenue.displayName }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div class=" col-md">
+                <mat-form-field class="input-full-width">
+                  <mat-select placeholder="FTL Annual Spend" [disabled]="isReadOnly" name="accountFTL"
+                    [(ngModel)]="account.accountFTL" required>
+                    <mat-option *ngFor="let eachAccountFTL of accountFTLList" [value]="eachAccountFTL.key">
+                      {{ eachAccountFTL.displayName }}</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div class=" col-md">
+
+                <mat-form-field class="input-full-width">
+                  <mat-select placeholder="Addressable FTL" [disabled]="isReadOnly" name="accountAddressableFTL"
+                    [(ngModel)]="account.accountAddressableFTL" required>
+                    <mat-option *ngFor="
+                          let eachaccountAddressableFTL of accountAddressableFTLList
+                        " [value]="eachaccountAddressableFTL.key">
+                      {{ eachaccountAddressableFTL.displayName }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="row row-sm">
+              <!-- <div class=" col-md">
+                <mat-form-field class="input-full-width">
+                  <mat-select placeholder="LTL Annual Spend" [disabled]="isReadOnly" name="accountLTL"
+                    [(ngModel)]="account.accountLTL" required>
+                    <mat-option *ngFor="let eachAccountLTL of accountLTLList" [value]="eachAccountLTL.key">
+                      {{ eachAccountLTL.displayName }}</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div> -->
+
+              <div class=" col-md">
+                <mat-form-field class="input-full-width">
+                  <mat-select placeholder="Geographic Scope" [disabled]="isReadOnly" name="accountGeographicScope"
+                    [(ngModel)]="account.accountGeographicScope" required>
+                    <mat-option *ngFor="
+                          let eachAccountGeographicScope of accountGeographicScopeList
+                        " [value]="eachAccountGeographicScope.key">{{ eachAccountGeographicScope.displayName }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div class=" col-md">
+                <mat-form-field class="input-full-width">
+                  <mat-select placeholder="Truck Type" [disabled]="isReadOnly" name="accountTruckType"
+                    [(ngModel)]="account.accountTruckType" required>
+                    <mat-option *ngFor="let eachTruckType of accountTruckTypeList" [value]="eachTruckType.key">
+                      {{ eachTruckType.displayName }}</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <!-- <div class=" col-md">
+                <mat-form-field class="input-full-width">
+                  <mat-select placeholder="Parcel Spend" [disabled]="isReadOnly" name="accountParcel"
+                    [(ngModel)]="account.accountParcel" required>
+                    <mat-option *ngFor="let eachAccountParcel of accountParcelList" [value]="eachAccountParcel.key">
+                      {{ eachAccountParcel.displayName }}</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div> -->
+              <div class=" col-md">
+                <mat-form-field class="input-full-width">
+                  <mat-select disableOptionCentering placeholder="Routes Operated" [formControl]="routesSelectCtrl"
+                    [multiple]="true" required>
+                    <ngx-mat-select-search [noEntriesFoundLabel]="'No match found'"
+                      [formControl]="routesSelectFilterCtrl" [placeholderLabel]="'search...'">
+                    </ngx-mat-select-search>
+                    <mat-option *ngFor="let field of routesFilteredData | async" [value]="field['locationId']">
+                      {{field['locationName']}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+
+
+            </div>
+
+            <div class='row row-sm'>
+              <div class="col-4 custom-input">
+                <mat-form-field style="display: inherit;">
+                  <input required matInput [min]="now" [matDatepicker]="startDatePicker"
+                    name="accountExpectedBusinessCommencementDate" #accountExpectedBusinessCommencementDate="ngModel"
+                    (click)="startDatePicker.open()" [(ngModel)]="account.expectedDateOfBusinessCommencement"
+                    placeholder="Exp.Dt.Of Business Comm." [disabled]="isReadOnly">
+                  <mat-datepicker-toggle matSuffix [for]="startDatePicker"></mat-datepicker-toggle>
+                  <mat-datepicker #startDatePicker></mat-datepicker>
+                </mat-form-field>
+              </div>
+              <div class=" col-4 custom-input">
+                <mat-form-field style="display: inherit;">
+                  <input required matInput [min]="now" [matDatepicker]="biddingDatePicker" name="biddingDate"
+                    #biddingDate="ngModel" (click)="biddingDatePicker.open()" [(ngModel)]="account.biddingDate"
+                    placeholder="Bidding Date" [disabled]="isReadOnly">
+                  <mat-datepicker-toggle matSuffix [for]="biddingDatePicker"></mat-datepicker-toggle>
+                  <mat-datepicker #biddingDatePicker></mat-datepicker>
+                </mat-form-field>
+              </div>
+              <div class=" col-md">
+                <mat-form-field class="input-full-width">
+                  <mat-select placeholder="Exp. Monthly Business" [disabled]="isReadOnly"
+                    name="accountExpectedMonthlyBusiness" [(ngModel)]="account.accountExpectedMonthlyBusiness" required>
+                    <mat-option *ngFor="let eachaccountExpectedMonthlyBusiness of accountExpectedMonthlyBusinessList"
+                      [value]="eachaccountExpectedMonthlyBusiness.key">
+                      {{ eachaccountExpectedMonthlyBusiness.displayName }}</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div class="modal-footer">
+              <button type="button" class="btn submitButton" (click)="nextTab()">
+                <span>Next</span>
+              </button>
+            </div>
+          </mat-tab>
+
+          <!-- Contact Tab -->
+          <div *ngIf="!editMode">
+            <mat-tab label="Contact">
+              <!-- <br /> -->
+              <div class="row row-sm mt-3">
+                <div class=" col-md">
+                  <mat-form-field class="input-full-width">
+                    <input matInput id="contactFirstName" name="contactFirstName" #contactFirstName="ngModel"
+                      placeholder="First Name" [ngModel]="contact?.contactFirstName"
+                      (ngModelChange)="contact.contactFirstName = $event" [disabled]="isReadOnly" required
+                      appAutofocus />
+                    <!-- <div *ngIf="contactFirstName.invalid && contactFirstName.touched">
+                      <span style="color: red;">Please Enter the first name.</span>
+                    </div> -->
+                  </mat-form-field>
+                </div>
+                <div class=" col-md">
+                  <mat-form-field class="input-full-width">
+                    <input matInput id="contactMiddleName" name="contactMiddleName" #contactMiddleName="ngModel"
+                      placeholder="Middle Name" [ngModel]="contact?.contactMiddleName"
+                      (ngModelChange)="contact.contactMiddleName = $event" [disabled]="isReadOnly" />
+                  </mat-form-field>
+                </div>
+                <div class=" col-md">
+                  <mat-form-field class="input-full-width">
+                    <input matInput id="contactLastName" name="contactLastName" #contactLastName="ngModel"
+                      placeholder="Last Name" [ngModel]="contact?.contactLastName"
+                      (ngModelChange)="contact.contactLastName = $event" [disabled]="isReadOnly" />
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="row row-sm">
+                <div class=" col-md">
+                  <mat-form-field class="input-full-width">
+                    <input matInput id="contactMobileNumber" name="contactMobileNumber" #contactMobileNumber="ngModel"
+                      placeholder="Mobile Number" [ngModel]="contact?.contactMobileNumber"
+                      (ngModelChange)="contact.contactMobileNumber = $event" [disabled]="isReadOnly" />
+                  </mat-form-field>
+                </div>
+                <div class=" col-md">
+                  <mat-form-field class="input-full-width">
+                    <input matInput id="contactPhoneNumber" name="contactPhoneNumber" #contactPhoneNumber="ngModel"
+                      placeholder="Phone Number" [ngModel]="contact?.contactPhoneNumber"
+                      (ngModelChange)="contact.contactPhoneNumber = $event" [disabled]="isReadOnly" />
+                  </mat-form-field>
+                </div>
+                <div class=" col-md">
+                  <mat-form-field class="input-full-width">
+                    <input matInput id="contactEmail" name="contactEmail" #contactEmail="ngModel"
+                      placeholder="Email Address" [(ngModel)]="contact.contactEmail" [disabled]="readOnlyContact" />
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <div class="row row-sm">
+                <div class=" col-md">
+                  <mat-form-field class="input-full-width">
+                    <input matInput id="contactAlias" name="contactAlias" #contactAlias="ngModel" placeholder="Alias"
+                      [ngModel]="contact?.contactAlias" (ngModelChange)="contact.contactAlias = $event"
+                      [disabled]="isReadOnly" />
+                  </mat-form-field>
+                </div>
+                <div class=" col-md">
+                  <mat-form-field class="input-full-width">
+                    <input matInput id="contactDepartment" name="contactDepartment" #contactDepartment="ngModel"
+                      placeholder="Department" [ngModel]="contact?.contactDepartment"
+                      (ngModelChange)="contact.contactDepartment = $event" [disabled]="isReadOnly" />
+                  </mat-form-field>
+                </div>
+                <div class=" col-md">
+                  <mat-form-field class="input-full-width">
+                    <input matInput id="contactDesignation" name="contactDesignation" #contactDesignation="ngModel"
+                      placeholder="Designation" [ngModel]="contact?.contactDesignation"
+                      (ngModelChange)="contact.contactDesignation = $event" [disabled]="isReadOnly" />
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <!-- <div class=" col-md">
+                  <div style="margin-bottom:20px">
+                    <mat-form-field class="input-full-width">
+                      <input  matInput id="contactEmail" name="contactEmail" #contactEmail="ngModel"
+                        placeholder="Email Address" [ngModel]='contact?.contactEmail' (ngModelChange)='contact.contactEmail=$event'
+                        [disabled]="readOnlyContact">
+                    </mat-form-field>
+                  </div>
+                </div> -->
+
+              <div class="row row-sm">
+                <div class=" col-md">
+                  <mat-form-field class="input-full-width">
+                    <mat-select placeholder="Category" required #contactCategory="ngModel" name="contactCategory"
+                      [ngModel]="contact?.contactCategory" (ngModelChange)="contact.contactCategory = $event"
+                      [disabled]="isReadOnly">
+                      <mat-option *ngFor="let contactcategory of ContactCategory" [value]="contactcategory.name">
+                        {{ contactcategory.alias }}</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+                <div class=" col-md">
+                  <mat-form-field class="input-full-width">
+                    <mat-select placeholder="Role" required #contactRole="ngModel" name="contactRole"
+                      [ngModel]="contact?.contactRole" (ngModelChange)="contact.contactRole = $event"
+                      [disabled]="isReadOnly">
+                      <mat-option *ngFor="let contactrole of ContactRole" [value]="contactrole.name">
+                        {{ contactrole.alias }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+                <div class=" col-md">
+                  <mat-form-field class="input-full-width">
+                    <mat-select placeholder="Orientation" required #contactOrientation="ngModel"
+                      name="contactOrientation" [ngModel]="contact?.contactOrientation"
+                      (ngModelChange)="contact.contactOrientation = $event" [disabled]="isReadOnly">
+                      <mat-option *ngFor="let contactorientation of ContactOrientation"
+                        [value]="contactorientation.name">
+                        {{ contactorientation.alias }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="row row-sm">
+                <div class=" col-md">
+                  <mat-form-field class="input-full-width">
+                    <input type="text" matInput id="contactRoleAdditionalDetails" name="contactRoleAdditionalDetails"
+                      #contactRoleAdditionalDetails="ngModel" placeholder=" Role Additional details"
+                      [ngModel]="contact?.contactRoleAdditionalDetails" (ngModelChange)="
+            contact.contactRoleAdditionalDetails = $event
+          " [disabled]="isReadOnly" />
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="modal-footer" style="margin-top: 45px;">
+                <button type="button" class="btn submitButton" (click)="previousTab()">
+                  Back
+                </button>
+                <button type="button" class="btn submitButton" (click)="nextTab()">
+                  Next
+                </button>
+              </div>
+            </mat-tab>
+          </div>
+          <!-- Address Tab -->
+          <mat-tab label="Address">
+            <!-- <br /> -->
+
+            <div class="row row-sm mb-4">
+              <div class=" col-md">
+                <label class="font-small">Location *</label>
+                <ngx-select-dropdown name="location" [config]="LocationFilter" [options]="locationList"
+                  (change)="selectLocation(selectedLocation)" [(ngModel)]="selectedLocation" [multiple]="false"
+                  appAutofocus>
+                </ngx-select-dropdown>
+                <!-- <div *ngIf="!isLocationSelected && !editMode">
+                  <span style="color: red;">Please select a location.</span>
+                </div> -->
+              </div>
+              <div class=" col-md">
+                <label class="font-small">Location type *</label>
+                <ngx-select-dropdown name="locationType" [config]="locationTypeFilter" [options]="locationTypeList"
+                  (change)="selectLocationType(selectedLocationType)" [(ngModel)]="selectedLocationType"
+                  [multiple]="false">
+                </ngx-select-dropdown>
+                <!-- <div *ngIf="!isLocationTypeSelected && !editMode">
+                  <span style="color: red;">Please select a location type</span>
+                </div> -->
+              </div>
+            </div>
+
+            <div class="row row-sm">
+              <div class=" col-md">
+                <mat-form-field class="input-full-width">
+                  <input type="text" matInput id="accountLocationGSTIN" [(ngModel)]="account.accountLocationGSTIN"
+                    placeholder="GSTIN" name="accountLocationGSTIN" [disabled]="isReadOnly" />
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div class="row">
+              <mat-form-field class="from-control col-md">
+                <textarea matInput id="accountPostalAddress" name="accountPostalAddress" #accountPostalAddress="ngModel"
+                  placeholder="Postal Address" [(ngModel)]="account.accountPostalAddress" [disabled]="isReadOnly"
+                  required></textarea>
+              </mat-form-field>
+            </div>
+
+            <div class="row row-sm">
+              <mat-form-field class="from-control col-md">
+                <input matInput id="otherAddressDetails" name="otherAddressDetails" #otherAddressDetails="ngModel"
+                  placeholder="Other Address Detail" [(ngModel)]="account.otherAddressDetails"
+                  [disabled]="isReadOnly" />
+              </mat-form-field>
+            </div>
+
+            <div class="row row-sm">
+              <mat-form-field class="from-control col-md">
+                <input type="text" matInput id="accountPinCode" name="accountPinCode" #accountPinCode="ngModel"
+                  placeholder="Pin Code" [(ngModel)]="account.accountPinCode" [disabled]="isReadOnly" />
+              </mat-form-field>
+            </div>
+
+            <div class="modal-footer" [ngStyle]="editMode ? {'margin-top': '56px'}:{'margin-top': '5px'}">
+              <button type="button" class="btn btn-lg clearButton" (click)="modal.dismiss('Cross click')"
+                *ngIf="!isReadOnly">
+                Cancel
+              </button>
+              <button type="button" class="btn submitButton" (click)="previousTab()">
+                Back
+              </button>
+              <button type="submit" class="btn submitButton" *ngIf="!isReadOnly">
+                Submit
+              </button>
+              <button type="button" class="btn clearButton" (click)="modal.dismiss()" *ngIf="isReadOnly">
+                Close
+              </button>
+            </div>
+          </mat-tab>
+        </mat-tab-group>
+      </form>
+    </div>
+  </div>
+</ng-template>

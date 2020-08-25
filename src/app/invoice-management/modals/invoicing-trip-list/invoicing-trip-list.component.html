@@ -1,0 +1,25 @@
+<!--
+ Created on Tue Feb 12 2019
+ Created by - 1149: Aashish Kumar
+
+ Copyright (c) 2019 Fortigo Network Logistics Pvt Ltd (4TiGO)
+-->
+<app-fortigo-modal-header>{{title}}</app-fortigo-modal-header>
+<mat-dialog-content>
+  <div>
+    <app-fortigo-grid [(columns)]="columns" [rows]="rows" [(gridConfiguration)]="gridConfiguration" [isDebug]=true
+      (radioButtonSelectedRow)="onSelectedRow($event)">
+    </app-fortigo-grid>
+  </div>
+  <div style="padding-top:7px;">
+    <app-fortigo-form [fields]="fields" [mode]="'auto'" [submitClearButtonEnabled]="false" #remarksData>
+    </app-fortigo-form>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <div *ngFor="let option of options" style="padding-right: 15px;">
+    <button mat-raised-button (click)="onSubmit(option,remarksData)" appFortigoSubmitButton>
+      {{option.name}}
+    </button>
+  </div>
+</mat-dialog-actions>

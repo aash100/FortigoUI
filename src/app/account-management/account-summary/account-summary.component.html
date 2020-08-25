@@ -1,0 +1,129 @@
+<mat-progress-spinner *ngIf="loading" class="spinner" mode="indeterminate"></mat-progress-spinner>
+<div *ngIf="!loading" class="container-fluid mt-2 pt-2 pl-2 pr-2 pb-2 "
+  style="background: #ffffff; box-shadow: 4px 4px 10px #888888">
+  <div class="row">
+    <div class="col-md">
+      <p class="view-h-style">Company Name</p>
+      <p class="view-p-style">{{ customerDetail?.accountName}}</p>
+    </div>
+    <div class="col-md">
+      <p class="view-h-style">Account Grade</p>
+      <p class="view-p-style">{{ customerDetail?.accountGrade}}</p>
+    </div>
+    <div class="col-md">
+      <p class="view-h-style">Geographic Scope</p>
+      <p class="view-p-style">{{ customerDetail?.accountGeographicScope}}</p>
+    </div>
+    <div class="col-md">
+      <p class="view-h-style">Alias</p>
+      <p class="view-p-style">{{ customerDetail?.accountAlias}}</p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md">
+      <p class="view-h-style">Parent Company</p>
+      <p class="view-p-style"></p>
+    </div>
+    <div class="col-md">
+      <p class="view-h-style">Group</p>
+      <p class="view-p-style">{{  customerDetail?.accountCategoryName}}</p>
+    </div>
+    <div class="col-md">
+      <p class="view-h-style">Account Manager</p>
+      <p class="view-p-style">{{ customerDetail?.accountNationalManagerName}}</p>
+    </div>
+    <div class="col-md">
+      <p class="view-h-style">Annual Revenue</p>
+      <p class="view-p-style">{{customerDetail?.accountAnnualRevenue}}</p>
+    </div>
+  </div>
+  <div class="row">
+    <!-- <div class="col-md">
+      <p class="view-h-style">Annual Logistics spent</p>
+      <p class="view-p-style">{{customerDetail?.accountAnnualLogisticSpent}}</p>
+    </div> -->
+    <div class="col-md">
+      <p class="view-h-style">FTL</p>
+      <p class="view-p-style">{{ customerDetail?.accountFTL}}</p>
+    </div>
+    <div class="col-md">
+      <p class="view-h-style">Commodities</p>
+      <p class="view-p-style">{{ customerDetail?.accountCommodityType}}</p>
+    </div>
+    <div class="col-md">
+      <p class="view-h-style">Location Name</p>
+      <p class="view-p-style">{{customerDetail?.accountLocationName}}</p>
+    </div>
+    <div class="col-md">
+      <p class="view-h-style">Industry</p>
+      <p class="view-p-style">{{ customerDetail?.accountIndustryType}}</p>
+    </div>
+    <!-- <div class="col-md">
+      <p class="view-h-style">LTL</p>
+      <p class="view-p-style">{{ customerDetail?.accountLTL}}</p>
+    </div> -->
+    <!-- <div class="col-md">
+      <p class="view-h-style">Parcel</p>
+      <p class="view-p-style">{{ customerDetail?.accountParcel}}</p>
+    </div> -->
+  </div>
+  <!-- <div class="row"> -->
+
+  <!-- <div class="col-md">
+      <p class="view-h-style">Addressable Freight Value</p>
+      <p class="view-p-style">{{ customerDetail?.accountAddressableFreightValue}}</p>
+    </div> -->
+
+  <!-- </div> -->
+  <div class="row">
+    <div class="col-md">
+      <p class="view-h-style">Location Type</p>
+      <p class="view-p-style">{{customerDetail?.accountLocationTypeName}}</p>
+    </div>
+    <div class="col-md">
+      <p class="view-h-style">GSTIN</p>
+      <p class="view-p-style">{{customerDetail?.accountLocationGSTIN}}</p>
+    </div>
+    <div class="col-md">
+      <p class="view-h-style">Postal Address</p>
+      <p class="view-p-style">{{customerDetail?.accountPostalAddress}}</p>
+    </div>
+    <div class="col-md">
+      <p class="view-h-style">Other Address Detail</p>
+      <p class="view-p-style">{{customerDetail?.otherAddressDetails}}</p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md">
+      <p class="view-h-style">Pin Code</p>
+      <p class="view-p-style">{{customerDetail?.accountPinCode}}</p>
+    </div>
+    <div class="col-md">
+      <p class="view-h-style">Routes Operated</p>
+      <p class="view-p-style">{{customerDetail?.routesOperated}}</p>
+    </div>
+    <div class="col-md">
+      <p class="view-h-style">Expected Dt. Of Business Comm.</p>
+      <p class="view-p-style">{{customerDetail?.expectedDateOfBusinessCommencement | date: 'dd-MM-yyyy'}}</p>
+    </div>
+    <div class="col-md">
+      <p class="view-h-style">Bidding Date</p>
+      <p class="view-p-style">{{customerDetail?.biddingDate | date: 'dd-MM-yyyy'}}</p>
+    </div>
+  </div>
+  <div class="row">
+      <div class="col-md">
+        <p class="view-h-style">Expected Monthly Business</p>
+        <p class="view-p-style">{{customerDetail?.accountExpectedMonthlyBusiness}}</p>
+      </div>
+      <div class="col-md">
+        <p class="view-h-style">Truck Type</p>
+        <p class="view-p-style">{{customerDetail?.accountTruckType}}</p>
+      </div>
+      <div class="col-md">
+        <p class="view-h-style">Addressable FTL</p>
+        <p class="view-p-style">{{customerDetail?.accountAddressableFTL }}</p>
+      </div>
+      <div class="col-md"></div>
+    </div>
+</div>

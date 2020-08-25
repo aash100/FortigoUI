@@ -1,0 +1,69 @@
+/*
+ * Created on Tue Jan 22 2019
+ * Created by - 1191: Ritesh Kant
+ *
+ * Copyright (c) 2019 Fortigo Network Logistics Pvt Ltd (4TiGO)
+ */
+
+.mat-drawer-container {
+    position: absolute;
+    top: 60px;
+    bottom: 0;
+    right: 0;
+    left: 0;
+}
+
+.sidenav {
+    width: 400px;
+    overflow-x: hidden;
+}
+
+.sidenav2 {
+    width: 600px;
+}
+
+.filter-head {
+    height: 60px;
+    padding: 10px;
+    background: #ebeced;
+    color: #666 !important;
+    display: table;
+    width: 100%;
+}
+
+.button-group {
+    position: absolute;
+    bottom: 65px;
+}
+
+/*for styling purpose of filter header and close button - vertical alignment */
+
+.wrapper-div {
+    display: table-cell;
+    vertical-align: middle;
+}
+
+/* theme2 starts here */
+
+.filter-head {
+    background-color: #eaebec;
+}
+
+.panel-btn {
+    padding-right: 3px;
+    padding-left: 3px;
+    color: #5d5d5d;
+    font-size: 13px;
+}
+
+.panel-btn:focus {
+    outline: none;
+    box-shadow: 0 0 10px 1px #a9a9a9;
+}
+
+.panel-btn img {
+    width: 22px;
+    vertical-align: text-bottom;
+}
+
+/* theme2 ends here */

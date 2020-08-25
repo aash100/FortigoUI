@@ -1,0 +1,718 @@
+<!--
+ Created on Tue Jan 22 2019
+ Created by - 1157: Mayur Ranjan
+
+ Copyright (c) 2019 Fortigo Network Logistics Pvt Ltd (4TiGO)
+-->
+
+<div class="container-fluid mb-3 pr-0 pl-0" [ngStyle]="{height: calcTableHeight}">
+  <!-- Fortigo Filter Tab -->
+  <app-fortigo-tabs *ngIf="gridConfiguration && gridConfiguration.isFilterTabEnabled" [selectTab]=selectedTabIndex
+    [tabList]="gridConfiguration.filterTabList" (tabClicked)="filterTabClicked($event)">
+  </app-fortigo-tabs>
+
+  <!-- Filter -->
+  <mat-form-field style="padding-top: 6px; min-width: 23px;height: 40px;"
+    *ngIf="gridConfiguration && gridConfiguration.isFilterEnabled">
+    <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search">
+  </mat-form-field>
+
+  <mat-spinner *ngIf="isLoadingData || (gridConfiguration && gridConfiguration.showLoader)" class="spinner">
+  </mat-spinner>
+
+  <div class="table-container mat-elevation-z2" [ngStyle]="tableContainerStyle">
+
+    <!-- Table -->
+    <table #table mat-table [dataSource]="dataSource" matSort [matSortActive]="gridConfiguration.sortColumnName"
+      [matSortDirection]="gridConfiguration.sortOrder">
+
+      <!-- Checkbox 1 Calculated Sub-header -->
+      <ng-container *ngIf="gridConfiguration.isCheckbox1Enabled"
+        [matColumnDef]="CHECKBOX_1_COL_DEF + CALCULATED_SUB_HEADER_COL_DEF">
+        <th class="container calculated-sub-header checkbox" [attr.rowspan]="1" mat-header-cell *matHeaderCellDef>
+          <ng-container *ngIf="!gridConfiguration.showCheckbox1HeaderText">
+          </ng-container>
+        </th>
+      </ng-container>
+      <!-- Checkbox 2 Calculated Sub-header -->
+      <ng-container *ngIf="gridConfiguration.isCheckbox2Enabled"
+        [matColumnDef]="CHECKBOX_2_COL_DEF + CALCULATED_SUB_HEADER_COL_DEF">
+        <th class="container calculated-sub-header checkbox" [attr.rowspan]="1" mat-header-cell *matHeaderCellDef>
+          <ng-container *ngIf="!gridConfiguration.showCheckbox2HeaderText">
+          </ng-container>
+        </th>
+      </ng-container>
+
+      <!-- Checkbox 1 Sub-header 2 -->
+      <ng-container *ngIf="gridConfiguration.isCheckbox1Enabled"
+        [matColumnDef]="CHECKBOX_1_COL_DEF + SUB_HEADER_2_COL_DEF">
+        <th class="container sub-header-2 checkbox" [attr.rowspan]="3" mat-header-cell *matHeaderCellDef>
+          <ng-container *ngIf="!gridConfiguration.showCheckbox1HeaderText">
+            <mat-checkbox class="vertical-center small-checkbox" color="primary" (change)="masterToggle($event)"
+              [(checked)]="isMasterCheckbox1Checked" [(indeterminate)]="isMasterCheckbox1Indeterminate">
+            </mat-checkbox>
+          </ng-container>
+          <ng-container *ngIf="gridConfiguration.showCheckbox1HeaderText">
+            <div class="text-head">{{gridConfiguration.checkbox1HeaderText}}</div>
+          </ng-container>
+        </th>
+      </ng-container>
+      <!-- Checkbox 2 Sub-header 2 -->
+      <ng-container *ngIf="gridConfiguration.isCheckbox2Enabled"
+        [matColumnDef]="CHECKBOX_2_COL_DEF + SUB_HEADER_2_COL_DEF">
+        <th class="container sub-header-2 checkbox" [attr.rowspan]="3" mat-header-cell *matHeaderCellDef>
+          <ng-container *ngIf="!gridConfiguration.showCheckbox2HeaderText">
+            <mat-checkbox class="vertical-center small-checkbox" color="primary" (change)="masterToggle($event)"
+              [(checked)]="isMasterCheckbox2Checked" [(indeterminate)]="isMasterCheckbox2Indeterminate">
+            </mat-checkbox>
+          </ng-container>
+          <ng-container *ngIf="gridConfiguration.showCheckbox2HeaderText">
+            <div class="text-head">{{gridConfiguration.checkbox2HeaderText}}</div>
+          </ng-container>
+        </th>
+      </ng-container>
+
+      <!-- Checkbox 1 Sub-header 1 -->
+      <ng-container *ngIf="gridConfiguration.isCheckbox1Enabled"
+        [matColumnDef]="CHECKBOX_1_COL_DEF + SUB_HEADER_1_COL_DEF">
+        <th class="container sub-header-1 checkbox" [attr.rowspan]="2" [class.hide]="isHavingSubHeader2" mat-header-cell
+          *matHeaderCellDef>
+          <ng-container *ngIf="!gridConfiguration.showCheckbox1HeaderText">
+            <mat-checkbox class="vertical-center small-checkbox" color="primary" (change)="masterToggle($event)"
+              [(checked)]="isMasterCheckbox1Checked" [(indeterminate)]="isMasterCheckbox1Indeterminate">
+            </mat-checkbox>
+          </ng-container>
+          <ng-container *ngIf="gridConfiguration.showCheckbox1HeaderText">
+            <div class="text-head">{{gridConfiguration.checkbox1HeaderText}}</div>
+          </ng-container>
+        </th>
+      </ng-container>
+      <!-- Checkbox 2 Sub-header 1 -->
+      <ng-container *ngIf="gridConfiguration.isCheckbox2Enabled"
+        [matColumnDef]="CHECKBOX_2_COL_DEF + SUB_HEADER_1_COL_DEF">
+        <th class="container sub-header-1 checkbox" [attr.rowspan]="2" [class.hide]="isHavingSubHeader2" mat-header-cell
+          *matHeaderCellDef>
+          <ng-container *ngIf="!gridConfiguration.showCheckbox2HeaderText">
+            <mat-checkbox class="vertical-center small-checkbox" color="primary" (change)="masterToggle($event)"
+              [(checked)]="isMasterCheckbox2Checked" [(indeterminate)]="isMasterCheckbox2Indeterminate">
+            </mat-checkbox>
+          </ng-container>
+          <ng-container *ngIf="gridConfiguration.showCheckbox2HeaderText">
+            <div class="text-head">{{gridConfiguration.checkbox2HeaderText}}</div>
+          </ng-container>
+        </th>
+      </ng-container>
+
+      <!-- Checkbox 1 Column & Data -->
+      <ng-container *ngIf="gridConfiguration.isCheckbox1Enabled" [matColumnDef]="CHECKBOX_1_COL_DEF">
+        <th class="container header checkbox" [class.hide]="isHavingSubHeader1 || isHavingSubHeader2"
+          [class.header-top-calc-1]="isHavingCalculatedSubHeader && maxInnerCells === 1"
+          [class.header-top-calc-2]="isHavingCalculatedSubHeader && maxInnerCells === 2"
+          [class.header-top-calc-3]="isHavingCalculatedSubHeader && maxInnerCells === 3"
+          [class.header-top-calc-4]="isHavingCalculatedSubHeader && maxInnerCells === 4"
+          [class.header-top-calc-5]="isHavingCalculatedSubHeader && maxInnerCells === 5" mat-header-cell
+          *matHeaderCellDef>
+          <ng-container *ngIf="!gridConfiguration.showCheckbox1HeaderText">
+            <mat-checkbox class="vertical-center small-checkbox" color="primary" (change)="masterToggle($event, 1)"
+              [(checked)]="isMasterCheckbox1Checked" [(indeterminate)]="isMasterCheckbox1Indeterminate">
+            </mat-checkbox>
+          </ng-container>
+          <ng-container *ngIf="gridConfiguration.showCheckbox1HeaderText">
+            <div class="text-head">{{gridConfiguration.checkbox1HeaderText}}</div>
+          </ng-container>
+        </th>
+        <td class="container data-row checkbox" mat-cell *matCellDef="let row; let rowIndex = index">
+          <mat-checkbox class="vertical-center small-checkbox" color="primary" [disabled]="isCheckboxDisabled(row, 1)"
+            (click)="$event.stopPropagation()" (change)="updateCheckedOptions(row, 1)"
+            [checked]="selection1.isSelected(row)">
+          </mat-checkbox>
+        </td>
+        <ng-container *ngIf="gridConfiguration.isFooterEnabled">
+          <td class="footer-row" mat-footer-cell *matFooterCellDef></td>
+        </ng-container>
+      </ng-container>
+
+      <!-- Checkbox 2 Column & Data -->
+      <ng-container *ngIf="gridConfiguration.isCheckbox2Enabled" [matColumnDef]="CHECKBOX_2_COL_DEF">
+        <th class="container header checkbox" [class.hide]="isHavingSubHeader1 || isHavingSubHeader2"
+          [class.header-top-calc-1]="isHavingCalculatedSubHeader && maxInnerCells === 1"
+          [class.header-top-calc-2]="isHavingCalculatedSubHeader && maxInnerCells === 2"
+          [class.header-top-calc-3]="isHavingCalculatedSubHeader && maxInnerCells === 3"
+          [class.header-top-calc-4]="isHavingCalculatedSubHeader && maxInnerCells === 4"
+          [class.header-top-calc-5]="isHavingCalculatedSubHeader && maxInnerCells === 5" mat-header-cell
+          *matHeaderCellDef>
+          <ng-container *ngIf="!gridConfiguration.showCheckbox2HeaderText">
+            <mat-checkbox class="vertical-center small-checkbox" color="primary" (change)="masterToggle($event, 2)"
+              [(checked)]="isMasterCheckbox2Checked" [(indeterminate)]="isMasterCheckbox2Indeterminate">
+            </mat-checkbox>
+          </ng-container>
+          <ng-container *ngIf="gridConfiguration.showCheckbox2HeaderText">
+            <div class="text-head">{{gridConfiguration.checkbox2HeaderText}}</div>
+          </ng-container>
+        </th>
+        <td class="container data-row checkbox" mat-cell *matCellDef="let row; let rowIndex = index">
+          <mat-checkbox class="vertical-center small-checkbox" [disabled]="isCheckboxDisabled(row, 2)" color="primary"
+            (click)="$event.stopPropagation()" (change)="updateCheckedOptions(row, 2)"
+            [checked]="selection2.isSelected(row)">
+          </mat-checkbox>
+        </td>
+        <ng-container *ngIf="gridConfiguration.isFooterEnabled">
+          <td class="footer-row" mat-footer-cell *matFooterCellDef></td>
+        </ng-container>
+      </ng-container>
+
+      <!-- Radio Button Calculated Sub-header -->
+      <ng-container *ngIf="gridConfiguration.isRadioButtonEnabled"
+        [matColumnDef]="RADIO_BUTTON_COL_DEF + CALCULATED_SUB_HEADER_COL_DEF">
+        <th class="container calculated-sub-header radio-button" [attr.rowspan]="1" mat-header-cell *matHeaderCellDef>
+        </th>
+      </ng-container>
+
+      <!-- Radio Button Sub-header 2 -->
+      <ng-container *ngIf="gridConfiguration.isRadioButtonEnabled"
+        [matColumnDef]="RADIO_BUTTON_COL_DEF + SUB_HEADER_2_COL_DEF">
+        <th class="container sub-header-2 radio-button" [attr.rowspan]="3" mat-header-cell *matHeaderCellDef>
+          <ng-container *ngIf="gridConfiguration.showRadioButtonHeaderText">
+            <div class="text-head">{{gridConfiguration.radioButtonHeaderText}}</div>
+          </ng-container>
+        </th>
+      </ng-container>
+
+      <!-- Radio Button Sub-header 1 -->
+      <ng-container *ngIf="gridConfiguration.isRadioButtonEnabled"
+        [matColumnDef]="RADIO_BUTTON_COL_DEF + SUB_HEADER_1_COL_DEF">
+        <th class="container sub-header-1 radio-button" [attr.rowspan]="2" [class.hide]="isHavingSubHeader2"
+          mat-header-cell *matHeaderCellDef>
+          <ng-container *ngIf="gridConfiguration.showRadioButtonHeaderText">
+            <div class="text-head">{{gridConfiguration.radioButtonHeaderText}}</div>
+          </ng-container>
+        </th>
+      </ng-container>
+
+      <!-- Radio Button Column & Data -->
+      <ng-container *ngIf="gridConfiguration.isRadioButtonEnabled" [matColumnDef]="RADIO_BUTTON_COL_DEF">
+        <th class="container header radio-button"
+          [class.header-top-calc-1]="isHavingCalculatedSubHeader && maxInnerCells === 1"
+          [class.header-top-calc-2]="isHavingCalculatedSubHeader && maxInnerCells === 2"
+          [class.header-top-calc-3]="isHavingCalculatedSubHeader && maxInnerCells === 3"
+          [class.header-top-calc-4]="isHavingCalculatedSubHeader && maxInnerCells === 4"
+          [class.header-top-calc-5]="isHavingCalculatedSubHeader && maxInnerCells === 5" mat-header-cell
+          *matHeaderCellDef>
+          <ng-container *ngIf="gridConfiguration.showRadioButtonHeaderText">
+            <div class="text-head">{{gridConfiguration.radioButtonHeaderText}}</div>
+          </ng-container>
+        </th>
+        <td class="container data-row radio-button" mat-cell *matCellDef="let row; let rowIndex = index">
+          <mat-radio-group [(ngModel)]="radioSelectedRowIndex" (change)="onRadioButtonSelect($event)">
+            <mat-radio-button class="small-radio-button" [value]="rowIndex" color="primary"></mat-radio-button>
+          </mat-radio-group>
+        </td>
+        <ng-container *ngIf="gridConfiguration.isFooterEnabled">
+          <td class="footer-row" mat-footer-cell *matFooterCellDef></td>
+        </ng-container>
+      </ng-container>
+
+      <ng-container *ngIf="gridConfiguration.isActionButtonEnabled"
+        [matColumnDef]="ACTION_BUTTON_COL_DEF + CALCULATED_SUB_HEADER_COL_DEF">
+        <th [style.width]="gridConfiguration.actionButtonColumnWidth" class="text-head calculated-sub-header"
+          mat-header-cell [attr.rowspan]="1" *matHeaderCellDef matTooltip="Action Items"
+          [matTooltipDisabled]="gridConfiguration?.disableActionItemToolTipText">
+        </th>
+      </ng-container>
+
+      <ng-container *ngIf="gridConfiguration.isActionButtonEnabled && gridConfiguration.subHeader1Position === 'before'"
+        [matColumnDef]="ACTION_BUTTON_COL_DEF + SUB_HEADER_2_COL_DEF">
+        <th [style.width]="gridConfiguration.actionButtonColumnWidth" class="text-head sub-header-2" mat-header-cell
+          [attr.rowspan]="gridConfiguration.subHeader2Position === 'above' ? 3 : 2" *matHeaderCellDef
+          matTooltip="Action Items" [matTooltipDisabled]="gridConfiguration?.disableActionItemToolTipText">
+          Action Items
+        </th>
+      </ng-container>
+
+      <ng-container *ngIf="gridConfiguration.isActionButtonEnabled && gridConfiguration.subHeader1Position === 'before'"
+        [matColumnDef]="ACTION_BUTTON_COL_DEF + SUB_HEADER_1_COL_DEF">
+        <th [style.width]="gridConfiguration.actionButtonColumnWidth" class="text-head sub-header-1"
+          [class.hide]="isHavingSubHeader2" mat-header-cell [attr.rowspan]="2" *matHeaderCellDef
+          matTooltip="Action Items" [matTooltipDisabled]="gridConfiguration?.disableActionItemToolTipText">
+          Action Items
+        </th>
+      </ng-container>
+
+      <!-- Action Buttons Column -->
+      <ng-container *ngIf="gridConfiguration.isActionButtonEnabled" [matColumnDef]="ACTION_BUTTON_COL_DEF">
+        <th [style.width]="gridConfiguration.actionButtonColumnWidth" class="text-head hide header"
+          [class.hide]="isHavingSubHeader1 || isHavingSubHeader2" mat-header-cell
+          [class.header-top-calc-1]="isHavingCalculatedSubHeader && maxInnerCells === 1"
+          [class.header-top-calc-2]="isHavingCalculatedSubHeader && maxInnerCells === 2"
+          [class.header-top-calc-3]="isHavingCalculatedSubHeader && maxInnerCells === 3"
+          [class.header-top-calc-4]="isHavingCalculatedSubHeader && maxInnerCells === 4"
+          [class.header-top-calc-5]="isHavingCalculatedSubHeader && maxInnerCells === 5" *matHeaderCellDef
+          matTooltip="Action Items" [matTooltipDisabled]="gridConfiguration?.disableActionItemToolTipText">
+          Action Items
+        </th>
+        <td class="align-center clickable-cell data-row" mat-cell *matCellDef="let row; let rowIndex = index">
+          <app-fortigo-action-items *ngIf="gridConfiguration.isActionExtraButtonEnabled"
+            [actionMenu]=gridConfiguration.actionExtraButtonLabelList
+            (sideMenuAction)="actionExtraButtonClicked($event,row,rowIndex)" (menuClick)=onMenuClick(row)>
+          </app-fortigo-action-items>
+          <ng-container *ngIf="gridConfiguration.isActionIconEnabled">
+            <button [matTooltip]="eachIcon.toolTipText" class="m-1"
+              *ngFor="let eachIcon of gridConfiguration.actionIconList, let iconIndex = index"
+              (click)="actionExtraButtonClicked(iconIndex,row,rowIndex)" type="button" aria-label="Action Buttons"
+              mat-icon-button>
+              <mat-icon [style.color]="eachIcon.iconColor">{{ eachIcon.iconName }}</mat-icon>
+            </button>
+          </ng-container>
+        </td>
+        <ng-container *ngIf="gridConfiguration.isFooterEnabled">
+          <td class="footer-row" mat-footer-cell *matFooterCellDef></td>
+        </ng-container>
+      </ng-container>
+
+      <!-- Calculated SubHeader Table Header -->
+      <ng-container *ngFor="let column of columns; index as i; last as isLast"
+        [matColumnDef]="column.calculatedSubHeaderColumnDef">
+        <!-- Header Row -->
+        <th *matHeaderCellDef [class.hide]="!(i === 0 || columns[i]['innerCells'] === 1)" mat-header-cell
+          class="align-left calculated-sub-header">
+          <div class="text-head" [ngClass]="columns[i].cssClass" *ngIf="columns[i]['innerCells'] === 1"
+            [matTooltipDisabled]="columns[i].disableCalcHeaderToolTipText === undefined ? gridConfiguration.disableCalcHeaderToolTipText : columns[i].disableCalcHeaderToolTipText"
+            [matTooltip]="columns[i].calculatedSubHeaderName">
+            <ng-container *ngIf="columns[i].calculatedSubHeaderName">
+              {{ columns[i].calculatedSubHeaderName }}
+            </ng-container>
+          </div>
+          <div class="text-subhead" [ngClass]="columns[i+1].cssClass"
+            *ngIf="i+1 < columns.length && columns[i+1]['innerCells'] === 2"
+            [matTooltipDisabled]="columns[i+1].disableCalcHeaderToolTipText === undefined ? gridConfiguration.disableCalcHeaderToolTipText : columns[i+1].disableCalcHeaderToolTipText"
+            [matTooltip]="columns[i+1].calculatedSubHeaderName">
+            <ng-container *ngIf="columns[i+1].calculatedSubHeaderName">
+              {{ columns[i+1].calculatedSubHeaderName }}
+            </ng-container>
+          </div>
+          <div class="text-subhead" [ngClass]="columns[i+2].cssClass"
+            *ngIf="i+2 < columns.length && columns[i+2]['innerCells'] === 3"
+            [matTooltipDisabled]="columns[i+2].disableCalcHeaderToolTipText === undefined ? gridConfiguration.disableCalcHeaderToolTipText : columns[i+2].disableCalcHeaderToolTipText"
+            [matTooltip]="columns[i+2].calculatedSubHeaderName">
+            <ng-container *ngIf="columns[i+2].calculatedSubHeaderName">
+              {{ columns[i+2].calculatedSubHeaderName }}
+            </ng-container>
+          </div>
+          <div class="text-subhead" [ngClass]="columns[i+3].cssClass"
+            *ngIf="i+3 < columns.length && columns[i+3]['innerCells'] === 4"
+            [matTooltipDisabled]="columns[i+3].disableCalcHeaderToolTipText === undefined ? gridConfiguration.disableCalcHeaderToolTipText : columns[i+3].disableCalcHeaderToolTipText"
+            [matTooltip]="columns[i+3].calculatedSubHeaderName">
+            <ng-container *ngIf="columns[i+3].calculatedSubHeaderName">
+              {{ columns[i+3].calculatedSubHeaderName }}
+            </ng-container>
+          </div>
+          <div class="text-subhead" [ngClass]="columns[i+4].cssClass"
+            *ngIf="i+4 < columns.length && columns[i+4]['innerCells'] === 5"
+            [matTooltipDisabled]="columns[i+4].disableCalcHeaderToolTipText === undefined ? gridConfiguration.disableCalcHeaderToolTipText : columns[i+4].disableCalcHeaderToolTipText"
+            [matTooltip]="columns[i+4].calculatedSubHeaderName">
+            <ng-container *ngIf="columns[i+4].calculatedSubHeaderName">
+              {{ columns[i+4].calculatedSubHeaderName }}
+            </ng-container>
+          </div>
+        </th>
+      </ng-container>
+
+      <!-- SubHeader2 Table Header -->
+      <ng-container *ngFor="let column of columns; index as i; last as isLast"
+        [matColumnDef]="column.subHeader2ColumnDef">
+        <!-- Header Row -->
+        <th *matHeaderCellDef [attr.rowspan]="columns[i].subHeader2Rowspan"
+          [attr.colspan]="columns[i].subHeader2Colspan"
+          [class.hide]="columns[i][this.SUB_HEADER_2_HIDE] || !(i === 0 || columns[i]['innerCells'] === 1)"
+          mat-header-cell class="align-left sub-header-2">
+          <div class="text-head" [ngClass]="columns[i].cssClass" *ngIf="columns[i]['innerCells'] === 1"
+            [matTooltipDisabled]="columns[i].disableSubHeader2ToolTipText === undefined ? gridConfiguration.disableSubHeader2ToolTipText : columns[i].disableSubHeader2ToolTipText"
+            [matTooltip]="columns[i].title">
+            {{ columns[i].subHeader2Name }}
+          </div>
+          <div class="text-subhead" [ngClass]="columns[i+1].cssClass"
+            *ngIf="i+1 < columns.length && columns[i+1]['innerCells'] === 2"
+            [matTooltipDisabled]="columns[i+1].disableSubHeader2ToolTipText === undefined ? gridConfiguration.disableSubHeader2ToolTipText : columns[i+1].disableSubHeader2ToolTipText"
+            [matTooltip]="columns[i+1].title">
+            {{ columns[i+1].subHeader2Name }}
+          </div>
+          <div class="text-subhead" [ngClass]="columns[i+2].cssClass"
+            *ngIf="i+2 < columns.length && columns[i+2]['innerCells'] === 3"
+            [matTooltipDisabled]="columns[i+2].disableSubHeader2ToolTipText === undefined ? gridConfiguration.disableSubHeader2ToolTipText : columns[i+2].disableSubHeader2ToolTipText"
+            [matTooltip]="columns[i+2].title">
+            {{ columns[i+2].subHeader2Name }}
+          </div>
+          <div class="text-subhead" [ngClass]="columns[i+3].cssClass"
+            *ngIf="i+3 < columns.length && columns[i+3]['innerCells'] === 4"
+            [matTooltipDisabled]="columns[i+3].disableSubHeader2ToolTipText === undefined ? gridConfiguration.disableSubHeader2ToolTipText : columns[i+3].disableSubHeader2ToolTipText"
+            [matTooltip]="columns[i+3].title">
+            {{ columns[i+3].subHeader2Name }}
+          </div>
+          <div class="text-subhead" [ngClass]="columns[i+4].cssClass"
+            *ngIf="i+4 < columns.length && columns[i+4]['innerCells'] === 5"
+            [matTooltipDisabled]="columns[i+4].disableSubHeader2ToolTipText === undefined ? gridConfiguration.disableSubHeader2ToolTipText : columns[i+4].disableSubHeader2ToolTipText"
+            [matTooltip]="columns[i+4].title">
+            {{ columns[i+4].subHeader2Name }}
+          </div>
+        </th>
+      </ng-container>
+
+      <!-- SubHeader1 Table Header -->
+      <ng-container *ngFor="let column of columns; index as i; last as isLast"
+        [matColumnDef]="column.subHeader1ColumnDef">
+        <!-- Header Row -->
+        <th *matHeaderCellDef [attr.rowspan]="columns[i].subHeader1Rowspan"
+          [attr.colspan]="columns[i].subHeader1Colspan"
+          [class.hide]="columns[i][this.SUB_HEADER_1_HIDE] || !(i === 0 || columns[i]['innerCells'] === 1) || columns[i].subHeader1Colspan === 0"
+          mat-header-cell class="align-left sub-header-1">
+          <div class="text-head" [ngClass]="columns[i].cssClass" *ngIf="columns[i]['innerCells'] === 1"
+            [matTooltipDisabled]="columns[i].disableSubHeader1ToolTipText === undefined ? gridConfiguration.disableSubHeader1ToolTipText : columns[i].disableSubHeader1ToolTipText"
+            [matTooltip]="columns[i].title">
+            {{ columns[i].subHeader1Name }}
+          </div>
+          <div class="text-subhead" [ngClass]="columns[i+1].cssClass"
+            *ngIf="i+1 < columns.length && columns[i+1]['innerCells'] === 2"
+            [matTooltipDisabled]="columns[i+1].disableSubHeader1ToolTipText === undefined ? gridConfiguration.disableSubHeader1ToolTipText : columns[i+1].disableSubHeader1ToolTipText"
+            [matTooltip]="columns[i+1].title">
+            {{ columns[i+1].subHeader1Name }}
+          </div>
+          <div class="text-subhead" [ngClass]="columns[i+2].cssClass"
+            *ngIf="i+2 < columns.length && columns[i+2]['innerCells'] === 3"
+            [matTooltipDisabled]="columns[i+2].disableSubHeader1ToolTipText === undefined ? gridConfiguration.disableSubHeader1ToolTipText : columns[i+2].disableSubHeader1ToolTipText"
+            [matTooltip]="columns[i+2].title">
+            {{ columns[i+2].subHeader1Name }}
+          </div>
+          <div class="text-subhead" [ngClass]="columns[i+3].cssClass"
+            *ngIf="i+3 < columns.length && columns[i+3]['innerCells'] === 4"
+            [matTooltipDisabled]="columns[i+3].disableSubHeader1ToolTipText === undefined ? gridConfiguration.disableSubHeader1ToolTipText : columns[i+3].disableSubHeader1ToolTipText"
+            [matTooltip]="columns[i+3].title">
+            {{ columns[i+3].subHeader1Name }}
+          </div>
+          <div class="text-subhead" [ngClass]="columns[i+4].cssClass"
+            *ngIf="i+4 < columns.length && columns[i+4]['innerCells'] === 5"
+            [matTooltipDisabled]="columns[i+4].disableSubHeader1ToolTipText === undefined ? gridConfiguration.disableSubHeader1ToolTipText : columns[i+4].disableSubHeader1ToolTipText"
+            [matTooltip]="columns[i+4].title">
+            {{ columns[i+4].subHeader1Name }}
+          </div>
+        </th>
+      </ng-container>
+
+      <!-- Table Data -->
+      <ng-container *ngFor="let column of columns; index as i; last as isLast" [matColumnDef]="column.columnDef">
+        <!-- Header Row -->
+        <th *matHeaderCellDef class="header" [style.width]="column.width"
+          [class.hide]="!(i === 0 || columns[i]['innerCells'] === 1)" mat-header-cell
+          [class.header-top-calc-1]="isHavingCalculatedSubHeader && maxInnerCells === 1"
+          [class.header-top-calc-2]="isHavingCalculatedSubHeader && maxInnerCells === 2"
+          [class.header-top-calc-3]="isHavingCalculatedSubHeader && maxInnerCells === 3"
+          [class.header-top-calc-4]="isHavingCalculatedSubHeader && maxInnerCells === 4"
+          [class.header-top-calc-5]="isHavingCalculatedSubHeader && maxInnerCells === 5" style="text-align: right">
+          <div class="header-button" *ngIf="gridConfiguration.showExpandCollapseAllIcon && i === 0 && rows?.length > 0">
+            <button [class.expand-icon]="expandAllCollapseAllState === 'isCollapsed'"
+              [matTooltip]='expandAllCollapseAllTooltip'
+              [class.collapse-icon]="expandAllCollapseAllState === 'isExpanded'" (click)="onHeaderIconClick()"
+              type="button" aria-label="Row Expansion" mat-icon-button>
+              <mat-icon aria-label="Row Expansion Icon">
+                {{expandAllCollapseAllIcon}}
+              </mat-icon>
+            </button>
+          </div>
+          <div class="text-head" [ngClass]="columns[i].cssClass" *ngIf="columns[i]['innerCells'] === 1"
+            [mat-sort-header]="columns[i].columnDef"
+            [ngStyle]="columns[i].headerName === ''? {'display': 'none'}:{'display': 'block'}"
+            [disabled]="!gridConfiguration.isSortingEnabled || columns[i].isSortingDisabled"
+            [matTooltipDisabled]="columns[i].disableHeaderToolTipText === undefined ? gridConfiguration.disableHeaderToolTipText : columns[i].disableHeaderToolTipText"
+            [matTooltip]="columns[i].title">
+            {{ columns[i].headerName }}
+          </div>
+          <div class="text-subhead" [ngClass]="columns[i+1].cssClass"
+            *ngIf="i+1 < columns.length && columns[i+1]['innerCells'] === 2" [mat-sort-header]="columns[i+1].columnDef"
+            [ngStyle]="columns[i+1].headerName === ''? {'display': 'none'}:{'display': 'block'}"
+            [disabled]="!gridConfiguration.isSortingEnabled || columns[i+1].isSortingDisabled"
+            [matTooltipDisabled]="columns[i+1].disableHeaderToolTipText === undefined ? gridConfiguration.disableHeaderToolTipText : columns[i+1].disableHeaderToolTipText"
+            [matTooltip]="columns[i+1].title">
+            {{ columns[i+1].headerName }}
+          </div>
+          <div class="text-subhead" [ngClass]="columns[i+2].cssClass"
+            *ngIf="i+2 < columns.length && columns[i+2]['innerCells'] === 3" [mat-sort-header]="columns[i+2].columnDef"
+            [ngStyle]="columns[i+2].headerName === ''? {'display': 'none'}:{'display': 'block'}"
+            [disabled]="!gridConfiguration.isSortingEnabled || columns[i+2].isSortingDisabled"
+            [matTooltipDisabled]="columns[i+2].disableHeaderToolTipText === undefined ? gridConfiguration.disableHeaderToolTipText : columns[i+2].disableHeaderToolTipText"
+            [matTooltip]="columns[i+2].title">
+            {{ columns[i+2].headerName }}
+          </div>
+          <div class="text-subhead" [ngClass]="columns[i+3].cssClass"
+            *ngIf="i+3 < columns.length && columns[i+3]['innerCells'] === 4" [mat-sort-header]="columns[i+3].columnDef"
+            [ngStyle]="columns[i+3].headerName === ''? {'display': 'none'}:{'display': 'block'}"
+            [disabled]="!gridConfiguration.isSortingEnabled || columns[i+3].isSortingDisabled"
+            [matTooltipDisabled]="columns[i+3].disableHeaderToolTipText === undefined ? gridConfiguration.disableHeaderToolTipText : columns[i+3].disableHeaderToolTipText"
+            [matTooltip]="columns[i+3].title">
+            {{ columns[i+3].headerName }}
+          </div>
+          <div class="text-subhead" [ngClass]="columns[i+4].cssClass"
+            *ngIf="i+4 < columns.length && columns[i+4]['innerCells'] === 5" [mat-sort-header]="columns[i+4].columnDef"
+            [ngStyle]="columns[i+4].headerName === ''? {'display': 'none'}:{'display': 'block'}"
+            [disabled]="!gridConfiguration.isSortingEnabled || columns[4].isSortingDisabled"
+            [matTooltipDisabled]="columns[i+4].disableHeaderToolTipText === undefined ? gridConfiguration.disableHeaderToolTipText : columns[i+4].disableHeaderToolTipText"
+            [matTooltip]="columns[i+4].title">
+            {{ columns[i+4].headerName }}
+          </div>
+        </th>
+
+        <!-- Row -->
+        <ng-container *matCellDef="let row; let rowIndex = index">
+          <td class="data-row" *ngIf="i === 0 || columns[i]['innerCells'] === 1" mat-cell>
+            <div class="text-row" [ngClass]="columns[i].cssClass" *ngIf="columns[i]['innerCells'] === 1">
+              <button [class.expand-icon]="!row[columns[i].columnDef + '_isExpanded']"
+                [class.collapse-icon]="row[columns[i].columnDef + '_isExpanded']"
+                (click)="onRowIconClick(row, columns[i].columnDef, columns[i].action, i)"
+                *ngIf="columns[i].isExpandableRow && !row[columns[i].columnDef + '_isExtraRow']" type="button"
+                aria-label="Row Expansion" mat-icon-button>
+                <mat-icon aria-label="Row Expansion Icon">
+                  {{ columns[i].cellIcon(row) }}
+                </mat-icon>
+              </button>
+              <span class="clickable-cell" *ngIf="columns[i].action==='click'"
+                (click)="setSelectedColumnData(row, columns[i].columnDef, columns[i].action, rowIndex)">
+                {{ columns[i].cell(row) }}
+              </span>
+              <span class="clickable-cell" *ngIf="columns[i].action==='view'"
+                (click)="setSelectedColumnData(row, columns[i].columnDef, columns[i].action, rowIndex)">
+                <mat-icon>description</mat-icon>
+              </span>
+              <!-- Mayur - fix it for expandable edit -->
+              <!-- <span *ngIf="column.action === 'edit' && isEditableGrid(columns[i], row)"> -->
+              <span *ngIf="columns[i].action==='edit'">
+                <app-fortigo-edit-grid [value]=columns[i].cell(row) [column]=columns[i]
+                  [formConfiguration]="gridConfiguration?.editableFormConfiguration"
+                  [fieldsFontSize]=gridConfiguration?.css?.tableFont
+                  (editChanges)=rowEditChanges(row,columns[i],$event,i) [isReadOnly]=columns[i].isReadOnly(row)
+                  [dropdownOption]=columns[i].editDropdownOption>
+                </app-fortigo-edit-grid>
+              </span>
+              <!-- removed for right expandable row icon -->
+              <!-- [class.ml-2]="columns[i].isExpandableRow" -->
+              <span style="width: 100%;"
+                *ngIf="columns[i].action!=='click' && columns[i].action!=='view' && columns[i].action!=='edit'">
+                <ng-container *ngIf="columns[i]?.icon?.isIconOnly || columns[i]?.icon?.isIconAndText">
+                  <mat-icon [style.float]="columns[i]?.icon?.css?.alignment">{{ columns[i].iconCell(row) }} </mat-icon>
+                </ng-container>
+                <ng-container *ngIf="columns[i]?.image?.isImageOnly || columns[i]?.image?.isImageAndText">
+                  <img [style.width]="columns[i]?.image?.css?.width" [style.float]="columns[i]?.image?.css?.alignment"
+                    [src]="columns[i].imageCell(row)" [alt]="columns[i].imageAltCell(row)">
+                </ng-container>
+                <ng-container
+                  *ngIf="!(columns[i]?.icon?.isIconOnly && columns[i]?.image?.isImageOnly) || columns[i]?.icon?.isIconAndText || columns[i]?.image?.isImageAndText">
+                  <span
+                    [matTooltipDisabled]="columns[i].disableRowToolTipText === undefined ? gridConfiguration.disableRowToolTipText : columns[i].disableRowToolTipText"
+                    [matTooltip]="columns[i].cellToolTipText(row)">
+                    {{ columns[i].cell(row) }}
+                  </span>
+                  <span class="cell-copy" *ngIf="columns[i].dataFormat === 'bigTextWithCopy'"
+                    (click)="copyCellData(row, columns[i])">
+                    <mat-icon matTooltip="Copy to Clipboard">file_copy</mat-icon>
+                  </span>
+                </ng-container>
+              </span>
+            </div>
+            <div class="text-subrow"
+              [matTooltipDisabled]="columns[i+1].disableRowToolTipText === undefined ? gridConfiguration.disableRowToolTipText : columns[i+1].disableRowToolTipText"
+              [matTooltip]="columns[i+1].cellToolTipText(row)" [ngClass]="columns[i+1].cssClass"
+              *ngIf="i+1 < columns.length && columns[i+1]['innerCells'] === 2">
+              <span class="clickable-cell" *ngIf="columns[i+1].action==='click'"
+                (click)="setSelectedColumnData(row, columns[i+1].columnDef, columns[i+1].action, rowIndex)">
+                {{ columns[i+1].cell(row) }}
+              </span>
+              <span class="clickable-cell" *ngIf="columns[i+1].action==='view'"
+                (click)="setSelectedColumnData(row, columns[i+1].columnDef, columns[i+1].action, rowIndex)">
+                <button type="button" mat-raised-button> View </button>
+              </span>
+              <span
+                *ngIf="columns[i+1].action!=='click' && columns[i+1].action!=='view' && columns[i+1].action!=='edit'">
+                <ng-container *ngIf="columns[i+1]?.icon?.isIconOnly || columns[i+1]?.icon?.isIconAndText">
+                  <mat-icon [style.float]="columns[i+1]?.icon?.css?.alignment">{{ columns[i+1].iconCell(row) }}
+                  </mat-icon>
+                </ng-container>
+                <ng-container *ngIf="columns[i+1]?.image?.isImageOnly || columns[i+1]?.image?.isImageAndText">
+                  <img [style.width]="columns[i+1]?.image?.css?.width"
+                    [style.float]="columns[i+1]?.image?.css?.alignment" [src]="columns[i+1].imageCell(row)"
+                    [alt]="columns[i+1].imageAltCell(row)">
+                </ng-container>
+                <ng-container
+                  *ngIf="!(columns[i+1]?.icon?.isIconOnly && columns[i+1]?.image?.isImageOnly) || columns[i+1]?.icon?.isIconAndText || columns[i+1]?.image?.isImageAndText">
+                  {{ columns[i+1].cell(row) }}
+                </ng-container>
+              </span>
+            </div>
+            <div class="text-subrow"
+              [matTooltipDisabled]="columns[i+2].disableRowToolTipText === undefined ? gridConfiguration.disableRowToolTipText : columns[i+2].disableRowToolTipText"
+              [matTooltip]="columns[i+2].cellToolTipText(row)" [ngClass]="columns[i+2].cssClass"
+              *ngIf="i+2 < columns.length && columns[i+2]['innerCells'] === 3">
+              <ng-container *ngIf="columns[i+2]?.icon?.isIconOnly || columns[i+2]?.icon?.isIconAndText">
+                <mat-icon [style.float]="columns[i+2]?.icon?.css?.alignment">{{ columns[i+2].iconCell(row) }}
+                </mat-icon>
+              </ng-container>
+              <ng-container *ngIf="columns[i+2]?.image?.isImageOnly || columns[i+2]?.image?.isImageAndText">
+                <img [style.width]="columns[i+2]?.image?.css?.width" [style.float]="columns[i+2]?.image?.css?.alignment"
+                  [src]="columns[i+2].imageCell(row)" [alt]="columns[i+2].imageAltCell(row)">
+              </ng-container>
+              <ng-container
+                *ngIf="!(columns[i+2]?.icon?.isIconOnly && columns[i+2]?.image?.isImageOnly) || columns[i+2]?.icon?.isIconAndText || columns[i+2]?.image?.isImageAndText">
+                {{ columns[i+2].cell(row) }}
+              </ng-container>
+            </div>
+            <div class="text-subrow"
+              [matTooltipDisabled]="columns[i+3].disableRowToolTipText === undefined ? gridConfiguration.disableRowToolTipText : columns[i+3].disableRowToolTipText"
+              [matTooltip]="columns[i+3].cellToolTipText(row)" [ngClass]="columns[i+3].cssClass"
+              *ngIf="i+3 < columns.length && columns[i+3]['innerCells'] === 4">
+              <ng-container *ngIf="columns[i+3]?.icon?.isIconOnly || columns[i+3]?.icon?.isIconAndText">
+                <mat-icon [style.float]="columns[i+3]?.icon?.css?.alignment">{{ columns[i+3].iconCell(row) }}
+                </mat-icon>
+              </ng-container>
+              <ng-container *ngIf="columns[i+3]?.image?.isImageOnly || columns[i+3]?.image?.isImageAndText">
+                <img [style.width]="columns[i+3]?.image?.css?.width" [style.float]="columns[i+3]?.image?.css?.alignment"
+                  [src]="columns[i+3].imageCell(row)" [alt]="columns[i+3].imageAltCell(row)">
+              </ng-container>
+              <ng-container
+                *ngIf="!(columns[i+3]?.icon?.isIconOnly && columns[i+3]?.image?.isImageOnly) || columns[i+3]?.icon?.isIconAndText || columns[i+3]?.image?.isImageAndText">
+                {{ columns[i+3].cell(row) }}
+              </ng-container>
+            </div>
+            <div class="text-subrow"
+              [matTooltipDisabled]="columns[i+4].disableRowToolTipText === undefined ? gridConfiguration.disableRowToolTipText : columns[i+4].disableRowToolTipText"
+              [matTooltip]="columns[i+4].cellToolTipText(row)" [ngClass]="columns[i+4].cssClass"
+              *ngIf="i+4 < columns.length && columns[i+4]['innerCells'] === 5">
+              <ng-container *ngIf="columns[i+4]?.icon?.isIconOnly || columns[i+4]?.icon?.isIconAndText">
+                <mat-icon [style.float]="columns[i+4]?.icon?.css?.alignment">{{ columns[i+4].iconCell(row) }}
+                </mat-icon>
+              </ng-container>
+              <ng-container *ngIf="columns[i+4]?.image?.isImageOnly || columns[i+4]?.image?.isImageAndText">
+                <img [style.width]="columns[i+4]?.image?.css?.width" [style.float]="columns[i+4]?.image?.css?.alignment"
+                  [src]="columns[i+4].imageCell(row)" [alt]="columns[i+4].imageAltCell(row)">
+              </ng-container>
+              <ng-container
+                *ngIf="!(columns[i+4]?.icon?.isIconOnly && columns[i+4]?.image?.isImageOnly) || columns[i+4]?.icon?.isIconAndText || columns[i+4]?.image?.isImageAndText">
+                {{ columns[i+4].cell(row) }}
+              </ng-container>
+            </div>
+          </td>
+        </ng-container>
+
+        <!-- Footer Row -->
+        <ng-container *ngIf="gridConfiguration.isFooterEnabled">
+          <ng-container *matFooterCellDef>
+            <td class="footer-row" *ngIf="i === 0 || columns[i]['innerCells'] === 1" mat-footer-cell>
+              <div [class.align-right]="columns[i].dataType === 'number'"
+                *ngIf="columns[i]['innerCells'] === 1 && columns[i]?.footerCalculatedDataType">
+                {{ getCalculatedData(i, 'footer') }}
+              </div>
+              <div [class.align-right]="columns[i+1].dataType === 'number'"
+                *ngIf="i+1 < columns.length && columns[i+1]['innerCells'] === 2 && columns[i+1]?.footerCalculatedDataType">
+                {{ getCalculatedData(i+1, 'footer') }}
+              </div>
+              <div [class.align-right]="columns[i+2].dataType === 'number'"
+                *ngIf="i+2 < columns.length && columns[i+2]['innerCells'] === 3 && columns[i+2]?.footerCalculatedDataType">
+                {{ getCalculatedData(i+2, 'footer') }}
+              </div>
+              <div [class.align-right]="columns[i+3].dataType === 'number'"
+                *ngIf="i+3 < columns.length && columns[i+3]['innerCells'] === 4 && columns[i+3]?.footerCalculatedDataType">
+                {{ getCalculatedData(i+3, 'footer') }}
+              </div>
+              <div [class.align-right]="columns[i+4].dataType === 'number'"
+                *ngIf="i+4 < columns.length && columns[i+4]['innerCells'] === 5 && columns[i+4]?.footerCalculatedDataType">
+                {{ getCalculatedData(i+4, 'footer') }}
+              </div>
+            </td>
+          </ng-container>
+        </ng-container>
+      </ng-container>
+
+      <!-- Footer - informational -->
+      <ng-container matColumnDef="loading">
+        <td class="align-center information-text" mat-footer-cell *matFooterCellDef [ngStyle]="{height: rowsCalcHeight}"
+          [attr.colspan]="displayedColumns?.length">
+          Loading data...
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="noData">
+        <td class="align-center information-text" mat-footer-cell *matFooterCellDef
+          [attr.colspan]="displayedColumns?.length" [ngStyle]="{height: rowsCalcHeight}">
+          No data.
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="customFooterMessage">
+        <td class="align-center information-text" mat-footer-cell *matFooterCellDef
+          [attr.colspan]="displayedColumns?.length" [ngStyle]="{height: rowsCalcHeight}">
+          {{ gridConfiguration.customFooterMessage }}
+        </td>
+      </ng-container>
+
+      <!-- Header Row -->
+      <ng-template *ngIf="!isHavingCalculatedSubHeader else showCalculatedSubHeader"> </ng-template>
+      <ng-template #showCalculatedSubHeader>
+        <tr mat-header-row class="white-background" [class.calc-sub-header-1]="maxInnerCells === 1"
+          [class.calc-sub-header-2]="maxInnerCells === 2" [class.calc-sub-header-3]="maxInnerCells === 3"
+          [class.calc-sub-header-4]="maxInnerCells === 4" [class.calc-sub-header-5]="maxInnerCells === 5"
+          *matHeaderRowDef="calculatedSubHeaders; sticky:true"></tr>
+      </ng-template>
+      <ng-template *ngIf="!isHavingSubHeader2 else showSubHeader2">
+      </ng-template>
+      <ng-template #showSubHeader2>
+        <ng-template
+          *ngIf="gridConfiguration.subHeader2Position === 'before'; then showSubHeader2Before else showSubHeader2After">
+        </ng-template>
+      </ng-template>
+
+      <ng-template *ngIf="!isHavingSubHeader1 else showSubHeader1">
+      </ng-template>
+      <ng-template #showSubHeader1>
+        <ng-template
+          *ngIf="gridConfiguration.subHeader1Position === 'before'; then showSubHeader1Before else showSubHeader1After">
+        </ng-template>
+      </ng-template>
+
+      <ng-template #showSubHeader2Before>
+        <tr mat-header-row class="slate-gray-background sub-header" *matHeaderRowDef="subHeaders2; sticky:true"></tr>
+      </ng-template>
+      <ng-template #showSubHeader1Before>
+        <tr mat-header-row class="slate-gray-background sub-header" *matHeaderRowDef="subHeaders1; sticky:true"></tr>
+      </ng-template>
+      <tr mat-header-row class="slate-gray-background" *matHeaderRowDef="displayedColumns; sticky: true;"></tr>
+      <ng-template #showSubHeader1After>
+        <tr mat-header-row class="slate-gray-background sub-header" *matHeaderRowDef="subHeaders1; sticky:true"></tr>
+      </ng-template>
+      <ng-template #showSubHeader2After>
+        <tr mat-header-row class="slate-gray-background sub-header" *matHeaderRowDef="subHeaders2; sticky:true"></tr>
+      </ng-template>
+
+      <!-- Data Row -->
+      <!-- REVIEW add css -->
+      <tr [class.inner-row]="row[columns[0].columnDef + '_isExtraRow']"
+        [class.primary-row]="row['_rowType'] === 'primary'" [class.secondary-row]="row['_rowType'] === 'secondary'"
+        [class.success-row]="row['_rowType'] === 'success'" [class.danger-row]="row['_rowType'] === 'danger'"
+        [class.warning-row]="row['_rowType'] === 'warning'" mat-row *matRowDef="let row; columns: displayedColumns;">
+      </tr>
+
+      <!-- Footer Row -->
+      <ng-template *ngIf="!gridConfiguration.isFooterEnabled else showFooter"> </ng-template>
+      <ng-template #showFooter>
+        <tr mat-footer-row *matFooterRowDef="displayedColumns"></tr>
+      </ng-template>
+
+      <tr mat-footer-row *matFooterRowDef="['loading']" class="hide"
+        [class.show]="rows === null || dataSource === undefined">
+      </tr>
+      <tr mat-footer-row *matFooterRowDef="['noData']"
+        [class.hide]="rows === null || !(dataSource !== null && dataSource && dataSource.data && dataSource.data.length === 0) || (gridConfiguration.customFooterMessage !== undefined && gridConfiguration.customFooterMessage !== '')">
+      </tr>
+      <tr mat-footer-row *matFooterRowDef="['customFooterMessage']"
+        [class.hide]="gridConfiguration.customFooterMessage === undefined || gridConfiguration.customFooterMessage === ''">
+      </tr>
+    </table>
+
+    <!-- Pagination -->
+    <mat-paginator *ngIf="displayPaginator" showFirstLastButtons class="mat-paginator-sticky"
+      [pageSize]="gridConfiguration.defaultPageSize" [pageSizeOptions]="gridConfiguration.pageSizeOptions">
+    </mat-paginator>
+  </div>
+</div>

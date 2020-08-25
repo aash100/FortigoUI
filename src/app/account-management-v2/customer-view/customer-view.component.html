@@ -1,0 +1,5 @@
+<div class="container-fluid">
+  <!-- Creates table for customer view -->
+    <app-fortigo-grid [columns]="columnsData" [isDebug]="true" [rows]="rowsData" [extraRows]=extraRows [gridConfiguration]="gridconfiguration" (cellClick)="onCellClick($event)" (actionExtraButtonSelectedIndex)="onActionExtraButtonClick($event)">
+      </app-fortigo-grid>
+</div>

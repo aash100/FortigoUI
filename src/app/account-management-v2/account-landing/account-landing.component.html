@@ -1,0 +1,40 @@
+<!--
+ Created on Fri Sep 06 2019
+ Created by - 1214: Sachin Sehgal
+
+ Copyright (c) 2019 Fortigo Network Logistics Pvt Ltd (4TiGO)
+-->
+
+<!-- Used to fet fortigo filter -->
+<app-fortigo-filter [fields]="filterFields" (filterSubmit)="onFilterSubmit($event)"
+  (clearClicked)="clearClicked($event)" [data]="data">
+
+  <app-fortigo-head [subTitle]=pageSubTitle [searchText]=searchText [displayTitleInline]=true
+    [isFilterVisible]=isFilterVisible [isSearchVisible]=isFilterVisible [isRefreshVisible]=isFilterVisible
+    [buttons]=buttons [title]=pageTitle (searchClicked)="onSearchClick($event)"
+    (buttonClicked)="onHeaderButtonClick($event)" (refreshClicked)="onRefreshClick($event)"
+    >
+  </app-fortigo-head>
+
+  <div class="row mt-1 ml-2">
+    <button [routerLink]="'/account'" class="btn submitButton mt-0 mb-0" style="width: 83px; padding: 2px 2px;">
+      Back
+    </button>
+  </div>
+  <!-- Used to get fortigo tabs component -->
+  <app-fortigo-tabs [selectTab]=selectedTab [tabList]="filterTabList" (tabClicked)="onTabClicked($event)">
+  </app-fortigo-tabs>
+
+  <!-- Loads component based on selected tab -->
+  <div class="container-fluid">
+    <ng-container [ngSwitch]="selectedTab">
+      <app-view-account *ngSwitchCase="0" style="margin:10% !important;">
+      </app-view-account>
+      <app-meeting-list *ngSwitchCase="1" style="margin:5% !important;" [searchText]=searchText></app-meeting-list>
+      <app-document-list *ngSwitchCase="2" style="margin:5% !important;"></app-document-list>
+      <app-contact-list *ngSwitchCase="3" style="margin:5% !important;"></app-contact-list>
+      <app-target-list *ngSwitchCase="4" style="margin:5% !important;"></app-target-list>
+    </ng-container>
+  </div>
+
+</app-fortigo-filter>

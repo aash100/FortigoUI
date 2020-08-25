@@ -1,0 +1,15 @@
+<div>
+  <div class="material-modal-header">
+    <h1 mat-dialog-title class="ml-1">JOB EXECUTION HISTORY</h1>
+    <button class="material-modal-close-button" mat-button mat-dialog-close>
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+  <div>
+    <h5>{{jobDesc}} ({{jobCode}})</h5>
+  </div>
+  <div>
+    <app-fortigo-grid [columns]="columnsData" [rows]="jobTxns" [gridConfiguration]="jobTxnsGridconfiguration">
+    </app-fortigo-grid>
+  </div>
+</div>

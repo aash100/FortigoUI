@@ -1,0 +1,91 @@
+<mat-sidenav-container #container class="sidenav-container" style="height: 100%;">
+  <mat-sidenav #drawer (closedStart)="menuTrigger.closeMenu()" class="sidenav" fixedInViewport="true"
+    [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'" [mode]="'over'" [opened]="false">
+    <mat-toolbar class="header">
+      <mat-icon aria-label="Side nav toggle icon" style="color: white;">menu</mat-icon>
+      <span style="height: 100%;"><a class="navbar-brand" routerLink=""></a></span>
+    </mat-toolbar>
+    <mat-nav-list class="nav-list">
+
+      <!-- Menu Item Trigger -->
+      <mat-menu #animals="matMenu" [overlapTrigger]="false" xPosition="before">
+        <button mat-menu-item [matMenuTriggerFor]="mainMenu" #menuTrigger="matMenuTrigger">Animal index</button>
+      </mat-menu>
+
+      <!-- Menu Items -->
+      <mat-menu class="navigation-menu-panel" #mainMenu="matMenu">
+        <ng-container *ngFor="let mainItem of menuListCopy">
+          <button [matTooltip]="mainItem.tooltipText" matTooltipPosition="right"
+            [matTooltipDisabled]="mainItem?.subMenuItems !== undefined" mat-menu-item
+            *ngIf="mainItem?.subMenuItems === undefined || (mainItem?.subMenuItems?.length === 0 && (mainItem?.hyperLink !== undefined || mainItem?.externalhyperLink !== undefined)); else subMenuButton"
+            (click)="onClick(mainItem)">
+            <mat-icon>{{ mainItem?.icon }}</mat-icon>
+            <span>
+              {{ mainItem?.name }}
+            </span>
+          </button>
+          <ng-template #subMenuButton>
+            <button
+              *ngIf="!(mainItem?.subMenuItems?.length === 0 && mainItem?.hyperLink === undefined && mainItem?.externalhyperLink === undefined)"
+              mat-menu-item [matMenuTriggerFor]="sub_menu_1">
+              <mat-icon>{{ mainItem?.icon }}</mat-icon>
+              <span>
+                {{ mainItem?.name }}
+              </span>
+            </button>
+          </ng-template>
+          <mat-menu class="navigation-sub-menu-panel" #sub_menu_1="matMenu">
+            <ng-container *ngFor="let subItem1 of mainItem.subMenuItems">
+              <button [matTooltip]="subItem1.tooltipText" matTooltipPosition="right"
+                [matTooltipDisabled]="subItem1?.subMenuItems !== undefined" mat-menu-item
+                *ngIf="subItem1?.subMenuItems === undefined || subItem1?.subMenuItems?.length===0; else subMenuButton2"
+                (click)="onClick(subItem1)">
+                <mat-icon>{{ subItem1?.icon }}</mat-icon>
+                <span>
+                  {{ subItem1?.name }}
+                </span>
+              </button>
+              <ng-template #subMenuButton2>
+                <button mat-menu-item [matMenuTriggerFor]="sub_menu_2">
+                  <mat-icon>{{ subItem1.icon }}</mat-icon>
+                  <span>
+                    {{ subItem1.name }}
+                  </span>
+                </button>
+              </ng-template>
+              <mat-menu class="navigation-sub-menu-panel" #sub_menu_2="matMenu">
+                <button *ngFor="let subItem2 of subItem1.subMenuItems" mat-menu-item (click)="onClick(subItem2)">
+                  <mat-icon>{{ subItem2.icon }}</mat-icon>
+                  <span>
+                    {{ subItem2.name }}
+                  </span>
+                </button>
+              </mat-menu>
+            </ng-container>
+          </mat-menu>
+        </ng-container>
+      </mat-menu>
+
+    </mat-nav-list>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <mat-toolbar class="header">
+      <button *ngIf="!hideMenu" type="button" aria-label="Toggle sidenav" mat-icon-button
+        (mouseenter)="drawer.toggle(); menuTrigger.openMenu()">
+        <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+      </button>
+      <span style="height: 100%;"><a class="navbar-brand" routerLink="/"></a></span>
+      <form id="nav-login">
+        <span style="color:white;">Welcome, {{ userName | titlecase }}</span><br>
+        <em class="material-icons ml-5 signout" (click)="logout()"
+          style="line-height: inherit;font-size: 25px; color: white; cursor: pointer;">
+          power_settings_new
+        </em>
+      </form>
+    </mat-toolbar>
+
+    <!-- Add Content Here -->
+    <ng-content></ng-content>
+
+  </mat-sidenav-content>
+</mat-sidenav-container>

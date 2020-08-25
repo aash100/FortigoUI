@@ -1,0 +1,29 @@
+<!--
+ Created on Wed Oct 16 2019
+ Created by - 1157: Mayur Ranjan
+
+ Copyright (c) 2019 Fortigo Network Logistics Pvt Ltd (4TiGO)
+-->
+
+<div class="container-fluid">
+  <mat-spinner *ngIf="isLoadingData" class="spinner"> </mat-spinner>
+  <!-- file upload -->
+  <div>
+    <app-fortigo-form [(fields)]=uploadFields [submitClearButtonEnabled]=false (fileChanges)=uploadDocument($event)>
+    </app-fortigo-form>
+  </div>
+
+  <!-- buttons -->
+  <div style="justify-content:flex-end; margin-bottom: 10px;display: flex">
+    <div *ngFor="let button of buttons" style="padding-right: 15px;" class="button-cell">
+      <button type="button" mat-raised-button (click)="onClick(button.key)" [disabled]=button.isDisabled
+        appFortigoSubmitButton>
+        <mat-icon>{{button.icon}}</mat-icon> {{button.name}}
+      </button>
+    </div>
+  </div>
+
+<!-- doc data -->
+  <app-fortigo-grid *ngIf='dataLoaded' [(columns)]=columnsData [rows]=rowsData [(gridConfiguration)]=gridConfiguration>
+  </app-fortigo-grid>
+</div>

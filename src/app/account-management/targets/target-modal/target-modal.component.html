@@ -1,0 +1,28 @@
+<div role="document">
+  <div class="modal-content" style="border: 0;">
+    <div class="modal-header shadow-sm" style="height: 57px;">
+      <p style="border-left: 10px solid #0A50A1;padding: 6px; font-size: 15px;">{{title}}</p>
+      <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-bodyborder" style="padding: 1rem;">
+      <form [formGroup]="form" (ngSubmit)="onSubmit();">
+        <app-target-form-card [data]='targetList' [mode]="'edit'"  #targetCard></app-target-form-card>
+        <br>
+        <mat-form-field style="width: 100%;">
+          <textarea matInput placeholder="Remarks" formControlName="remarks" ></textarea>
+          <br>
+        </mat-form-field>
+        <div style="float: right;">
+          <button type="submit" mat-raised-button appFortigoNavigationButton>
+            <mat-icon>save</mat-icon> Save
+          </button>
+          <button type="button" (click)="reset()" mat-raised-button appFortigoClearButton>
+            <mat-icon>block</mat-icon>Clear
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

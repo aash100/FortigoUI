@@ -1,0 +1,21 @@
+<!--
+ Created on Thu Jan 31 2019
+ Created by - 1191: Ritesh Kant
+
+ Copyright (c) 2019 Fortigo Network Logistics Pvt Ltd (4TiGO)
+-->
+<div class="container-fluid">
+  <nav mat-tab-nav-bar [ngStyle]="tabNavBarStyle">
+    <a mat-tab-link *ngFor="let eachTab of tabList; let i = index" style="margin-top: 0px !important;" class="mat-link"
+      (click)="tabIsClicked(i);activeLink = eachTab?.label" [active]="activeLink == eachTab?.label"
+      [ngStyle]="{'display': displayNone[i] ? 'none': 'inline-flex'}">
+      <span class="selected-tab fortigo-orange-badge" [matTooltip]="eachTab?.toolTipText + ' (' + eachTab?.badge + ')'"
+        [matTooltipDisabled]='eachTab?.hideToolTipText  || eachTab?.toolTipText === undefined || this.isForm'
+        matBadgeOverlap="false" [matBadge]="eachTab?.badge > 99 ? '99+' : eachTab?.badge" matBadgeSize="medium" matbadge
+        [matBadgeHidden]="eachTab?.hideBadge" [class.fortigo-blue-badge]=!clicked[i]
+        [ngClass]="{'selected-tab': clicked[i]}" (click)="tabChanged(i)">
+        {{ eachTab?.label }}
+      </span>
+    </a>
+  </nav>
+</div>

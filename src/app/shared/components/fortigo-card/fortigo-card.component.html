@@ -1,0 +1,26 @@
+<!--
+ Created on Wed Jul 10 2019
+ Created by - 1149: Aashish Kumar
+
+ Copyright (c) 2019 Fortigo Network Logistics Pvt Ltd (4TiGO)
+-->
+<ng-template #content>
+    <ng-content></ng-content>
+</ng-template>
+<!-- template with card fields. -->
+<mat-card *ngIf="card && card?.data?.title !== undefined else withoutCard" [ngStyle]="cardConfiguration?.style?.card" class="mat-card-style mat-elevation-z1">
+    <mat-card-header [ngStyle]="cardConfiguration?.style?.header">
+        <mat-card-title [ngStyle]="cardConfiguration?.style?.headerTitle">{{card?.data?.title}}
+        </mat-card-title>
+        <mat-card-subtitle *ngIf="card?.data?.subTitle" [ngStyle]="cardConfiguration?.style?.headerSubTitle">
+            {{card.data.subTitle}}
+        </mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content class="container-fluid" [ngStyle]="cardConfiguration?.style?.content">
+        <ng-container *ngTemplateOutlet="content"></ng-container>
+    </mat-card-content>
+</mat-card>
+<!-- template without card fields. -->
+<ng-template #withoutCard>
+    <ng-container *ngTemplateOutlet="content"></ng-container>
+</ng-template>

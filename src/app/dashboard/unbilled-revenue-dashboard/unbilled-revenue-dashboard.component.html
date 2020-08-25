@@ -1,0 +1,19 @@
+<!--
+ Created on Sun Aug 18 2019
+ Created by - 1157: Mayur Ranjan
+
+ Copyright (c) 2019 Fortigo Network Logistics Pvt Ltd (4TiGO)
+-->
+<app-fortigo-filter [userMode]="'filter-theme2'" [groups]='groups' [fields]="filterFields" [data]=appliedFilter
+  (filterSubmit)=submitFilterForm($event) (clearClicked)=onRefresh()>
+  <!-- Header -->
+  <app-fortigo-head [title]=pageTitle [miniNotes]=miniNotes [isSearchVisible]=showSearch [pattern]=searchRegexPattern
+    (refreshClicked)=onRefresh()>
+  </app-fortigo-head>
+  <!-- Data grid -->
+  <div class="container-fluid">
+    <app-fortigo-grid [isDebug]=false [columns]=columnsData [rows]=rowsData [extraRows]=extraRows
+      [gridConfiguration]="gridConfigurationData" (cellClick)="onCellClick($event)">
+    </app-fortigo-grid>
+  </div>
+</app-fortigo-filter>

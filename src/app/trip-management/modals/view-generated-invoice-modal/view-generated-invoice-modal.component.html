@@ -1,0 +1,25 @@
+<!--
+ Created on Thu Oct 24 2019
+ Created by - 1227: Vinayak K S
+
+ Copyright (c) 2019 Fortigo Network Logistics Pvt Ltd (4TiGO)
+-->
+
+<app-fortigo-modal-header>{{title}}</app-fortigo-modal-header>
+<mat-dialog-content class="mat-typography">
+  <!-- Form Fields -->
+  <div>
+    <app-fortigo-card>
+      <app-fortigo-form [fields]="fields" (formSubmit) = formSubmit($event) (inputChanges)="inputChanges($event)" (checkValidationBeforeSubmit)=true >
+
+      </app-fortigo-form>
+    </app-fortigo-card>
+
+  </div>
+  <!-- grid field -->
+  <div>
+    <app-fortigo-grid [isDebug]=false [(columns)]=columnsData [(rows)]=rowsData
+      [(gridConfiguration)]=gridConfigurationData>
+    </app-fortigo-grid>
+  </div>
+</mat-dialog-content>

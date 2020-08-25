@@ -1,0 +1,90 @@
+<!--
+ Created on Sat Mar 02 2019
+ Created by - 1149: Aashish Kumar
+
+ Copyright (c) 2019 Fortigo Network Logistics Pvt Ltd (4TiGO)
+-->
+<mat-spinner *ngIf="showModalLoader" class="spinner"></mat-spinner>
+<app-fortigo-modal-header>{{title}}</app-fortigo-modal-header>
+<!-- Invoice Data -->
+<mat-dialog-content class="mat-typography">
+
+    <div class="row container-fluid" style="padding-top:10px;" [hidden]="isGenerateInvoice">
+        <app-fortigo-form [userMode]='"filter"' [(fields)]="invoiceGstData" [mode]="'auto'"
+            [fieldsFontSize]=fieldsFontSize [submitClearButtonEnabled]="false" [data]=_data?.tripValueFormData
+            (selectChanges)="onSelectChanges($event)" [updateChanges]="updateChanges" #invoiceGstDataForm>
+        </app-fortigo-form>
+    </div>
+    <!-- Card Data -->
+    <div class="row">
+        <div class="col-md-4" [hidden]="isGenerateInvoice">
+            <!-- customer form -->
+            <app-fortigo-card [card]=customerCard [cardConfiguration]=customerCardConfiguration>
+                <app-fortigo-form [fields]="filterFieldsCustomer" [isReadOnly]=isToPayTripType
+                    [data]="_data?.tripValueFormData?.invoicedBillToDetails" [mode]="'inline'"
+                    [fieldsFontSize]=fieldsFontSize [submitClearButtonEnabled]="false" [updateChanges]="updateChanges"
+                    (selectChanges)="onSelectChanges($event)" (inputChanges)="onInputChanges($event,customerForm)"
+                    #customerForm>
+                </app-fortigo-form>
+            </app-fortigo-card>
+        </div>
+        <div class="col-md-4" [hidden]="isGenerateInvoice">
+            <!-- consignor form -->
+            <app-fortigo-card [card]=consignorCard [cardConfiguration]=consignorCardConfiguration>
+                <app-fortigo-form [fields]="filterFieldsConsignor" [mode]="'inline'" [isReadOnly]=true
+                    [fieldsFontSize]=fieldsFontSize [data]="_data?.tripValueFormData?.consignorDetails"
+                    [submitClearButtonEnabled]="false" (selectChanges)="onSelectChanges($event)" #consignorForm>
+                </app-fortigo-form>
+            </app-fortigo-card>
+        </div>
+        <div class="col-md-4" [hidden]="isGenerateInvoice">
+            <!-- consignee form -->
+            <app-fortigo-card [card]=consigneeCard [cardConfiguration]=consigneeCardConfiguration>
+                <app-fortigo-form [fields]="filterFieldsConsignee" [mode]="'inline'" [isReadOnly]=true
+                    [fieldsFontSize]=fieldsFontSize [data]="_data?.tripValueFormData?.consigneeDetails"
+                    [submitClearButtonEnabled]="false" (selectChanges)="onSelectChanges($event)" #consigneeForm>
+                </app-fortigo-form>
+            </app-fortigo-card>
+        </div>
+    </div>
+   
+    <div *ngIf="isGenerateInvoice" class="row container-fluid" style="padding-top:10px;">
+        <app-fortigo-form [fields]="generateInvoiceFields" [mode]="'auto'" [fieldsFontSize]=fieldsFontSize
+            [submitClearButtonEnabled]="false" [data]=_data?.tripValueFormData (selectChanges)="onSelectChanges($event)"
+            #invoiceGstDataForm>
+        </app-fortigo-form>
+    </div>
+     <!-- CusReference Data  -->
+     <div class="cusReferenceData mt-3">
+        <app-fortigo-form [fields]="cusReferenceData" [mode]="'auto'"
+            [fieldsFontSize]=fieldsFontSize [submitClearButtonEnabled]="false" (selectChanges)="onSelectChanges($event)"
+            #cusReferenceDataForm>
+        </app-fortigo-form>
+    </div>
+    <app-fortigo-grid [isDebug]=false [(columns)]=columnsDataTrip [rows]=rowsDataTrip
+        [(gridConfiguration)]=tripRfvGridConfiguration (editRows)="editRows($event,'trip')">
+    </app-fortigo-grid>
+    <app-fortigo-grid [hidden]="isGenerateInvoice" [isDebug]=false [(columns)]=columnsDataAdjustments
+        [rows]=rowsDataAdjustments [(gridConfiguration)]=adjustmentsGridConfiguration
+        (checkbox1SelectedRow)="updateAdjustmentCheckbox($event, 1)"
+        (checkbox2SelectedRow)="updateAdjustmentCheckbox($event, 2)" (editRows)="editRows($event,'adjustments')">
+    </app-fortigo-grid>
+    <div class="cusReferenceData mt-3">
+        <app-fortigo-form [hidden]="isGenerateInvoice" [fields]="remarksData" [mode]="'auto'"
+            [submitClearButtonEnabled]="false" [fieldsFontSize]=fieldsFontSize
+            (inputChanges)="onInputChanges($event,remarksDataForm)" #remarksDataForm>
+        </app-fortigo-form>
+    </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+    <div class="row button-cell">
+        <div *ngFor="let button of buttons" style="padding-right: 15px;">
+            <button type="button" mat-raised-button
+                (click)="onClick([invoiceGstDataForm,customerForm,consigneeForm,consignorForm,cusReferenceDataForm,remarksDataForm],button.name)"
+                [disabled]=button.isDisabled appFortigoSubmitButton>
+                <mat-icon>{{button.icon}}</mat-icon> {{button.name}}
+            </button>
+        </div>
+    </div>
+</mat-dialog-actions>

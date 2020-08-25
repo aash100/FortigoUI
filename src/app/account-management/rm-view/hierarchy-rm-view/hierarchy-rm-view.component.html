@@ -1,0 +1,658 @@
+<!-- Account Table  -->
+<div class="container-fluid" style="padding: 0px; min-height: 500px;">
+    <mat-spinner *ngIf="!visible || loading" class="spinner"></mat-spinner>
+
+    <p-treeTable *ngIf="visible" #dt [value]="treeData" [ngClass]="'tableHeader'" [scrollable]="true"
+        [multiSortMeta]="multiSortMeta" [scrollHeight]="calcTableHeight" [style]="{width: '100%'}"
+        [paginator]="isPaginating" [rows]="100" sortMode="multiple">
+        <!-- Setting Column Group -->
+        <ng-template pTemplate="colgroup" let-columns>
+            <colgroup>
+                <col style="width: 135px;">
+                <col style="width: 150px;">
+                <col style="width: 150px;">
+                <col style="width: 150px;">
+                <col style="width: 120px;">
+                <col style="width: 60px;">
+                <col style="width: 30px;">
+                <col style="width: 70px;">
+                <col style="width: 70px;">
+                <!-- <col style="width: 50px;"> -->
+            </colgroup>
+        </ng-template>
+
+        <!-- Column header and Calculation header -->
+        <ng-template pTemplate="header">
+            <!-- Calculated Header -->
+            <tr class="colWidth tableCalcHeader">
+                <th>
+                    <div class="text-row row-no-margin row row-no-margin" style="text-align: left">
+                        <div class="col-md-12">{{ getHeaderCalc('count', 'rmAccountManager',selectedMode) }} </div>
+                    </div>
+                </th>
+                <th style="text-align: right;">
+                    <div class="text-row row row-no-margin calc-header-align" style="text-align: right;">
+                        <div class="col-md-4 hightlighted-cell"
+                            [title]="getHeaderCalc('sum','actualRTD') | currency : 'INR' : 'symbol' : '0.2-2'">
+                            <span>
+                                {{ getHeaderCalc('sum','actualRTD',selectedMode) | rsToLakh | currency : 'INR' : 'symbol' : '0.2-2' }}L
+                            </span>
+                        </div>
+                        <div class="col-md-4"
+                            [title]="getHeaderCalc('sum','actualR1') | currency : 'INR' : 'symbol' : '0.2-2'">
+                            {{ getHeaderCalc('sum','actualR1',selectedMode) | rsToLakh | currency : 'INR' : 'symbol' : '0.2-2' }}L
+                        </div>
+                        <div class="col-md-4"
+                            [title]="getHeaderCalc('sum','actualR2') | currency : 'INR' : 'symbol' : '0.2-2'">
+                            {{ getHeaderCalc('sum','actualR2',selectedMode) | rsToLakh | currency : 'INR' : 'symbol' : '0.2-2' }}L
+                        </div>
+                    </div>
+                    <br>
+                    <div class="text-subrow row row-no-margin calc-header-align">
+                        <div class="col-md-4 hightlighted-cell"
+                            [title]="getHeaderCalc('sum','targetRevenueMTD') | currency : 'INR' : 'symbol' : '0.2-2'">
+                            <span>
+                                {{ getHeaderCalc('sum','targetRevenueMTD',selectedMode) | rsToLakh | currency : 'INR' : 'symbol' : '0.2-2' }}L
+                            </span>
+                        </div>
+                        <div class="col-md-4"
+                            [title]="getHeaderCalc('sum','targetRevenueM1') | currency : 'INR' : 'symbol' : '0.2-2'">
+                            {{ getHeaderCalc('sum','targetRevenueM1',selectedMode) | rsToLakh | currency : 'INR' : 'symbol' : '0.2-2' }}L
+                        </div>
+                        <div class="col-md-4"
+                            [title]="getHeaderCalc('sum','targetRevenueM2') | currency : 'INR' : 'symbol' : '0.2-2'">
+                            {{ getHeaderCalc('sum','targetRevenueM2',selectedMode) | rsToLakh | currency : 'INR' : 'symbol' : '0.2-2' }}L
+                        </div>
+                    </div>
+                </th>
+                <th style="text-align: right;">
+                    <div class="text-row row row-no-margin calc-header-align">
+                        <div class="col-md-4 hightlighted-cell"
+                            [title]="getHeaderCalc('sum','actualAnnualRevenue') | currency : 'INR' : 'symbol' : '0.2-2'">
+                            <span>
+                                {{ getHeaderCalc('sum','actualAnnualRevenue',selectedMode) | rsToLakh | currency : 'INR' : 'symbol' : '0.2-2' }}L
+                            </span>
+                        </div>
+                        <div class="col-md-4"
+                            [title]="getHeaderCalc('sum','actualRevenueQ1') | currency : 'INR' : 'symbol' : '0.2-2'">
+                            {{ getHeaderCalc('sum','actualRevenueQ1',selectedMode) | rsToLakh | currency : 'INR' : 'symbol' : '0.2-2' }}L
+                        </div>
+                        <div class="col-md-4"
+                            [title]="getHeaderCalc('sum','actualRevenueQ2') | currency : 'INR' : 'symbol' : '0.2-2'">
+                            {{ getHeaderCalc('sum','actualRevenueQ2',selectedMode) | rsToLakh | currency : 'INR' : 'symbol' : '0.2-2' }}L
+
+                        </div>
+                    </div>
+                    <br>
+                    <div class="text-subrow row-no-margin row calc-header-align">
+                        <div class="col-md-4 hightlighted-cell"
+                            [title]="getHeaderCalc('sum','targetAnnualExpectedRevenue') | currency : 'INR' : 'symbol' : '0.2-2'">
+                            <span>{{ getHeaderCalc('sum','targetAnnualExpectedRevenue',selectedMode) | rsToLakh | currency : 'INR' : 'symbol' : '0.2-2' }}L</span>
+                        </div>
+                        <div class="col-md-4"
+                            [title]="getHeaderCalc('sum','targetRevenueQ1') | currency : 'INR' : 'symbol' : '0.2-2'">
+                            {{ getHeaderCalc('sum','targetRevenueQ1',selectedMode) | rsToLakh | currency : 'INR' : 'symbol' : '0.2-2' }}L
+                        </div>
+                        <div class="col-md-4"
+                            [title]="getHeaderCalc('sum','targetRevenueQ2') | currency : 'INR' : 'symbol' : '0.2-2'">
+                            {{ getHeaderCalc('sum','targetRevenueQ2',selectedMode) |rsToLakh | currency : 'INR' : 'symbol' : '0.2-2' }}L
+                        </div>
+                    </div>
+
+
+                </th>
+                <th>
+                    <div class="text-row row row-no-margin calc-header-align">
+                        <div class="col-md-4 hightlighted-cell"
+                            [title]="getHeaderCalc('sum','actualMTD') | currency : 'INR' : 'symbol' : '0.2-2'">
+                            <span>
+                                {{ getHeaderCalc('sum','actualMTD',selectedMode) | rsToLakh | currency : 'INR' : 'symbol' : '0.2-2' }}L
+                            </span>
+                        </div>
+                        <div class="col-md-4"
+                            [title]="getHeaderCalc('sum','actualM1') | currency : 'INR' : 'symbol' : '0.2-2'">
+                            {{ getHeaderCalc('sum','actualM1',selectedMode) | rsToLakh | currency : 'INR' : 'symbol' : '0.2-2' }}L
+                        </div>
+                        <div class="col-md-4"
+                            [title]="getHeaderCalc('sum','actualM2') | currency : 'INR' : 'symbol' : '0.2-2'">
+                            {{ getHeaderCalc('sum','actualM2',selectedMode) | rsToLakh | currency : 'INR' : 'symbol' : '0.2-2' }}L
+                        </div>
+                    </div>
+                    <br>
+                    <div class="text-subrow row row-no-margin calc-header-align">
+                        <div class="col-md-4 hightlighted-cell"
+                            [title]="getHeaderCalc('sum','targetMarginMTD') | currency : 'INR' : 'symbol' : '0.2-2'">
+                            <span>
+                                {{ getHeaderCalc('sum','targetMarginMTD',selectedMode) | rsToLakh |currency : 'INR' : 'symbol' : '0.2-2' }}L
+                            </span>
+                        </div>
+                        <div class="col-md-4"
+                            [title]="getHeaderCalc('sum','targetMarginM1') | currency : 'INR' : 'symbol' : '0.2-2'">
+                            {{ getHeaderCalc('sum','targetMarginM1',selectedMode) | rsToLakh | currency : 'INR' : 'symbol' : '0.2-2' }}L
+                        </div>
+                        <div class="col-md-4"
+                            [title]="getHeaderCalc('sum','targetMarginM2') | currency : 'INR' : 'symbol' : '0.2-2'">
+                            {{ getHeaderCalc('sum','targetMarginM2',selectedMode) | rsToLakh | currency : 'INR' : 'symbol' : '0.2-2' }}L
+                        </div>
+                    </div>
+
+                </th>
+                <th>
+                    <div class="text-row row-no-margin row row-no-margin calc-header-align">
+                        <div class="col-md-6 hightlighted-cell"
+                            [title]="getHeaderCalc('sum','totalOutstanding') | currency : 'INR' : 'symbol' : '0.2-2'">
+                            <span>
+                                {{ getHeaderCalc('sum','totalOutstanding',selectedMode) | rsToLakh | currency : 'INR' : 'symbol' : '0.2-2' }}L
+                            </span>
+                        </div>
+                        <div class="col-md-6 hightlighted-cell"
+                            [title]="getHeaderCalc('sum','actualBilled') | currency : 'INR' : 'symbol' : '0.2-2'">
+                            {{ getHeaderCalc('sum','actualBilled',selectedMode) | rsToLakh | currency : 'INR' : 'symbol' : '0.2-2' }}L
+                        </div>
+                    </div>
+                    <br>
+                    <div class="text-subrow row row-no-margin calc-header-align"
+                        [title]="getHeaderCalc('sum','actualOverdue') | currency : 'INR' : 'symbol' : '0.2-2'">
+                        <div class="col-md-6 hightlighted-cell">
+                            <span>
+                                {{ getHeaderCalc('sum','actualOverdue',selectedMode) | rsToLakh | currency : 'INR' : 'symbol' : '0.2-2' }}L
+                            </span>
+                        </div>
+                        <div class="col-md-6"
+                            [title]="getHeaderCalc('sum','actualDue') | currency : 'INR' : 'symbol' : '0.2-2'">
+                            {{ getHeaderCalc('sum','actualDue',selectedMode) | rsToLakh | currency : 'INR' : 'symbol' : '0.2-2' }}L
+                        </div>
+                    </div>
+                </th>
+                <th>
+                    <div class="text-row row-no-margin row row-no-margin calc-header-align">
+                        <div class="col-md-12"
+                            [title]="getHeaderCalc('sum','actualCollection') | currency : 'INR' : 'symbol' : '0.2-2'">
+                            {{ getHeaderCalc('sum','actualCollection',selectedMode)| rsToLakh | currency : 'INR' : 'symbol' : '0.2-2' }}L
+                        </div>
+                    </div>
+                    <br>
+                    <!-- <div class="text-subrow row row-no-margin calc-header-align">
+                        <div class="col-md-12" [title]="getHeaderCalculation('weightedAverage','cycleTime') | number">
+                            {{ getHeaderCalculation('weightedAverage','cycleTime') | number }} Days
+                        </div>
+                    </div> -->
+                </th>
+                <th></th>
+                <th></th>
+                <th></th>
+            </tr>
+
+            <!-- Header -->
+            <tr class="colWidth tableHeader">
+                <!-- Company Name and AM Name -->
+                <th class="headerStyling pl-2 line-height:20px">
+                    <div [ttSortableColumn]="'rmAccountManager'" style="text-align: left;">
+                        <span class="text-head">Account Manager</span>
+                        <p-treeTableSortIcon [field]="'rmAccountManager'" ariaLabel="Activate to sort"
+                            ariaLabelDesc="Activate to sort in descending order"
+                            ariaLabelAsc="Activate to sort in ascending order">
+                        </p-treeTableSortIcon>
+                    </div>
+                    <div style="text-align: left;">
+                        <span class="text-subhead">Company Name</span>
+                    </div>
+                </th>
+
+                <!-- Monthly - Current, M-1, M-2 Revenue -->
+
+                <th class="headerStyling pl-2 line-height:20px">
+                    <div class="text-head"
+                        style="width: 80%; text-align: center; margin-left: 10%; border-bottom: 1px solid #80808059;">
+                        Rev. (Monthly)
+                    </div>
+
+                    <!-- Actual -->
+                    <div class="row row-no-margin" style="text-align: right">
+                        <div class="col-md-4" title="Actual: Revenue Till Date" [ttSortableColumn]="'actualRTD'">
+                            <span class="text-head targetAndActual">(A)</span>
+                            <span class="text-subhead">T.D</span>
+                            <p-treeTableSortIcon [field]="'actualRTD'" ariaLabel="Activate to sort"
+                                ariaLabelDesc="Activate to sort in descending order"
+                                ariaLabelAsc="Activate to sort in ascending order">
+                            </p-treeTableSortIcon>
+                        </div>
+                        <div class="col-md-4" title="Actual: Last Month's Revenue" [ttSortableColumn]="'actualR1'">
+                            <span class="text-subhead">M-1</span>
+                            <p-treeTableSortIcon [field]="'actualR1'" ariaLabel="Activate to sort"
+                                ariaLabelDesc="Activate to sort in descending order"
+                                ariaLabelAsc="Activate to sort in ascending order">
+                            </p-treeTableSortIcon>
+                        </div>
+                        <div class="col-md-4" title="Actual: Second Last Month's Revenue"
+                            [ttSortableColumn]="'actualR2'">
+                            <span class="text-subhead">M-2</span>
+                            <p-treeTableSortIcon [field]="'actualR2'" ariaLabel="Activate to sort"
+                                ariaLabelDesc="Activate to sort in descending order"
+                                ariaLabelAsc="Activate to sort in ascending order">
+                            </p-treeTableSortIcon>
+                        </div>
+                    </div>
+                    <!-- Target -->
+                    <div class="row row-no-margin" style="text-align: right">
+                        <div class="col-md-4" title="Target: Current Revenue" [ttSortableColumn]="'targetRevenueMTD'">
+                            <span class="text-head targetAndActual">(T)</span>
+                            <span class="text-subhead">M</span>
+                            <p-treeTableSortIcon [field]="'targetRevenueMTD'" ariaLabel="Activate to sort"
+                                ariaLabelDesc="Activate to sort in descending order"
+                                ariaLabelAsc="Activate to sort in ascending order">
+                            </p-treeTableSortIcon>
+                        </div>
+                        <div class="col-md-4" title="Target: Last Month's Revenue"
+                            [ttSortableColumn]="'targetRevenueM1'">
+                            <span class="text-subhead">M-1</span>
+                            <p-treeTableSortIcon [field]="'targetRevenueM1'" ariaLabel="Activate to sort"
+                                ariaLabelDesc="Activate to sort in descending order"
+                                ariaLabelAsc="Activate to sort in ascending order">
+                            </p-treeTableSortIcon>
+                        </div>
+                        <div class="col-md-4" title="Target: Second Last Month's Revenue"
+                            [ttSortableColumn]="'targetRevenueM2'">
+                            <span class="text-subhead">M-2</span>
+                            <p-treeTableSortIcon [field]="'targetRevenueM2'" ariaLabel="Activate to sort"
+                                ariaLabelDesc="Activate to sort in descending order"
+                                ariaLabelAsc="Activate to sort in ascending order">
+                            </p-treeTableSortIcon>
+                        </div>
+                    </div>
+                </th>
+
+                <!-- Annual Quarterly Revenue -->
+                <th class="headerStyling pl-2 line-height:20px">
+                    <div class="text-head"
+                        style="width: 80%; text-align: center; margin-left: 10%; border-bottom: 1px solid #80808059;">
+                        Rev. (Annual & Qtly)
+                    </div>
+
+                    <!-- Actual -->
+                    <div class="row row-no-margin" style="text-align: right">
+                        <div class="col-md-4" title="Actual: Annual Revenue, Till Date"
+                            [ttSortableColumn]="'actualAnnualRevenue'">
+                            <span class="text-subhead">T.D</span>
+                            <p-treeTableSortIcon [field]="'actualAnnualRevenue'" ariaLabel="Activate to sort"
+                                ariaLabelDesc="Activate to sort in descending order"
+                                ariaLabelAsc="Activate to sort in ascending order">
+                            </p-treeTableSortIcon>
+                        </div>
+                        <div class="col-md-4" title="Actual: Last Quarter's Revenue"
+                            [ttSortableColumn]="'actualRevenueQ1'">
+                            <span class="text-subhead">Q-1</span>
+                            <p-treeTableSortIcon [field]="'actualRevenueQ1'" ariaLabel="Activate to sort"
+                                ariaLabelDesc="Activate to sort in descending order"
+                                ariaLabelAsc="Activate to sort in ascending order">
+                            </p-treeTableSortIcon>
+                        </div>
+                        <div class="col-md-4" title="Actual: Second Last Quarter's Revenue"
+                            [ttSortableColumn]="'actualRevenueQ2'">
+                            <span class="text-subhead">Q-2</span>
+                            <p-treeTableSortIcon [field]="'actualRevenueQ2'" ariaLabel="Activate to sort"
+                                ariaLabelDesc="Activate to sort in descending order"
+                                ariaLabelAsc="Activate to sort in ascending order">
+                            </p-treeTableSortIcon>
+                        </div>
+                    </div>
+                    <!-- Target -->
+                    <div class="row row-no-margin" style="text-align: right">
+                        <div class="col-md-4" title="Target: Annual Revenue"
+                            [ttSortableColumn]="'targetAnnualExpectedRevenue'">
+                            <span class="text-subhead">Ann.</span>
+                            <p-treeTableSortIcon [field]="'targetAnnualExpectedRevenue'" ariaLabel="Activate to sort"
+                                ariaLabelDesc="Activate to sort in descending order"
+                                ariaLabelAsc="Activate to sort in ascending order">
+                            </p-treeTableSortIcon>
+                        </div>
+                        <div class="col-md-4" title="Target: Last Quarter's Revenue"
+                            [ttSortableColumn]="'targetRevenueQ1'">
+                            <span class="text-subhead">Q-1</span>
+                            <p-treeTableSortIcon [field]="'targetRevenueQ1'" ariaLabel="Activate to sort"
+                                ariaLabelDesc="Activate to sort in descending order"
+                                ariaLabelAsc="Activate to sort in ascending order">
+                            </p-treeTableSortIcon>
+                        </div>
+                        <div class="col-md-4" title="Target: Second Last Quarter's Revenue"
+                            [ttSortableColumn]="'targetRevenueQ2'">
+                            <span class="text-subhead">Q-2</span>
+                            <p-treeTableSortIcon [field]="'targetRevenueQ2'" ariaLabel="Activate to sort"
+                                ariaLabelDesc="Activate to sort in descending order"
+                                ariaLabelAsc="Activate to sort in ascending order">
+                            </p-treeTableSortIcon>
+                        </div>
+                    </div>
+                </th>
+
+                <!-- Monthly - Current, M-1, M-2 Margin -->
+                <th class="headerStyling pl-2 line-height:20px">
+                    <div class="text-head"
+                        style="width: 80%; text-align: center; margin-left: 10%; border-bottom: 1px solid #80808059;">
+                        Margin (Monthly)
+                    </div>
+
+                    <!-- Actual -->
+                    <div class="row row-no-margin" style="text-align: right">
+                        <div class="col-md-4" title="Actual: Margin Till Date" [ttSortableColumn]="'actualMTD'">
+                            <span class="text-subhead">T.D</span>
+                            <p-treeTableSortIcon [field]="'actualMTD'" ariaLabel="Activate to sort"
+                                ariaLabelDesc="Activate to sort in descending order"
+                                ariaLabelAsc="Activate to sort in ascending order">
+                            </p-treeTableSortIcon>
+                        </div>
+                        <div class="col-md-4" title="Actual: Last Month's Margin" [ttSortableColumn]="'actualM1'">
+                            <span class="text-subhead">M-1</span>
+                            <p-treeTableSortIcon [field]="'actualM1'" ariaLabel="Activate to sort"
+                                ariaLabelDesc="Activate to sort in descending order"
+                                ariaLabelAsc="Activate to sort in ascending order">
+                            </p-treeTableSortIcon>
+                        </div>
+                        <div class="col-md-4" title="Actual: Second Last Month's Margin"
+                            [ttSortableColumn]="'actualM2'">
+                            <span class="text-subhead">M-2</span>
+                            <p-treeTableSortIcon [field]="'actualM2'" ariaLabel="Activate to sort"
+                                ariaLabelDesc="Activate to sort in descending order"
+                                ariaLabelAsc="Activate to sort in ascending order">
+                            </p-treeTableSortIcon>
+                        </div>
+                    </div>
+                    <!-- Target -->
+                    <div class="row row-no-margin" style="text-align: right">
+                        <div class="col-md-4" title="Target: Current Margin" [ttSortableColumn]="'targetMarginMTD'">
+                            <span class="text-subhead">M</span>
+                            <p-treeTableSortIcon [field]="'targetMarginMTD'" ariaLabel="Activate to sort"
+                                ariaLabelDesc="Activate to sort in descending order"
+                                ariaLabelAsc="Activate to sort in ascending order">
+                            </p-treeTableSortIcon>
+                        </div>
+                        <div class="col-md-4" title="Target: Last Month's Margin" [ttSortableColumn]="'targetMarginM1'">
+                            <span class="text-subhead">M-1</span>
+                            <p-treeTableSortIcon [field]="'targetMarginM1'" ariaLabel="Activate to sort"
+                                ariaLabelDesc="Activate to sort in descending order"
+                                ariaLabelAsc="Activate to sort in ascending order">
+                            </p-treeTableSortIcon>
+                        </div>
+                        <div class="col-md-4" title="Target: Second Last Month's Margin"
+                            [ttSortableColumn]="'targetMarginM2'">
+                            <span class="text-subhead">M-2</span>
+                            <p-treeTableSortIcon [field]="'targetMarginM2'" ariaLabel="Activate to sort"
+                                ariaLabelDesc="Activate to sort in descending order"
+                                ariaLabelAsc="Activate to sort in ascending order">
+                            </p-treeTableSortIcon>
+                        </div>
+                    </div>
+                </th>
+
+                <!-- Total Outstanding, Billed, Due and OverDue -->
+                <th class="headerStyling  pl-2 line-height:20px" style="text-align: right">
+                    <div class="row row-no-margin">
+                        <div class="col-md-6" title="Total Outstanding" [ttSortableColumn]="'totalOutstanding'">
+                            <span class="text-head">Tot. Out.</span>
+                            <p-treeTableSortIcon [field]="'totalOutstanding'" ariaLabel="Activate to sort"
+                                ariaLabelDesc="Activate to sort in descending order"
+                                ariaLabelAsc="Activate to sort in ascending order">
+                            </p-treeTableSortIcon>
+                        </div>
+                        <div class="col-md-6" title="Billed" [ttSortableColumn]="'actualBilled'">
+                            <span class="text-subhead">Billed</span>
+                            <p-treeTableSortIcon [field]="'actualBilled'" ariaLabel="Activate to sort"
+                                ariaLabelDesc="Activate to sort in descending order"
+                                ariaLabelAsc="Activate to sort in ascending order">
+                            </p-treeTableSortIcon>
+                        </div>
+                    </div>
+                    <div class="row row-no-margin">
+                        <div class="col-md-6" title="Overdue" [ttSortableColumn]="'actualOverdue'">
+                            <span class="text-head">O.D</span>
+                            <p-treeTableSortIcon [field]="'actualOverdue'" ariaLabel="Activate to sort"
+                                ariaLabelDesc="Activate to sort in descending order"
+                                ariaLabelAsc="Activate to sort in ascending order">
+                            </p-treeTableSortIcon>
+                        </div>
+                        <div class="col-md-6" title="Due" [ttSortableColumn]="'actualDue'">
+                            <span class="text-subhead">Due</span>
+                            <p-treeTableSortIcon [field]="'actualDue'" ariaLabel="Activate to sort"
+                                ariaLabelDesc="Activate to sort in descending order"
+                                ariaLabelAsc="Activate to sort in ascending order">
+                            </p-treeTableSortIcon>
+                        </div>
+                    </div>
+                </th>
+
+                <!-- Collection and Cycle Time -->
+                <th class="headerStyling  pl-2 line-height:20px" style="text-align: right">
+                    <div title="Appropriated Collection Amount" [ttSortableColumn]="'actualCollection'">
+                        <span class="text-head" title="Appropriated Collection Amount">Rec. Coll.</span>
+                        <p-treeTableSortIcon [field]="'actualCollection'" ariaLabel="Activate to sort"
+                            ariaLabelDesc="Activate to sort in descending order"
+                            ariaLabelAsc="Activate to sort in ascending order">
+                        </p-treeTableSortIcon>
+                    </div>
+                    <!-- <div title="Cycle Time" [ttSortableColumn]="'cycleTime'">
+                        <span class="text-subhead">Cycle T</span>
+                        <p-treeTableSortIcon [field]="'cycleTime'" ariaLabel="Activate to sort"
+                            ariaLabelDesc="Activate to sort in descending order"
+                            ariaLabelAsc="Activate to sort in ascending order">
+                        </p-treeTableSortIcon>
+                    </div> -->
+                </th>
+
+                <!-- Status -->
+                <th class="headerStyling  pl-2 line-height:20px">
+                    <div title="Company Status">
+                        <span class="text-head">Status</span>
+                    </div>
+                </th>
+
+                <!-- Primary Contact: Name and Number -->
+                <th class="headerStyling  pl-2 line-height:20px" style="text-align: right">
+                    <div class="row row-no-margin">
+                        <div class="col-md-12" title="Primary Contact - Name">
+                            <span class="text-head">Name</span>
+                        </div>
+                    </div>
+                    <div class="row row-no-margin">
+                        <div class="col-md-12" title="Primary Contact - Number">
+                            <span class="text-subhead">Number</span>
+                        </div>
+                    </div>
+                </th>
+
+                <!-- Next Step: What and When -->
+                <th class="headerStyling  pl-2 line-height:20px" style="text-align: right">
+                    <div class="row row-no-margin">
+                        <div class="col-md-12" title="Next Step: What">
+                            <span class="text-head">Next Step</span>
+                        </div>
+                    </div>
+                    <div class="row row-no-margin">
+                        <div class="col-md-12" title="Next Step: When">
+                            <span class="text-subhead">When</span>
+                        </div>
+                    </div>
+                </th>
+            </tr>
+        </ng-template>
+
+        <!-- Data -->
+        <ng-template pTemplate="body" let-rowNode let-customer="rowData" let-columns="columns">
+            <tr class="colWidth">
+                <td style="text-align: left; border-right: 3px solid gray; padding-right: 3px !important;">
+                    <p-treeTableToggler [rowNode]="rowNode"></p-treeTableToggler>
+                    <span class="text-row row-no-margin" [title]="customer.rmAccountManager">
+                        {{customer.rmAccountManager}}
+                    </span>
+                    <span class="text-row row-no-margin" [title]="customer.salesManagerName">
+                        {{customer.salesManagerName}}
+                    </span>
+                    <span class="text-subrow" [title]="customer.companyName">
+                        {{customer.companyName}}
+                    </span>
+                </td>
+
+                <td class="headerStyling"
+                    style="text-align: right; border-right: 3px solid gray; padding-right: 3px !important;">
+                    <div class="row row-no-margin">
+                        <div class="col-md-4 hightlighted-cell" style="padding-right: 0px"><span class="text-row"
+                                [title]='customer.actualRTD'>
+                                ₹ {{(customer.actualRTD) | rsToLakh | number : '0.2-2'}}</span></div>
+                        <div class="col-md-4" style="padding-right: 0px"><span class="text-row"
+                                [title]='customer.actualR1| number : "0.2-2"'>
+                                ₹ {{(customer.actualR1) | rsToLakh | number : '0.2-2'}}</span></div>
+                        <div class="col-md-4" style="padding-right: 0px"><span class="text-row"
+                                [title]='customer.actualR2| number : "0.2-2"'>
+                                ₹ {{(customer.actualR2) | rsToLakh | number : '0.2-2'}} </span></div>
+                    </div>
+                    <div class="row row-no-margin">
+                        <div class="col-md-4 hightlighted-cell" style="padding-right: 0px"><span
+                                class="text-subrow row-no-margin" [title]='customer.targetRevenueMTD| number : "0.2-2"'>
+                                ₹ {{customer.targetRevenueMTD | rsToLakh | number : '0.2-2' }}</span></div>
+                        <div class="col-md-4" style="padding-right: 0px"><span class="text-subrow row-no-margin"
+                                [title]='customer.targetRevenueM1| number : "0.2-2"'>
+                                ₹ {{customer.targetRevenueM1 | rsToLakh | number : '0.2-2'}}</span></div>
+                        <div class="col-md-4" style="padding-right: 0px"><span class="text-subrow row-no-margin"
+                                [title]='customer.targetRevenueM2| number : "0.2-2"'>
+                                ₹ {{customer.targetRevenueM2 | rsToLakh | number : '0.2-2'}}</span></div>
+                    </div>
+
+                </td>
+
+                <td class="headerStyling"
+                    style="text-align: right; border-right: 3px solid gray; padding-right: 3px !important;">
+                    <div class="row row-no-margin">
+                        <div class="col-md-4 hightlighted-cell" style="padding-right: 0px"><span class="text-row"
+                                [title]='customer.actualAnnualRevenue| number : "0.2-2"'>
+                                ₹ {{(customer.actualAnnualRevenue ) | rsToLakh | number : '0.2-2'}} </span></div>
+                        <div class="col-md-4" style="padding-right: 0px"><span class="text-row"
+                                [title]='customer.actualRevenueQ1| number : "0.2-2"'>
+                                ₹ {{(customer.actualRevenueQ1 ) | rsToLakh | number : '0.2-2'}} </span></div>
+                        <div class="col-md-4" style="padding-right: 0px"><span class="text-row"
+                                [title]='customer.actualRevenueQ2| number : "0.2-2"'>
+                                ₹ {{(customer.actualRevenueQ2 ) | rsToLakh | number : '0.2-2' }} </span></div>
+                    </div>
+                    <div class="row row-no-margin">
+                        <div class="col-md-4 hightlighted-cell" style="padding-right: 0px"><span
+                                class="text-subrow row-no-margin"
+                                [title]='customer.targetAnnualExpectedRevenue| number : "0.2-2"'>
+                                ₹ {{customer.targetAnnualExpectedRevenue | rsToLakh |number : '0.2-2' }}</span></div>
+                        <div class="col-md-4" style="padding-right: 0px"><span class="text-subrow row-no-margin"
+                                [title]='customer.targetRevenueQ1| number : "0.2-2"'>
+                                ₹ {{customer.targetRevenueQ1 | rsToLakh |number : '0.2-2'}}</span></div>
+                        <div class="col-md-4" style="padding-right: 0px"><span class="text-subrow row-no-margin"
+                                [title]='customer.targetRevenueQ2| number : "0.2-2"'>
+                                ₹ {{customer.targetRevenueQ2 | rsToLakh |number : '0.2-2'}}</span></div>
+                    </div>
+
+                </td>
+
+                <td class="headerStyling"
+                    style="text-align: right; border-right: 3px solid gray; padding-right: 3px !important;">
+                    <div class="row row-no-margin">
+                        <div class="col-md-4 hightlighted-cell" style="padding-right: 0px"><span class="text-row"
+                                [title]='customer.actualMTD| number : "0.2-2"'>
+                                ₹ {{(customer.actualMTD ) | rsToLakh | number : '0.2-2'}} </span></div>
+                        <div class="col-md-4" style="padding-right: 0px"><span class="text-row"
+                                [title]='customer.actualM1| number : "0.2-2"'>
+                                ₹ {{(customer.actualM1) | rsToLakh | number : '0.2-2'}} </span></div>
+                        <div class="col-md-4" style="padding-right: 0px"><span class="text-row"
+                                [title]='customer.actualM2| number : "0.2-2"'>
+                                ₹ {{(customer.actualM2) | rsToLakh | number : '0.2-2'}} </span></div>
+                    </div>
+                    <div class="row row-no-margin">
+                        <div class="col-md-4 hightlighted-cell" style="padding-right: 0px"><span
+                                class="text-subrow row-no-margin" [title]='customer.targetMarginMTD| number : "0.2-2"'>
+                                ₹ {{customer.targetMarginMTD | rsToLakh | number : '0.2-2' }}</span></div>
+                        <div class="col-md-4" style="padding-right: 0px"><span class="text-subrow row-no-margin"
+                                [title]='customer.targetMarginM1| number : "0.2-2"'>
+                                ₹ {{customer.targetMarginM1 | rsToLakh | number : '0.2-2'}}</span></div>
+                        <div class="col-md-4" style="padding-right: 0px"><span class="text-subrow row-no-margin"
+                                [title]='customer.targetMarginM2| number : "0.2-2"'>
+                                ₹ {{customer.targetMarginM2 | rsToLakh | number : '0.2-2'}}</span></div>
+                    </div>
+
+                </td>
+
+                <td class="headerStyling"
+                    style="text-align: right; border-right: 3px solid gray; padding-right: 3px !important;">
+                    <div class="row row-no-margin">
+                        <div class="col-md-6 hightlighted-cell">
+                            <span class="text-row row-no-margin" [title]='customer.totalOutstanding| number : "0.2-2"'>
+                                ₹ {{customer.totalOutstanding | rsToLakh | number : '0.2-2'}}
+                            </span>
+                        </div>
+                        <div class="col-md-6">
+                            <span class="text-row" [title]='customer.actualBilled| number : "0.2-2"'>
+                                ₹ {{customer.actualBilled | rsToLakh | number : '0.2-2'}}
+                            </span>
+                        </div>
+                    </div>
+                    <div class="row row-no-margin">
+                        <div class="col-md-6 hightlighted-cell">
+                            <span class="text-subrow row-no-margin" [title]='customer.actualOverdue| number : "0.2-2"'>
+                                ₹ {{customer.actualOverdue | rsToLakh | number : '0.2-2'}}
+                            </span>
+                        </div>
+                        <div class="col-md-6">
+                            <span class="text-subrow" [title]='customer.actualDue| number : "0.2-2"'>
+                                ₹ {{customer.actualDue | rsToLakh | number : '0.2-2'}}
+                            </span>
+                        </div>
+                    </div>
+                </td>
+                <td class="headerStyling"
+                    style="text-align: right; border-right: 3px solid gray; padding-right: 3px !important;">
+                    <div [title]="customer.actualCollection| number : '0.2-2'" class="text-row row-no-margin">₹
+                        {{customer.actualCollection | rsToLakh | number : '0.2-2'}}</div>
+                    <!-- <div [title]="customer.cycleTime| number : '1.0-0'" class="text-subrow">
+                        {{customer.cycleTime| number : '1.0-0'}}</div> -->
+                </td>
+                <td class="text-row row-no-margin" [class]="customer.companyStatusClass"
+                    [title]="customer.companyStatus | titlecase">
+                    <span
+                        style="margin-left: auto; margin-right: auto; display: table;">{{ customer.companyStatus | slice:0:1 | titlecase }}</span>
+                </td>
+
+                <td class="headerStyling">
+                    <span class="text-row row-no-margin calc-header-align" style="float: left"
+                        [title]="customer.primaryContactName">
+                        {{customer.primaryContactName}}</span>
+                    <br>
+                    <span class="text-subrow" style="float: right"
+                        [title]="customer.primaryContactNumber">{{customer.primaryContactNumber}}</span>
+                </td>
+
+                <td class="headerStyling">
+                    <div class="row row-no-margin" style="float: left"
+                        *ngIf="(customer?.postMeetingRemarks && customer.nextActionItemDate); else noNextStep">
+                        <div class="col-md-12">
+                            <span class="text-row row-no-margin calc-header-align"
+                                [title]='customer?.postMeetingRemarks'>
+                                {{customer?.postMeetingRemarks | truncateText: 10 }}
+                            </span>`
+                        </div>
+                    </div>
+                    <div class="row row-no-margin" style="float: right"
+                        *ngIf="(customer?.postMeetingRemarks && customer.nextActionItemDate); else noNextStep">
+                        <div class="col-md-12">
+                            <span *ngIf="customer.nextActionItemDate !== null" class="text-subrow"
+                                [title]='customer.byWhen| date:"dd-MM-yyyy"'>
+                                {{customer.byWhen | date:'dd-MM-yyyy' }}
+                            </span>
+                        </div>
+                    </div>
+                    <div class="row row-no-margin">
+                        <ng-template #noNextStep>
+                            <span class="text-subrow"></span>
+                        </ng-template>
+                    </div>
+                </td>
+            </tr>
+        </ng-template>
+
+        <!-- No Data -->
+        <ng-template pTemplate="summary" *ngIf="totalRow === 0 && !loading">
+            No Data Found
+        </ng-template>
+    </p-treeTable>
+</div>

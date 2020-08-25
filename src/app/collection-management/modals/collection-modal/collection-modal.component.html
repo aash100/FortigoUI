@@ -1,0 +1,73 @@
+<!--
+ Created on Tue Aug 20 2019
+ Created by - 1214: Sachin Sehgal
+
+ Copyright (c) 2019 Fortigo Network Logistics Pvt Ltd (4TiGO)
+-->
+<!-- Loader -->
+<mat-spinner *ngIf="showModalLoader" class="spinner"></mat-spinner>
+<!-- set header for modal -->
+<app-fortigo-modal-header>{{title}}</app-fortigo-modal-header>
+<!-- set tabs -->
+<app-fortigo-tabs [selectTab]=tabSelectedIndex [tabList]=tabList (tabClicked)="filterTabClicked($event)"
+  [hideTab]="hideTab" [isForm]=true #fortigoTab>
+</app-fortigo-tabs>
+<div *ngIf="tabSelectedIndex === 0">
+  <!-- form -->
+  <mat-dialog-content class="mat-typography">
+    <app-fortigo-form [isReadOnly]=isCollectionReadOnly [submitClearButtonEnabled]=false [isReadOnly]=false
+      (selectChanges)="onCompanyChange($event)" [updateChanges]="updateChanges" [(fields)]=encashmentFields
+      (inputChanges)="onDateChange($event)" [mode]="'auto'" [groups]="groups" [checkValidationBeforeSubmit]=true
+      #encashmentForm>
+    </app-fortigo-form>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <div class="row button-cell">
+      <div *ngFor="let button of buttons" style="padding-right: 15px;">
+        <button type="button" mat-raised-button (click)="onSubmit($event,button.name)"
+          [disabled]="button.isDisabled || isSubmitReceiptDisabled" appFortigoSubmitButton>
+          <mat-icon>{{button.icon}}</mat-icon> {{button.name}}
+        </button>
+      </div>
+    </div>
+  </mat-dialog-actions>
+
+</div>
+<!-- works whenever tab index 1 is selected -->
+<div *ngIf="tabSelectedIndex===1">
+  <mat-dialog-content>
+    <!-- Appropriated and total ammount fields in groups -->
+    <div class="col-md-12">
+      <app-fortigo-form [isReadOnly]=isCollectionReadOnly [(fields)]="appropriationFields" [groups]=appropriationGroup
+        [submitClearButtonEnabled]="false" [mode]="'auto'" #apprTotal>
+      </app-fortigo-form>
+    </div>
+    <div class="col-md-12">
+      <app-fortigo-form [isReadOnly]=true [(fields)]="totalAppropriationFields" [submitClearButtonEnabled]="false"
+        [groups]=totalAppropriationGroup [mode]="'auto'" #apprTotal>
+      </app-fortigo-form>
+    </div>
+    <div class="col-md-12 pt-2">
+      <app-fortigo-form [isReadOnly]=false [(fields)]="searchingFields" [submitClearButtonEnabled]="false"
+        (formSubmit)="onEnterSearch($event)" [mode]="'auto'" #apprTotal>
+      </app-fortigo-form>
+    </div>
+    <div class="col-md-12">
+      <app-fortigo-grid [(columns)]=columnsData [(rows)]=rowsData
+        [(gridConfiguration)]="appropriationGridConfigurationData"
+        (actionExtraButtonSelectedIndex)="onActionItemClick($event)" (editRows)="editRows($event)"
+        (allRowExpandCollapseState)="onAllRowExpandCollapseStateClick($event)" (cellClick)="onCellClick($event)"
+        (expandAllClick)="onExpandAll()" [extraRows]=extraRows>
+      </app-fortigo-grid>
+    </div>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <div class="row" id="button-cell">
+      <app-fortigo-button-group [clear]=true [submit]=true [isSubmitDisabled]=isSubmitDisabled
+        (buttonClicked)="onFormSubmit($event)">
+      </app-fortigo-button-group>
+    </div>
+  </mat-dialog-actions>
+
+</div>

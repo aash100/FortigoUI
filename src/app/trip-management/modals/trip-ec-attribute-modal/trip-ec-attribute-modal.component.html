@@ -1,0 +1,15 @@
+<!--
+ Created on Fri Oct 04 2019
+ Created by - 1149: Aashish Kumar
+
+ Copyright (c) 2019 Fortigo Network Logistics Pvt Ltd (4TiGO)
+-->
+<div style="width: 400px;">
+    <app-fortigo-modal-header>{{title}}</app-fortigo-modal-header>
+    <mat-spinner *ngIf="isLoadingData" class="spinner">
+    </mat-spinner>
+    <app-fortigo-form [submitClearButtonEnabled]=false [fields]=fields>
+
+    </app-fortigo-form>
+
+</div>

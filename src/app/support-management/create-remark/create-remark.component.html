@@ -1,0 +1,10 @@
+<div class="material-modal-header">
+  <h1 mat-dialog-title class="ml-1">NEW REMARK</h1>
+  <button class="material-modal-close-button" mat-button mat-dialog-close>
+    <mat-icon>close</mat-icon>
+  </button>
+</div>
+
+<app-fortigo-form [fields]="fields" [mode]="'inline'" [submitClearButtonEnabled]="true"
+  (formSubmit)="saveRemark($event)" #issueForm>
+</app-fortigo-form>

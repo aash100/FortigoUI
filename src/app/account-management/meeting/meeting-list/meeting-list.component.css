@@ -1,0 +1,90 @@
+.align-right {
+    margin-left: 90%;
+}
+
+* {
+    color: #4d4d4d;
+}
+
+.iconField {
+    position: relative;
+    padding-left: 50px;
+}
+
+.iconField:before {
+    font-family: "FontAwesome";
+    content: "\f002";
+    color: gray;
+    display: inline-block;
+    position: absolute;
+    font-size: 28px;
+    z-index: 1;
+    top: -5px;
+    left: 55px;
+    margin: 0;
+}
+
+.tableHeader {
+    text-align: center;
+    font-size: 15px;
+    border-radius: 3px;
+}
+
+.overPane {
+    font-size: 13px;
+    cursor: pointer;
+    width: auto;
+}
+
+.overPane>li {
+    margin-top: 5px;
+    margin-bottom: 5px;
+    list-style: none;
+    transition: transform .2s;
+}
+
+.overPane>li :hover {
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transform: scale(1.5);
+}
+
+.overPane>li>a {
+    text-decoration: none;
+}
+
+.icons>a :hover {
+    color: #0A50A1;
+}
+
+.button>a,
+.button>a>i {
+    background: #E66006;
+    color: white;
+    cursor: pointer;
+}
+
+.button :hover {
+    background: rgb(252, 104, 5);
+}
+
+tr>td {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.colWidth>th[rowspan],
+.colWidth>td {
+    width: 120px;
+    /* border: 2px solid red; */
+}
+
+.colWidth>th[colspan="2"] {
+    width: 240px;
+}
+
+.colWidth>th[colspan="3"] {
+    width: 360px;
+}

@@ -1,0 +1,15 @@
+.header {
+    height: 60px;
+    padding: 10px;
+    background: #ebeced;
+    color: #666;
+}
+
+.backButton {
+    cursor: pointer;
+}
+
+span.pi-times:before {
+    border: 2px solid red;
+    font-size: 40px;
+}

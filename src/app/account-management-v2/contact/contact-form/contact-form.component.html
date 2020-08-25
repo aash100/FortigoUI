@@ -1,0 +1,14 @@
+<!--
+ Created on Tue Aug 13 2019
+ Created by - 1214: Sachin Sehgal
+
+ Copyright (c) 2019 Fortigo Network Logistics Pvt Ltd (4TiGO)
+-->
+
+<!-- Header -->
+<app-fortigo-modal-header>{{modalHeader}}</app-fortigo-modal-header>
+
+<!-- Main form -->
+<app-fortigo-form [fields]="fields" [checkValidationBeforeSubmit]=true [isReadOnly]=isReadOnly [data]=contact
+  [tabList]=contactTabList [submitClearButtonEnabled]=isSubmitButtonEnabled (formSubmit)="onSubmitContactForm($event)" #contactForm>
+</app-fortigo-form>

@@ -1,0 +1,65 @@
+<!-- <p style="background: url('/assets/images/backgrounds/truck.jpg')">
+  login works!
+</p> -->
+<mat-card class="my-card">
+  <mat-card-header>
+    <mat-card-title> <img src="../../../assets/4tigo.gif" alt="Loading please wait..." width="250px" height="100px"
+        style="margin-top:12%;margin-left:12%;margin-right:20%;margin-bottom: 20%">
+    </mat-card-title>
+
+    <mat-card-subtitle>
+      LOGIN TO YOUR ACCOUNT</mat-card-subtitle>
+  </mat-card-header>
+
+  <mat-card-content>
+    <form>
+      <table>
+        <tr>
+          <td>
+            <mat-form-field class="input-full-width" appearance="outline">
+              <input matInput placeholder="Email" type="email" name="email" [(ngModel)]="email" required>
+            </mat-form-field>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <mat-form-field class="input-full-width" appearance="outline">
+              <input matInput placeholder="Password" type="password" name="password" [(ngModel)]="password" required>
+            </mat-form-field>
+          </td>
+        </tr>
+      </table>
+    </form>
+    <div>
+      
+    <input type="radio" name="remember me" value="remember me"> Remember me
+ 
+    <a (click)="getPassword()"style="cursor:  pointer; text-decoration: underline; padding-left:175px;
+    "> Forgot Password?</a>
+    
+    </div>
+    <mat-card-footer>
+      <button mat-raised-button (click)="login()" style="background-color: lightgrey;">
+        LOGIN
+      </button>
+      
+      <h6 >OR</h6>
+      
+        <div style>
+      <button mat-raised-button onclick="window.location.href='https://mail.google.com'" style="background-color: red; ">
+          Log in with Google
+        </button>
+        </div>
+    <div style="padding-top: 10px;">
+        <button mat-raised-button (click)="fblogin()" style="background-color: blue; ">
+            Log in with Facebook
+          </button> 
+        </div>
+      
+      <p style="padding-top: 20px; padding-left:30px;">Don't have an account?</p>
+      <div (click)="createAccount()" style="cursor: pointer; text-decoration: underline; padding-left:40px;
+      " > Create an account</div>
+    </mat-card-footer>
+
+  </mat-card-content>
+</mat-card>

@@ -1,0 +1,40 @@
+.align-right {
+    margin-left: 90%;
+}
+
+* {
+    color: #4d4d4d;
+}
+
+.button :hover {
+    background: rgb(252, 104, 5);
+}
+
+.iconField {
+    position: relative;
+    padding-left: 50px;
+}
+
+.iconField:before {
+    font-family: "FontAwesome";
+    content: "\f002";
+    color: gray;
+    display: inline-block;
+    position: absolute;
+    font-size: 28px;
+    z-index: 1;
+    top: -5px;
+    left: 55px;
+    margin: 0;
+}
+
+.icons>a :hover {
+    color: #0A50A1;
+}
+
+.button>a,
+.button>a>i {
+    background: #E66006;
+    color: white;
+    cursor: pointer;
+}

@@ -1,0 +1,381 @@
+<!--
+ Created on Tue Jan 22 2019
+ Created by - 1157: Mayur Ranjan
+
+ Copyright (c) 2019 Fortigo Network Logistics Pvt Ltd (4TiGO)
+-->
+
+<div class="container-fluid mb-3" [ngStyle]="{height: calcTableHeight}">
+
+  <!-- Fortigo Filter Tab -->
+  <app-fortigo-tabs *ngIf="gridConfiguration?.isFilterTabEnabled" [tabList]="gridConfiguration?.filterTabList"
+    (tabClicked)="filterTabClicked($event)">
+  </app-fortigo-tabs>
+
+  <!-- Filter -->
+  <mat-form-field style="padding-top: 20px" *ngIf="gridConfiguration?.isFilterEnabled">
+    <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+  </mat-form-field>
+
+  <mat-spinner *ngIf="isLoadingData" class="spinner"></mat-spinner>
+
+  <div class="table-container mat-elevation-z2" style="overflow-x: hidden;">
+    <!-- Table -->
+    <table #table mat-table multiTemplateDataRows [dataSource]="dataSource" matSort
+      [matSortActive]="gridConfiguration?.sortColumnName" [matSortDirection]="gridConfiguration?.sortOrder">
+
+      <!-- Checkbox Column -->
+      <ng-container *ngIf="gridConfiguration?.isCheckbox1Enabled" matColumnDef="select">
+        <th class="container"
+          [class.checkbox-first]="gridConfiguration?.isCheckbox1AtStart || gridConfiguration?.checkbox1Postion === 0"
+          [class.checkbox-last]="gridConfiguration?.isCheckbox1AtEnd || gridConfiguration?.checkbox1Postion === displayedColumns.length-1"
+          mat-header-cell *matHeaderCellDef>
+          <mat-checkbox class="vertical-center" color="primary" (change)="$event ? masterToggle() : null"
+            [checked]="selection.hasValue() && isAllSelected()"
+            [indeterminate]="selection.hasValue() && !isAllSelected()">
+          </mat-checkbox>
+        </th>
+        <td class="container"
+          [class.checkbox-first]="gridConfiguration?.isCheckbox1AtStart || gridConfiguration?.checkbox1Postion === 0"
+          [class.checkbox-last]="gridConfiguration?.isCheckbox1AtEnd || gridConfiguration?.checkbox1Postion === displayedColumns.length-1"
+          mat-cell *matCellDef="let row; let rowIndex = index">
+          <mat-checkbox class="vertical-center" color="primary" (click)="$event.stopPropagation()"
+            (change)="$event ? selection.toggle(row) : null" [checked]="selection.isSelected(row)"
+            (change)="updateCheckedOptions(rowIndex, $event)">
+          </mat-checkbox>
+        </td>
+        <ng-container *ngIf="gridConfiguration?.isFooterEnabled">
+          <td mat-footer-cell *matFooterCellDef></td>
+        </ng-container>
+      </ng-container>
+
+      <!-- Radio Button Column -->
+      <ng-container *ngIf="gridConfiguration?.isRadioButtonEnabled" matColumnDef="radio">
+        <th class="container"
+          [class.checkbox-first]="gridConfiguration?.isRadioButtonAtStart || gridConfiguration?.radioButtonPostion === 0"
+          [class.checkbox-last]="gridConfiguration?.isRadioButtonAtEnd || gridConfiguration?.radioButtonPostion === displayedColumns.length-1"
+          mat-header-cell *matHeaderCellDef>
+        </th>
+        <td class="container"
+          [class.checkbox-first]="gridConfiguration?.isRadioButtonAtStart || gridConfiguration?.radioButtonPostion === 0"
+          [class.checkbox-last]="gridConfiguration?.isRadioButtonAtEnd || gridConfiguration?.radioButtonPostion === displayedColumns.length-1"
+          mat-cell *matCellDef="let row; let rowIndex = index">
+          <mat-radio-group [(ngModel)]="radioSelectedRowIndex" (change)="onRadioButtonSelect($event)">
+            <mat-radio-button [value]="rowIndex"></mat-radio-button>
+          </mat-radio-group>
+        </td>
+        <ng-container *ngIf="gridConfiguration?.isFooterEnabled">
+          <td mat-footer-cell *matFooterCellDef></td>
+        </ng-container>
+      </ng-container>
+
+      <!-- Action Buttons Column -->
+      <ng-container *ngIf="gridConfiguration?.isActionButtonEnabled" matColumnDef="actionButtons">
+        <th class="text-head" mat-header-cell *matHeaderCellDef matTooltip="Action Items">
+          Action Items
+        </th>
+        <td class="align-center clickable-cell" mat-cell *matCellDef="let row; let rowIndex = index">
+          <app-fortigo-action-items *ngIf="gridConfiguration?.isActionExtraButtonEnabled"
+            [actionMenu]=gridConfiguration?.actionExtraButtonLabelList
+            (sideMenuAction)="actionExtraButtonClicked($event,row,rowIndex)">
+          </app-fortigo-action-items>
+          <ng-container *ngIf="gridConfiguration?.isActionIconEnabled">
+            <button [matTooltip]="eachIcon.toolTipText"
+              *ngFor="let eachIcon of gridConfiguration?.actionIconList, let iconIndex = index"
+              (click)="actionExtraButtonClicked(iconIndex,row,rowIndex)" type="button" aria-label="Action Buttons"
+              mat-icon-button>
+              <mat-icon>{{ eachIcon.iconName }}</mat-icon>
+            </button>
+          </ng-container>
+        </td>
+        <ng-container *ngIf="gridConfiguration?.isFooterEnabled">
+          <td mat-footer-cell *matFooterCellDef></td>
+        </ng-container>
+      </ng-container>
+
+      <!-- Rows -->
+      <ng-container *ngFor="let column of columns; index as i; last as isLast" [matColumnDef]="column.columnDef">
+        <!-- Header Row -->
+        <th  *matHeaderCellDef [class.hide]="!(i === 0 || columns[i]['innerCells'] === 1)" mat-header-cell
+          style="text-align: right; background: #ebedf0 !important;">
+          <div class="text-head" [class.align-right]="columns[i].dataType === 'number'" [ngClass]="columns[i].cssClass"
+            *ngIf="columns[i]['innerCells'] === 1" [mat-sort-header]="columns[i]['columnDef']"
+            [disabled]=!gridConfiguration?.isSortingEnabled [matTooltip]="columns[i].title">
+            {{ columns[i].headerName }}
+          </div>
+          <div class="text-subhead" [class.align-right]="columns[i+1].dataType === 'number'"
+            [ngClass]="columns[i+1].cssClass" *ngIf="i+1 < columns.length && columns[i+1]['innerCells'] === 2"
+            [mat-sort-header]="columns[i+1]['columnDef']" [disabled]=!gridConfiguration?.isSortingEnabled
+            [matTooltip]="columns[i+1].title">
+            {{ columns[i+1].headerName }}
+          </div>
+          <div class="text-subhead" [class.align-right]="columns[i+2].dataType === 'number'"
+            [ngClass]="columns[i+2].cssClass" *ngIf="i+2 < columns.length && columns[i+2]['innerCells'] === 3"
+            [mat-sort-header]="columns[i+2]['columnDef']" [disabled]=!gridConfiguration?.isSortingEnabled
+            [matTooltip]="columns[i+2].title">
+            {{ columns[i+2].headerName }}
+          </div>
+          <div class="text-subhead" [class.align-right]="columns[i+3].dataType === 'number'"
+            [ngClass]="columns[i+3].cssClass" *ngIf="i+3 < columns.length && columns[i+3]['innerCells'] === 4"
+            [mat-sort-header]="columns[i+3]['columnDef']" [disabled]=!gridConfiguration?.isSortingEnabled
+            [matTooltip]="columns[i+3].title">
+            {{ columns[i+3].headerName }}
+          </div>
+          <div class="text-subhead" [class.align-right]="columns[i+4].dataType === 'number'"
+            [ngClass]="columns[i+4].cssClass" *ngIf="i+4 < columns.length && columns[i+4]['innerCells'] === 5"
+            [mat-sort-header]="columns[i+4]['columnDef']" [disabled]=!gridConfiguration?.isSortingEnabled
+            [matTooltip]="columns[i+4].title">
+            {{ columns[i+4].headerName }}
+          </div>
+        </th>
+
+        <!-- Row -->
+        <ng-container *matCellDef="let row; let rowIndex = index">
+          <td class="fortigo-cell" *ngIf="i === 0 || columns[i]['innerCells'] === 1" mat-cell>
+            <div class="text-row" [matTooltip]="columns[i].cellToolTipText(row)" [ngClass]="columns[i].cssClass"
+              *ngIf="columns[i]['innerCells'] === 1">
+              <button (click)="onRowIconClick(row, columns[i].columnDef, columns[i].action, rowIndex)"
+                *ngIf="columns[i].isExpandableRow && !row[columns[i].columnDef + '_isExtraRow']" type="button"
+                aria-label="Row Expansion" mat-icon-button>
+                <mat-icon
+                  [ngClass]="{'expand-row': columns[i].cellIcon(row) === 'add', 'collapse-row': columns[i].cellIcon(row) === 'remove'}"
+                  aria-label="Row Expansion Icon">
+                  {{ columns[i].cellIcon(row) }}
+                </mat-icon>
+              </button>
+              <span class="clickable-cell" *ngIf="columns[i].action==='click'"
+                (click)="setSelectedColumnData(row, columns[i].columnDef, columns[i].action, rowIndex)">
+                {{ columns[i].cell(row) }}
+              </span>
+              <span class="clickable-cell" *ngIf="columns[i].action==='view'"
+                (click)="setSelectedColumnData(row, columns[i].columnDef, columns[i].action, rowIndex)">
+                <mat-icon>note</mat-icon>
+              </span>
+              <span
+                [ngClass]="{'active-text' : columns[i].cell(row) === 'A', 'prospecting-text' : columns[i].cell(row) === 'P', 'suspended-text' : columns[i].cell(row) === 'S' && columns[i].cellToolTipText(row)!=='Sent For Validation', 'others-text' : (columns[i].cell(row) === 'S' && columns[i].cellToolTipText(row)==='Sent For Validation') || columns[i].cell(row) === 'V', 'eligible-text' : columns[i].cell(row) === 'E'} "
+                *ngIf="columns[i].action!=='click' && columns[i].action!=='view'">
+                {{ columns[i].cell(row) }}
+              </span>
+            </div>
+            <div class="text-subrow" [matTooltip]="columns[i+1].cellToolTipText(row)" [ngClass]="columns[i+1].cssClass"
+              *ngIf="i+1 < columns.length && columns[i+1]['innerCells'] === 2">
+              <span class="clickable-cell" *ngIf="columns[i+1].action==='click'"
+                (click)="setSelectedColumnData(row, columns[i+1].columnDef, columns[i+1].action, rowIndex)">
+                {{ columns[i+1].cell(row) }}
+              </span>
+              <span class="clickable-cell" *ngIf="columns[i+1].action==='view'"
+                (click)="setSelectedColumnData(row, columns[i+1].columnDef, columns[i+1].action, rowIndex)">
+                <button type="button" mat-raised-button> View </button>
+              </span>
+              <span *ngIf="columns[i+1].action!=='click' && columns[i+1].action!=='view'">
+                {{ columns[i+1].cell(row) }}
+              </span>
+            </div>
+            <div class="text-subrow" [matTooltip]="columns[i+2].cellToolTipText(row)" [ngClass]="columns[i+2].cssClass"
+              *ngIf="i+2 < columns.length && columns[i+2]['innerCells'] === 3">
+              {{ columns[i+2].cell(row) }}
+            </div>
+            <div class="text-subrow" [matTooltip]="columns[i+3].cellToolTipText(row)" [ngClass]="columns[i+3].cssClass"
+              *ngIf="i+3 < columns.length && columns[i+3]['innerCells'] === 4">
+              {{ columns[i+3].cell(row) }}
+            </div>
+            <div class="text-subrow" [matTooltip]="columns[i+4].cellToolTipText(row)" [ngClass]="columns[i+4].cssClass"
+              *ngIf="i+4 < columns.length && columns[i+4]['innerCells'] === 5">
+              {{ columns[i+4].cell(row) }}
+            </div>
+          </td>
+        </ng-container>
+
+        <!-- Footer Row -->
+        <ng-container *ngIf="gridConfiguration?.isFooterEnabled">
+          <ng-container *matFooterCellDef>
+            <td class="fortigo-cell" *ngIf="i === 0 || columns[i]['innerCells'] === 1" mat-footer-cell>
+              <div [class.align-right]="columns[i].dataType === 'number'"
+                *ngIf="columns[i]['innerCells'] === 1 && columns[i]?.footerCalculatedDataType">{{
+                  getCalculatedData(i) }}</div>
+              <div [class.align-right]="columns[i+1].dataType === 'number'"
+                *ngIf="i+1 < columns.length && columns[i+1]['innerCells'] === 2 && columns[i+1]?.footerCalculatedDataType">
+                {{ getCalculatedData(i+1) }}
+              </div>
+              <div [class.align-right]="columns[i+2].dataType === 'number'"
+                *ngIf="i+2 < columns.length && columns[i+2]['innerCells'] === 3 && columns[i+2]?.footerCalculatedDataType">
+                {{ getCalculatedData(i+2) }}
+              </div>
+              <div [class.align-right]="columns[i+3].dataType === 'number'"
+                *ngIf="i+3 < columns.length && columns[i+3]['innerCells'] === 4 && columns[i+3]?.footerCalculatedDataType">
+                {{ getCalculatedData(i+3) }}
+              </div>
+              <div [class.align-right]="columns[i+4].dataType === 'number'"
+                *ngIf="i+4 < columns.length && columns[i+4]['innerCells'] === 5 && columns[i+4]?.footerCalculatedDataType">
+                {{ getCalculatedData(i+4) }}
+              </div>
+            </td>
+          </ng-container>
+        </ng-container>
+      </ng-container>
+
+      <!-- Data Loading -->
+      <ng-container matColumnDef="loading">
+        <td mat-footer-cell *matFooterCellDef class="fortigo-cell" [attr.colspan]=displayedColumns?.length>
+          Loading data...
+        </td>
+      </ng-container>
+      <!-- No Data -->
+      <ng-container matColumnDef="noData">
+        <td mat-footer-cell *matFooterCellDef class="fortigo-cell" [attr.colspan]=displayedColumns?.length>
+          No data.
+        </td>
+      </ng-container>
+
+      <!-- Expanded Content Column - The detail row is made up of this one column that spans across all columns -->
+      <!-- <ng-container matColumnDef="expandedDetail">
+        <ng-container mat-cell *matCellDef="let expandedRow; let elem = index;" [attr.colspan]="displayedColumns.length">
+          <td [@detailExpand]="expandedRow == expandedElement ? 'expanded' : 'collapsed'" *ngFor='let i of innerKeys'>
+            {{innerIndex}}
+          </td> -->
+      <!-- <td *ngIf="expandedRow?.inner" [@detailExpand]="expandedRow == expandedElement ? 'expanded' : 'collapsed'">
+            {{expandedRow?.inner?.Date}}
+          </td>
+          <td *ngIf="expandedRow?.inner" [@detailExpand]="expandedRow == expandedElement ? 'expanded' : 'collapsed'">
+            {{expandedRow?.inner?.transactionType}}
+          </td>
+          <td *ngIf="expandedRow?.inner" [@detailExpand]="expandedRow == expandedElement ? 'expanded' : 'collapsed'">
+            {{expandedRow?.inner?.fortigoTripID}}
+          </td>
+          <td *ngIf="expandedRow?.inner" [@detailExpand]="expandedRow == expandedElement ? 'expanded' : 'collapsed'">
+            {{expandedRow?.inner?.GCNNumber}}
+          </td>
+          <td *ngIf="expandedRow?.inner" [@detailExpand]="expandedRow == expandedElement ? 'expanded' : 'collapsed'">
+            {{expandedRow?.inner?.customerReference}}
+          </td>
+          <td *ngIf="expandedRow?.inner" [@detailExpand]="expandedRow == expandedElement ? 'expanded' : 'collapsed'">
+            {{expandedRow?.inner?.refNumber}}
+          </td>
+          <td *ngIf="expandedRow?.inner" [@detailExpand]="expandedRow == expandedElement ? 'expanded' : 'collapsed'">
+            {{expandedRow?.inner?.credit}}
+          </td>
+          <td *ngIf="expandedRow?.inner" [@detailExpand]="expandedRow == expandedElement ? 'expanded' : 'collapsed'">
+            {{expandedRow?.inner?.debit}}
+          </td>
+          <td *ngIf="expandedRow?.inner" style="height: 25px;"
+            [@detailExpand]="expandedRow == expandedElement ? 'expanded' : 'collapsed'">
+            {{expandedRow?.inner?.remark}}
+          </td> -->
+
+      <!-- </ng-container> -->
+
+      <!-- </ng-container> -->
+
+      <!-- sticker top row -->
+      <ng-container [matColumnDef]="'sticky-top-row'">
+        <th mat-header-cell *matHeaderCellDef [attr.colspan]="displayedColumns?.length-1" style="background: #ebedf0 !important;">Starting Balance</th>
+      </ng-container>
+      <ng-container [matColumnDef]="'sticky-top-row-value'">
+        <th mat-header-cell *matHeaderCellDef [attr.colspan]="1" style="background: #ebedf0 !important;">{{stickyTopData | currency:'INR'}}</th>
+      </ng-container>
+      <!-- ends here -->
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true;"></tr>
+      <!-- calls sticky top row -->
+      <ng-container *ngIf="gridConfiguration?.isStickyTopRow">
+        <tr mat-header-row *matHeaderRowDef="['sticky-top-row','sticky-top-row-value']; sticky:true"></tr>
+      </ng-container>
+      <tr [class.inner-row]="row[columns[0].columnDef + '_isExtraRow']" mat-row
+        *matRowDef="let row; columns: displayedColumns;"
+        (click)="expandedElement = expandedElement === row ? null : row; setinnerData();">
+      </tr>
+      <div>
+        <ng-container *ngFor='let innerElem of expandedElement?.inner; let innerIndex = index;'>
+          <tr mat-row *matRowDef="let expandedRow; columns: ['expandedDetail'];" class="expanded-row"></tr>
+        </ng-container>
+      </div>
+
+      <!-- sticky footer row -->
+      <!-- Confirmed Deduction balance -->
+      <ng-container [matColumnDef]="'sticky-bottom-row-confirmedDeduction'">
+        <td mat-footer-cell *matFooterCellDef [ngClass]="displayPaginator ? 'sticky-bottom-row-confirmedDeduction' : 'sticky-bottom-row-confirmedDeduction-without'"
+          [attr.colspan]="displayedColumns?.length-1">
+          Confirmed Deduction</td>
+      </ng-container>
+      <ng-container [matColumnDef]="'sticky-bottom-row-confirmedDeduction-data'">
+        <td mat-footer-cell *matFooterCellDef [ngClass]="displayPaginator ? 'sticky-bottom-row-confirmedDeduction' : 'sticky-bottom-row-confirmedDeduction-without'" [attr.colspan]="1">
+          {{stickyBottomData?.hardAllAmt | currency:'INR'}}</td>
+      </ng-container>
+      <!-- Confirmed TDS balance -->
+      <ng-container [matColumnDef]="'sticky-bottom-row-confirmedTDS'">
+        <td mat-footer-cell *matFooterCellDef [ngClass]="displayPaginator ? 'sticky-bottom-row-confirmedTDS':'sticky-bottom-row-confirmedTDS-without'"
+          [attr.colspan]="displayedColumns?.length-1">
+          Confirmed TDS Withheld </td>
+      </ng-container>
+      <ng-container [matColumnDef]="'sticky-bottom-row-confirmedTDS-data'">
+        <td mat-footer-cell *matFooterCellDef [ngClass]="displayPaginator ? 'sticky-bottom-row-confirmedTDS':'sticky-bottom-row-confirmedTDS-without'" [attr.colspan]="1">
+          {{stickyBottomData?.hardTdsAmt | currency:'INR'}}</td>
+      </ng-container>
+      <!-- Closing balance TDS Inc. -->
+      <ng-container [matColumnDef]="'sticky-bottom-row-closingBalance-tdsInc'">
+        <td mat-footer-cell *matFooterCellDef [ngClass]="displayPaginator ? 'sticky-bottom-row-closingBalance-tdsInc':'sticky-bottom-row-closingBalance-tdsInc-without'"
+          [attr.colspan]="displayedColumns?.length-1">
+          Closing Balance (Incl. TDS)</td>
+      </ng-container>
+      <ng-container [matColumnDef]="'sticky-bottom-row-closingBalance-tdsInc-data'">
+        <td mat-footer-cell *matFooterCellDef [ngClass]="displayPaginator ? 'sticky-bottom-row-closingBalance-tdsInc':'sticky-bottom-row-closingBalance-tdsInc-without'" [attr.colspan]="1">
+          {{stickyBottomData?.closingBalance | currency:'INR'}}</td>
+      </ng-container>
+      <!-- Estimated TDS balance -->
+      <ng-container [matColumnDef]="'sticky-bottom-row-estimatedTDS'">
+        <td mat-footer-cell *matFooterCellDef [ngClass]="displayPaginator ? 'sticky-bottom-row-estimatedTDS':'sticky-bottom-row-estimatedTDS-without'"
+          [attr.colspan]="displayedColumns?.length-1">
+          Estimated TDS Withheld</td>
+      </ng-container>
+      <ng-container [matColumnDef]="'sticky-bottom-row-estimatedTDS-data'">
+        <td mat-footer-cell *matFooterCellDef [ngClass]="displayPaginator ? 'sticky-bottom-row-estimatedTDS':'sticky-bottom-row-estimatedTDS-without'" [attr.colspan]="1">
+          {{stickyBottomData?.softTdsAmt | currency:'INR'}}</td>
+      </ng-container>
+      <!-- Closing balance TDS Exc. -->
+      <ng-container [matColumnDef]="'sticky-bottom-row-closingBalance-tdsExc'">
+        <td mat-footer-cell *matFooterCellDef [ngClass]="displayPaginator ? 'sticky-bottom-row-closingBalance-tdsExc': 'sticky-bottom-row-closingBalance-tdsExc-without'" 
+          [attr.colspan]="displayedColumns?.length-1">
+          Closing Balance (Excl. TDS)</td>
+      </ng-container>
+      <ng-container [matColumnDef]="'sticky-bottom-row-closingBalance-tdsExc-data'">
+        <td mat-footer-cell *matFooterCellDef [ngClass]="displayPaginator ? 'sticky-bottom-row-closingBalance-tdsExc': 'sticky-bottom-row-closingBalance-tdsExc-without'" [attr.colspan]="1">
+          {{stickyBottomData?.closing_balance_TdsEx | currency:'INR'}}</td>
+      </ng-container>
+      <!-- ends here -->
+
+      <ng-template *ngIf="!gridConfiguration?.isFooterEnabled else showFooter"> </ng-template>
+      <ng-template #showFooter>
+        <tr mat-footer-row *matFooterRowDef="displayedColumns"></tr>
+      </ng-template>
+
+      <mat-footer-row *matFooterRowDef="['loading']" [class.hide]="dataSource!=null">
+      </mat-footer-row>
+      <mat-footer-row *matFooterRowDef="['noData']" [class.hide]="!(dataSource!=null && dataSource.data.length==0)">
+      </mat-footer-row>
+      <!-- calling sticky footer row -->
+      <tr mat-footer-row
+        *matFooterRowDef="['sticky-bottom-row-confirmedDeduction','sticky-bottom-row-confirmedDeduction-data'];"
+        [class.hide]="!gridConfiguration?.isStickyBottomRow"></tr>
+      <tr mat-footer-row *matFooterRowDef="['sticky-bottom-row-confirmedTDS','sticky-bottom-row-confirmedTDS-data'];"
+        [class.hide]="!gridConfiguration?.isStickyBottomRow"></tr>
+      <tr mat-footer-row
+        *matFooterRowDef="['sticky-bottom-row-closingBalance-tdsInc','sticky-bottom-row-closingBalance-tdsInc-data'];"
+        [class.hide]="!gridConfiguration?.isStickyBottomRow"></tr>
+      <tr mat-footer-row *matFooterRowDef="['sticky-bottom-row-estimatedTDS','sticky-bottom-row-estimatedTDS-data'];"
+        [class.hide]="!gridConfiguration?.isStickyBottomRow"></tr>
+      <tr mat-footer-row
+        *matFooterRowDef="['sticky-bottom-row-closingBalance-tdsExc','sticky-bottom-row-closingBalance-tdsExc-data'];"
+        [class.hide]="!gridConfiguration?.isStickyBottomRow"></tr>
+
+      <!-- ends here -->
+    </table>
+
+    <!-- Pagination -->
+    <ng-container *ngIf="displayPaginator">
+      <mat-paginator showFirstLastButtons *ngIf="gridConfiguration?.isPaginaionEnabled" class="mat-paginator-sticky"
+      [pageSize]="gridConfiguration?.defaultPageSize" [pageSizeOptions]="gridConfiguration?.pageSizeOptions">
+    </mat-paginator>
+    </ng-container>
+   
+  </div>
+</div>

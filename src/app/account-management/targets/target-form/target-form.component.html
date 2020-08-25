@@ -1,0 +1,37 @@
+<app-fortigo-filter>
+  <app-fortigo-head [buttons]="headButtonList" [displayTitleInline]=true [title]="'TARGET - ESTIMATE'"
+    [subTitle]="'(Revenue and Margin)'" [isFilterVisible]=false [isSearchVisible]=false [isRefreshVisible]=false
+    (buttonClicked)="onHeaderButtonClick($event)">
+  </app-fortigo-head>
+  <div class="container-fluid" style="box-sizing: border-box; padding-top: 10px">
+    <div class="row" style="width: 100%; display: block;">
+      <button [routerLink]="'/customer/overview'" class="btn submitButton mt-0 mb-0"
+        style="height: 26px; width: 83px; padding: 2px 2px;">
+        Back
+      </button>
+      <mat-form-field class="ml-3" style="font-size: 12px;width: 98px;">
+        <mat-select [placeholder]="'Financial Year'" [(value)]='selectedFinancialYear'>
+          <mat-option *ngFor="let eachFinancialYear of financialYearList" [value]="eachFinancialYear">
+            {{eachFinancialYear}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-label style="margin-left: 42px; font-size: 14px; background: #d3dce8; font-weight: bold;">
+        Monthly, Quarterly and Yearly Targets & Estimates (All amounts are in ₹ Lakhs)
+      </mat-label>
+    </div>
+  </div>
+  <div class="container-fluid mt-3" style="height: calc(100% - 76px);">
+    <mat-spinner *ngIf="isSavingData" class="spinner"></mat-spinner>
+
+    <div class="target-container" [style.height]="calcHeight">
+      <app-target-form-card *ngFor="let eachTarget of targets" [data]=eachTarget [financialYear]=selectedFinancialYear
+        (savedCard)="onCardSave($event)" (removedCard)="onCardRemove($event)">
+      </app-target-form-card>
+    </div>
+    <br>
+    <app-fortigo-button-group style=" bottom: 0px" [isDisabled]=isSavingData [save]=true [clear]=true
+      (buttonClicked)="onButtonClick($event)">
+    </app-fortigo-button-group>
+  </div>
+</app-fortigo-filter>

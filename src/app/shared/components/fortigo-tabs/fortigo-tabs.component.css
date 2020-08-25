@@ -1,0 +1,26 @@
+/*
+ * Created on Thu Jan 31 2019
+ * Created by - 1191: Ritesh Kant
+ *
+ * Copyright (c) 2019 Fortigo Network Logistics Pvt Ltd (4TiGO)
+ */
+
+/* Material Tab Styling -- starts here */
+
+.mat-link {
+    height: 35px !important;
+    min-width: 100px !important;
+    padding-right: 25px !important;
+    margin-top: 8px;
+    margin-bottom: 4px;
+    color: black !important;
+    align-items: flex-end;
+}
+
+.selected-tab {
+    border-bottom: 2px solid #E66006;
+    opacity: 1;
+    font-weight: bold;
+}
+
+/* Material Tab Styling -- ends here */

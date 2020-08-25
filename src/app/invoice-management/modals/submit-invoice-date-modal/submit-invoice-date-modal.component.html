@@ -1,0 +1,18 @@
+<!--
+ Created on Thu Jun 13 2019
+ Created by - 1149: Aashish Kumar
+
+ Copyright (c) 2019 Fortigo Network Logistics Pvt Ltd (4TiGO)
+-->
+<app-fortigo-modal-header>{{title}}</app-fortigo-modal-header>
+<mat-dialog-content class="mat-typography tripFormClass">
+    <div class="container-fluid" style="padding-top: 12px;">
+        <app-fortigo-grid *ngIf="showMultipleInvoice" [(columns)]=columnsData [rows]=rowsData
+            [(gridConfiguration)]="gridConfiguration">
+        </app-fortigo-grid>
+        <app-fortigo-form class="captureInvDateForm" [fields]="fields" [mode]="'auto'" (formSubmit)=formSubmit($event)
+            (radioSelectionChanges)="onRadioSelectionChange($event)" (fileChanges)="onFileSelectionChange($event)" [isReadOnly]="isReadOnly"
+            [submitClearButtonEnabled]="!isReadOnly">
+        </app-fortigo-form>
+    </div>
+</mat-dialog-content>

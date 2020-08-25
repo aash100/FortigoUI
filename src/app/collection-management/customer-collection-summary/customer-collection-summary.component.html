@@ -1,0 +1,20 @@
+<!--
+ Created on Thu Dec 26 2019
+ Created by - 1157: Mayur Ranjan
+
+ Copyright (c) 2019 Fortigo Network Logistics Pvt Ltd (4TiGO)
+-->
+
+<app-fortigo-filter [(fields)]="filterFields" (selectChange)="onCompanyChange($event);"
+  (filterSubmit)="filterSubmit($event)" (clearClicked)="clearFilter()">
+  <!-- Header -->
+  <app-fortigo-head [title]=pageTitle (searchClicked)=onSearch($event) [miniNotes]=miniNotes
+    (refreshClicked)=refresh()>
+  </app-fortigo-head>
+  <!-- Data grid -->
+  <div class="container-fluid mt-4">
+    <app-fortigo-grid [isDebug]=false [columns]=columnsData [rows]=rowsData [extraRows]=extraRows
+      [gridConfiguration]="gridConfigurationData" (cellClick)="onCellClick($event)">
+    </app-fortigo-grid>
+  </div>
+</app-fortigo-filter>

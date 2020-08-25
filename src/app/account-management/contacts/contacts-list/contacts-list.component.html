@@ -1,0 +1,12 @@
+<div class="container-fluid m-0 p-0">
+  <!-- <div *ngIf="contactList && contactList.length>0; else noContact"> -->
+      <mat-progress-spinner *ngIf="contactService.contactLoading" class="spinner" mode="indeterminate"></mat-progress-spinner>
+    <ng2-smart-table [settings]="settings" [source]="source" class="table table-striped table-hover"
+      (custom)="onCustom($event.data,$event.action)">
+      Contact Details
+    </ng2-smart-table>
+  <!-- </div> -->
+</div>
+<!-- <ng-template #noContact>
+  No Contact Found.  (edit)="editContactDetails($event)"
+</ng-template> -->

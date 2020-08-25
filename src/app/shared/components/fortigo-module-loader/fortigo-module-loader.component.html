@@ -1,0 +1,13 @@
+<!--
+ Created on Thu Nov 21 2019
+ Created by - 1157: Mayur Ranjan
+
+ Copyright (c) 2019 Fortigo Network Logistics Pvt Ltd (4TiGO)
+-->
+<mat-progress-bar *ngIf="value !== 100" [color]="color" [mode]="mode" [value]="value" [bufferValue]="bufferValue">
+</mat-progress-bar>
+<div *ngIf="isLoading" style="background: white">
+  <img src="assets/4tigo.gif" alt="Loading please wait..." width="250px" height="250px"
+    style="margin-top:12%;margin-left:40%;margin-bottom: 20%">
+</div>
+<router-outlet *ngIf="!isLoading"></router-outlet>

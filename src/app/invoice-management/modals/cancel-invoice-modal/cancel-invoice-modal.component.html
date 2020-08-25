@@ -1,0 +1,18 @@
+<!--
+ Created on Thu Jun 13 2019
+ Created by - 1149: Aashish Kumar
+
+ Copyright (c) 2019 Fortigo Network Logistics Pvt Ltd (4TiGO)
+-->
+<app-fortigo-modal-header>Cancel Invoice</app-fortigo-modal-header>
+
+<table>
+  <mat-radio-group class="example-radio-group" [(ngModel)]="tripId">
+    <mat-radio-button class="example-radio-button" *ngFor="let trip of trips" [value]="trip">
+      {{trip}}
+    </mat-radio-button>
+  </mat-radio-group>
+  <button mat-raised-button *ngFor="let option of options" [value]="option" (click)="onSubmit(option)">
+    {{option}}
+  </button>
+</table>

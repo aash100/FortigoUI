@@ -1,0 +1,28 @@
+<div class="doc-upload-modal">
+    <div class="modal-header " style="height: 57px;">
+        <div class="col-md " style="padding-left:1px; ">
+            <p style="border-left: 10px solid #0A50A1;padding: 6px; font-size: 15px;">Review Document</p>
+        </div>
+        <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')  ">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-bodyborder" style="padding: 1rem;">
+        <form #regiterForm="ngForm" novalidate>
+            <div class="row">
+                <div class="form-group col-md">
+                    <mat-form-field class="input-full-width">
+                        <mat-select placeholder="Document Status" [(value)]="selectedDocStatus" required>
+                            <mat-option *ngFor="let docStatus of docStatuses" [value]="docStatus">{{docStatus.name}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+            </div>
+        
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-dark" (click)="activeModal.dismiss('Cross click')">Cancel</button>
+                <button type="button" class="btn btn-outline-dark" (click)="onEdit()">Save</button>
+            </div>
+        </form>
+    </div>
+</div>

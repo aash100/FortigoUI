@@ -1,0 +1,220 @@
+<div role="document">
+    <div class="modal-content" style="border: 0;">
+        <div class="modal-header shadow-sm" style="height: 57px;">
+            <p style="border-left: 10px solid #0A50A1;padding: 6px; font-size: 15px;">{{title}}</p>
+            <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-bodyborder" style="padding: 1rem;">
+            <form #meetingForm="ngForm" (ngSubmit)="onSubmit()">
+                <div class="row">
+                    <div class=" col-md">
+                        <span class="font-small">Company Name *</span>
+                        <ngx-select-dropdown name="company" [disabled]="readOnlyMeeting || isCompanySelectDisabled"
+                            [config]="companyDropdownConfiguration" [options]="companyList"
+                            (change)="selectCompany(selectedCompany)" [(ngModel)]="selectedCompany" [multiple]="false">
+                        </ngx-select-dropdown>
+                    </div>
+                </div>
+                <mat-tab-group class="fortigo-tab" #matTabGroup>
+                    <!-- Meeting Tab -->
+                    <mat-tab label="Meetings">
+                        <div class="row row-sm mt-3">
+                            <div class=" col-md">
+                                <mat-form-field class="input-full-width">
+                                    <input matInput id="meetingtitle" name="meetingTitleName"
+                                        [title]="editMeeting.meetingTitle" #meetingTitle="ngModel" placeholder="Purpose"
+                                        [ngModel]="mode !=='view' ? editMeeting.meetingTitle : editMeeting.meetingTitle | truncateText : 30"
+                                        (ngModelChange)="editMeeting.meetingTitle=$event" [disabled]="readOnlyMeeting"
+                                        required appAutofocus>
+                                </mat-form-field>
+                            </div>
+                            <div class=" col-md">
+                                <mat-form-field class="input-full-width">
+                                    <mat-select placeholder="Type" required #meetingTypeSelect="ngModel"
+                                        name="meetingTypeSelect" [(ngModel)]="editMeeting.meetingType"
+                                        [disabled]="readOnlyMeeting">
+                                        <mat-option *ngFor="let meetingtype of MeetingType"
+                                            [value]=meetingtype.meetingTypeName>
+                                            {{meetingtype.meetingTypeAlias}}</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                        </div>
+
+
+                        <div class="row row-sm">
+                            <div class=" col-md custom-input">
+                                <mat-form-field style="display: inherit;">
+                                    <input required matInput [matDatepicker]="startDatePicker"
+                                        name="meetingStartDateInput" #meetingStartDateInput="ngModel"
+                                        (click)="startDatePicker.open()" [(ngModel)]="meetingStartDate"
+                                        (ngModelChange)="setMeetingEndDate()" placeholder="Please choose a Start Date"
+                                        [disabled]="readOnlyMeeting">
+                                    <mat-datepicker-toggle matSuffix [for]="startDatePicker"></mat-datepicker-toggle>
+                                    <mat-datepicker #startDatePicker></mat-datepicker>
+                                </mat-form-field>
+                            </div>
+                            <div class=" col-md">
+                                <mat-form-field class="input-full-width">
+                                    <mat-select placeholder="Status" required name="meetingStatusSelect"
+                                        #meetingStatusSelect="ngModel" [(ngModel)]='editMeeting.meetingStatus'
+                                        [disabled]="readOnlyMeeting">
+                                        <mat-option *ngFor="let meetingstatus of meetingStatus"
+                                            [value]=meetingstatus.name>
+                                            {{meetingstatus.alias}}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                            <div class=" col-md" *ngIf="mode && mode !=='create'">
+                                <mat-form-field class="input-full-width">
+                                    <input matInput id="meetingSetupBy" name="meetingSetupBy" #meetingSetupBy="ngModel"
+                                        placeholder="Setup By"
+                                        [(ngModel)]='editMeeting && editMeeting.meetingSetupByName' [disabled]="true">
+                                </mat-form-field>
+                            </div>
+                        </div>
+
+                        <div class="row row-sm">
+                            <div class=" col-md custom-input">
+                                <mat-form-field class="input-full-width">
+                                    <input matInput row row-sms="2"
+                                        [title]="editMeeting && editMeeting.postMeetingRemarks" placeholder="Next Steps"
+                                        name="postMeetingRemarks"
+                                        [ngModel]="editMeeting && mode !=='view' ? editMeeting.postMeetingRemarks : editMeeting.postMeetingRemarks | truncateText : 30"
+                                        (ngModelChange)="editMeeting.postMeetingRemarks=$event"
+                                        [disabled]="readOnlyMeeting">
+                                </mat-form-field>
+                            </div>
+                            <div class=" col-md custom-input">
+                                <mat-form-field style="display: inherit;">
+                                    <input matInput [matDatepicker]="nextActionItemDate"
+                                        name="meetingNextActionItemDate" #meetingNextActionItemDate="ngModel"
+                                        (click)="nextActionItemDate.open()"
+                                        [(ngModel)]="editMeeting && editMeeting.nextActionItemDate"
+                                        placeholder="By When" [disabled]="readOnlyMeeting">
+                                    <mat-datepicker-toggle matSuffix [for]="nextActionItemDate"></mat-datepicker-toggle>
+                                    <mat-datepicker #nextActionItemDate></mat-datepicker>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="row row-sm">
+                            <div class="col-md">
+                                <mat-form-field class="input-full-width">
+                                    <textarea matInput row row-sms="2" placeholder="What Transpired"
+                                        name="meetingSetupRemarks"
+                                        [(ngModel)]='editMeeting && editMeeting.meetingSetupRemarks'
+                                        [disabled]="readOnlyMeeting"></textarea>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn submitButton" (click)='nextTab()'>
+                                <span>Next</span>
+                            </button>
+                        </div>
+                    </mat-tab>
+                    <!-- Particpiant Tab -->
+                    <mat-tab label="Participant">
+                        <div class="row form-group" style="margin-left: 0px !important;">
+                            <div class="col-md-5 pl-0">
+                                <div class="input-full-width">
+                                    <span class="font-small">Internal Participant *</span>
+                                    <div *ngIf="isCompanySelected else noParticipant" name="internalParticipantName">
+                                        <ngx-select-dropdown name="internalParticipant"
+                                            [config]="ParticipantFilterConfiguration" [options]="internalParticipantList"
+                                            (change)="addParticipant(selectedInternalParticipants)"
+                                            [(ngModel)]="selectedInternalParticipants" [multiple]="true"
+                                            [disabled]="readOnlyMeeting">
+                                        </ngx-select-dropdown>
+                                    </div>
+                                    <ng-template #noParticipant>
+                                        <span class="row row-sm text-danger" style="margin-left: 0px !important;"><b>No
+                                                Participant
+                                                found.</b></span>
+                                    </ng-template>
+                                </div>
+                            </div>
+                            <div class="col-md-5 pl-0">
+                                    <div class="input-full-width">
+                                        <span class="font-small">External Participant *</span>
+                                        <div *ngIf="isCompanySelected else noParticipant" name="participantName">
+                                            <ngx-select-dropdown name="participant"
+                                                [config]="ParticipantFilterConfiguration" [options]="externalParticipantList"
+                                                [(ngModel)]="selectedExternalParticipants" [multiple]="true"
+                                                [disabled]="readOnlyMeeting">
+                                            </ngx-select-dropdown>
+                                        </div>
+                                        <ng-template #noParticipant>
+                                            <span class="row row-sm text-danger" style="margin-left: 0px !important;"><b>No
+                                                    Participant
+                                                    found.</b></span>
+                                        </ng-template>
+                                    </div>
+                                </div>
+                            <div class="col-md-2 pl-0">
+                                <div style="margin-top: 25px !important;">
+                                    <button type="button" mat-raised-button (click)="openAddContactModal()"
+                                        appFortigoSubmitButton>
+                                        <mat-icon>add</mat-icon>Contact
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="form-group col-md" style="margin-left: -15px;">
+                                <span class="font-small">Location *</span>
+                                <ngx-select-dropdown [disabled]="readOnlyMeeting" name="location"
+                                    [config]="LocationFilterConfiguration" [options]="locationList"
+                                    (change)="selectLocation(selectedLocation)" [(ngModel)]="selectedLocation"
+                                    [multiple]="false">
+                                </ngx-select-dropdown>
+                            </div>
+                        </div>
+                        <!-- <div class="row row-sm">
+       
+            </div> -->
+                        <div class="row row-sm">
+                            <div class=" col-md">
+                                <mat-form-field class="input-full-width">
+                                    <mat-select placeholder="Participant Mode" required
+                                        name="participantMeetingModelSelect" #participantMeetingModelSelect="ngModel"
+                                        [(ngModel)]='editMeeting.participantMeetingMode' [disabled]="readOnlyMeeting">
+                                        <mat-option *ngFor="let meetingparticipantmode of participantMeetingMode"
+                                            [value]=meetingparticipantmode.name>{{meetingparticipantmode.alias}}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                            <div class=" col-md">
+                                <mat-form-field class="input-full-width">
+                                    <mat-select placeholder="Participant Status" required
+                                        #participantStatusSelect="ngModel" name="participantStatusSelect"
+                                        [(ngModel)]='editMeeting.participantStatus' [disabled]="readOnlyMeeting">
+                                        <mat-option *ngFor="let participantstatus of participantStatus"
+                                            [value]=participantstatus.name>
+                                            {{participantstatus.alias}}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="">
+                            <mat-form-field class="input-full-width">
+                                <textarea matInput row row-sms="2" placeholder="Participant Role" name="participantRole"
+                                    [(ngModel)]='editMeeting && editMeeting.participantRole'
+                                    [disabled]="readOnlyMeeting"></textarea>
+                            </mat-form-field>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn clearButton"
+                                (click)="activeModal.dismiss('Cross click')">Cancel</button>
+                            <button type="button" class="btn submitButton" (click)="previousTab()"> Back</button>
+                            <button *ngIf="mode !=='view'" type="submit" class="btn submitButton">Submit</button>
+                        </div>
+                    </mat-tab>
+                </mat-tab-group>
+            </form>
+        </div>
+    </div>
+</div>

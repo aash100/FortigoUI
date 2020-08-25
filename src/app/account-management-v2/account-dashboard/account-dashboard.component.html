@@ -1,0 +1,29 @@
+<!--
+ Created on Wed Feb 27 2019
+ Created by - 1157: Mayur Ranjan
+
+ Copyright (c) 2019 Fortigo Network Logistics Pvt Ltd (4TiGO)
+-->
+
+<!-- default fortigo filter -->
+<app-fortigo-filter [fields]="filterFields" (filterSubmit)="onFilterSubmit($event)" (clearClicked)="onRefreshClick()">
+  <app-fortigo-head [buttons]=headButtonList [title]=pageTitle [searchText]=searchText
+    (searchClicked)="onSearchClick($event)" (buttonClicked)="onHeaderButtonClick($event)"
+    (refreshClicked)="onRefreshClick()" (filterClicked)="onFilterClick($event)">
+  </app-fortigo-head>
+  <app-fortigo-tabs [tabList]=filterTabList (tabClicked)="onGridFilterTabSelection($event)"
+    [selectTab]="selectedTabIndex">
+  </app-fortigo-tabs>
+
+  <!-- used to load respective views based on tab index -->
+  <ng-container [ngSwitch]="selectedTabIndex">
+    <app-manager-view *ngSwitchCase="'0'" [isRefresh]=refreshManagerView [searchText]=managerSearchText
+      [filterData]=managerFilterData>
+    </app-manager-view>
+    <app-customer-view *ngSwitchCase="'1'" [isRefresh]=refreshCustomerView [searchText]="customerSearchText"
+      [filterData]=customerFilterData></app-customer-view>
+    <app-meeting-view *ngSwitchCase="'2'" [isRefresh]=refreshMeetingView [searchText]=meetingSearchText
+      [filterData]=meetingFilterData>
+    </app-meeting-view>
+  </ng-container>
+</app-fortigo-filter>

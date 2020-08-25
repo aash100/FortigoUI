@@ -1,0 +1,25 @@
+<!--
+ Created on Thu Jan 02 2020
+ Created by - 1157: Mayur Ranjan
+
+ Copyright (c) 2020 Fortigo Network Logistics Pvt Ltd (4TiGO)
+-->
+<!-- <app-fortigo-head [title]=headerTitle [isRefreshVisible]=false [isFilterDisabled]=true [isSearchVisible]=false
+    [isFilterVisible]=false>
+</app-fortigo-head> -->
+<app-news-blog></app-news-blog>
+
+<app-fortigo-filter [fields]="filterFields" [filterFontSize]=filterFontSize>
+    <app-fortigo-head [title]=pageTitle [isRefreshVisible]=false [isFilterVisible]=false [isSearchVisible]=false
+        [buttons]=buttons (buttonClicked)='onHeadButtonClick($event)' [searchTextMinLength]=6
+        [searchTextMaxLength]=2000>
+    </app-fortigo-head>
+    <div class="container-fluid">
+        <!-- <app-fortigo-grid [isDebug]=false [(columns)]="columnsData" [selectedTabIndex]=selectedTabIndex
+            [rows]="rowsData" [(gridConfiguration)]="gridConfiguration"
+            (filterTabSelectedIndex)="onGridFilterTabSelection($event)"
+            (actionExtraButtonSelectedIndex)="onActionExtraButtonClick($event)" (cellClick)="onCellClick($event)"
+            (checkbox1SelectedRow)="selectedRows($event)">
+        </app-fortigo-grid> -->
+    </div>
+</app-fortigo-filter>

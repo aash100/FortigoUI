@@ -1,0 +1,35 @@
+<!--
+ Created on Wed Oct 16 2019
+ Created by - 1157: Mayur Ranjan
+
+ Copyright (c) 2019 Fortigo Network Logistics Pvt Ltd (4TiGO)
+-->
+
+<div class="container-fluid row">
+  <!-- success data -->
+  <div class="col-6">
+    <app-fortigo-card [card]=gridCard1 [cardConfiguration]=gridCardConfiguration1>
+      <app-fortigo-grid [(columns)]=columnsData1 [rows]=rowsData1 [(gridConfiguration)]=gridConfiguration1>
+      </app-fortigo-grid>
+    </app-fortigo-card>
+  </div>
+
+  <!-- error data -->
+  <div class="col-6">
+    <app-fortigo-card [card]=gridCard2 [cardConfiguration]=gridCardConfiguration2>
+      <app-fortigo-grid [(columns)]=columnsData2 [rows]=rowsData2 [(gridConfiguration)]=gridConfiguration2>
+      </app-fortigo-grid>
+    </app-fortigo-card>
+    <mat-card-actions>
+      <!-- buttons -->
+      <div style="float: right;">
+        <div *ngFor="let button of buttons" style="padding-right: 15px;" class="button-cell">
+          <button type="button" mat-raised-button (click)="onClick(button.key)" [disabled]=button.isDisabled
+            appFortigoSubmitButton>
+            <mat-icon >{{button.icon}}</mat-icon> {{button.name}}
+          </button>
+        </div>
+      </div>
+    </mat-card-actions>
+  </div>
+</div>

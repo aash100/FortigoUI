@@ -1,0 +1,25 @@
+/*
+ * Created on Thu Dec 26 2019
+ * Created by - 1157: Mayur Ranjan
+ *
+ * Copyright (c) 2019 Fortigo Network Logistics Pvt Ltd (4TiGO)
+ */
+
+.right-info {
+    float: right;
+    margin-right: 40px;
+    font-size: 13px;
+    color: chocolate;
+}
+
+.left-info {
+    float: left;
+    margin-left: 40px;
+    font-size: 13px;
+    color: chocolate;
+}
+
+.info-content {
+    color: chocolate;
+    font-weight: bold;
+}

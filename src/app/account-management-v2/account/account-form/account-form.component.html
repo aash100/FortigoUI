@@ -1,0 +1,17 @@
+<!--
+ Created on Fri Sep 06 2019
+ Created by - 1214: Sachin Sehgal
+
+ Copyright (c) 2019 Fortigo Network Logistics Pvt Ltd (4TiGO)
+-->
+
+<div>
+  <ng-container *ngIf="mode !== 'view'">
+    <!-- used to set modal header -->
+    <app-fortigo-modal-header>NEW ACCOUNT</app-fortigo-modal-header>
+  </ng-container>
+  <!-- loads fortigo form -->
+  <app-fortigo-form [isReadOnly]=false [fields]=accountFields [tabList]=tabList [hideTab]="[]" [data]="account"
+    (formSubmit)="onSubmit($event)" [checkValidationBeforeSubmit]=true >
+  </app-fortigo-form>
+</div>

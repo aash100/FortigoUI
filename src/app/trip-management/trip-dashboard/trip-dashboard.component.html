@@ -1,0 +1,23 @@
+<!--
+ Created on Wed Oct 09 2019
+ Created by - 1149: Aashish Kumar
+
+ Copyright (c) 2019 Fortigo Network Logistics Pvt Ltd (4TiGO)
+-->
+<app-fortigo-filter [fields]="filterFields" [filterFontSize]=filterFontSize [groups]=groups
+    (filterSubmit)=submitFilterForm($event) (clearClicked)=filterClearClicked() (selectChange)=onSelectChanges($event)>
+    <app-fortigo-head [title]=pageTitle (searchClicked)=onSearch($event) (refreshClicked)=onRefresh()
+        [searchText]="searchText" [isFilterApplied]=showFilterApplied [searchTextMinLength]=6 [searchTextMaxLength]=2000
+        (hasCommaValue)=applySearchOnAllTab() [pattern]="searchRegexPatternTripInvoice"
+        [searchTextValidation]=searchTextValidation>
+    </app-fortigo-head>
+    <mat-spinner *ngIf=showLoader class="spinner"></mat-spinner>
+    <div class="container-fluid">
+        <app-fortigo-grid [isDebug]=false [(columns)]="columnsData" [selectedTabIndex]=selectedTabIndex
+            [rows]="rowsData" [(gridConfiguration)]=gridConfiguration (cellClick)="onCellClick($event)"
+            (actionExtraButtonSelectedIndex)="onActionExtraButtonClick($event)"
+            (filterTabSelectedIndex)=onGridFilterTabSelection($event) (checkbox1SelectedRow)="onCheckboxSelection($event)"
+            (actionItemMenuClick)=getActionItemsByInvoicingStatus($event)>
+        </app-fortigo-grid>
+    </div>
+</app-fortigo-filter>

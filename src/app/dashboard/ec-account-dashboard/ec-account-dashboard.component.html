@@ -1,0 +1,37 @@
+<!--
+ Created on Thu Dec 26 2019
+ Created by - 1157: Mayur Ranjan
+
+ Copyright (c) 2019 Fortigo Network Logistics Pvt Ltd (4TiGO)
+-->
+
+<app-fortigo-filter [fields]="filterFields" [groups]='group' (filterSubmit)="onFilterSubmit($event)"
+  (clearClicked)="onClear()" (selectChange)="selectChanged($event)">
+  <mat-spinner *ngIf='loadingSummary && selectedTab === 0 || loadingDetails && selectedTab===1' class="spinner">
+  </mat-spinner>
+  <app-fortigo-head [title]=title [displayTitleInline]="true" [buttons]='headButtonList'
+    (filterClicked)='onFilterClick()' (buttonClicked)='onHeadButtonClicked($event)'>
+  </app-fortigo-head>
+  <div style='line-height: 1;'>
+    <span class="left-info">
+      {{subTitle}}
+    </span>
+    <span class="right-info" style="color: black">Total outstanding amount as of Today:
+      <span class="info-content"
+        *ngIf="rowData !== null && rowData !== undefined && rowData.length !== 0 ; else elseBlock">
+        ₹ {{totalOutstanding}}
+      </span>
+      <ng-template #elseBlock class="info-content">
+        -
+      </ng-template>
+    </span>
+    <br>
+    <span class="right-info">* Only trips which are invoiced are included in this report</span>
+
+  </div>
+  <div style="margin-top: 25px;"></div>
+  <app-fortigo-grid-beta [columns]="columnsData" [rows]="rowData" [isDebug]="true"
+    [gridConfiguration]="gridConfigurationData" (filterTabSelectedIndex)="onGridFilterTabSelection($event)"
+    [stickyTopData]="startingBalance" [stickyBottomData]="stickyBottomData">
+  </app-fortigo-grid-beta>
+</app-fortigo-filter>

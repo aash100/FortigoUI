@@ -1,0 +1,13 @@
+<div class="header" style="margin-top:auto;">
+    <span style="margin-left: 10px; margin-top: 10px;"><strong>Filter</strong></span>
+    <span>
+        <em class="fa fa-close float-right" style="font-size: 30px; cursor: pointer;" (click)="closeContactFilter();">
+        </em>
+    </span>
+</div>
+<br>
+<div class="container">
+    <app-fortigo-form [fields]="filterFields" [userMode]='"filter"' (formSubmit)="onSubmit($event)"
+        (isClearClicked)="clearForm()">
+    </app-fortigo-form>
+</div>

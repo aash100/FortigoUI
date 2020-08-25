@@ -1,0 +1,5 @@
+<mat-spinner *ngIf="isLoading" class="spinner"></mat-spinner>
+<app-fortigo-grid *ngIf="jobsList" [columns]="columnsData" [rows]="jobsList"
+   [gridConfiguration]="jobsGridconfiguration"
+   (actionExtraButtonSelectedIndex)="onActionClick($event)">
+</app-fortigo-grid>

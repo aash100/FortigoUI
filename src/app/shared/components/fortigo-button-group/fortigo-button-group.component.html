@@ -1,0 +1,58 @@
+<!--
+ Created on Mon Feb 04 2019
+ Created by - 1191: Ritesh Kant
+
+ Copyright (c) 2019 Fortigo Network Logistics Pvt Ltd (4TiGO)
+-->
+<div class="container-fluid " [ngClass]=" { 'button-group-bottom': filterMode}">
+  <div class="row button-row d-flex justify-content-end">
+    <div *ngIf="back">
+      <button type="button" [disabled]=isDisabled mat-raised-button (click)="onClick('back')"
+        appFortigoNavigationButton>
+        <mat-icon>arrow_back_ios</mat-icon>Back
+      </button>
+    </div>
+    <div *ngIf="clear">
+      <button type="button" [disabled]=isDisabled mat-raised-button (click)="onClick('clear')" appFortigoClearButton>
+        <mat-icon>block</mat-icon>Clear
+      </button>
+    </div>
+    <div *ngIf="submit">
+        <button type="submit" [disabled]="isSubmitDisabled || isDisabled" mat-raised-button (click)="onClick('submit')" appFortigoSubmitButton>
+        <mat-icon>check</mat-icon>Submit
+      </button>
+    </div>
+    <div *ngIf="apply">
+      <button type="submit" [disabled]=isDisabled mat-raised-button (click)="onClick('apply')" appFortigoSubmitButton>
+        <mat-icon>check</mat-icon>Apply
+      </button>
+    </div>
+    <div *ngIf="next">
+      <button type="button" [disabled]=isDisabled mat-raised-button (click)="onClick('next')"
+        appFortigoNavigationButton>
+        Next<mat-icon>arrow_forward_ios</mat-icon>
+      </button>
+    </div>
+    <div *ngIf="save">
+      <button type="button" [disabled]=isDisabled mat-raised-button (click)="onClick('save')"
+        appFortigoNavigationButton>
+        <mat-icon>save</mat-icon>Save
+      </button>
+    </div>
+    <div *ngIf="remove">
+      <button type="button" [disabled]=isDisabled mat-raised-button (click)="onClick('remove')"
+        appFortigoNavigationButton>
+        <mat-icon>delete</mat-icon>Remove
+      </button>
+    </div>
+    <div *ngIf="reject">
+      <button type="button" [disabled]=isDisabled mat-raised-button (click)="onClick('reject')" appFortigoClearButton>
+        <mat-icon>block</mat-icon>Reject
+      </button>
+    </div>
+    <div *ngIf="approve">
+      <button type="submit" [disabled]=isDisabled mat-raised-button (click)="onClick('approve')" appFortigoSubmitButton>
+        <mat-icon>check</mat-icon>Approve
+      </button>
+    </div>
+  </div>

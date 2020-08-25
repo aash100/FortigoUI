@@ -1,0 +1,70 @@
+<button style="float: right;" class="mr-4" mat-raised-button matTooltip="Refresh" (click)="initializeValues(); setDefaultStatus(); checkStatus()"
+  aria-label="Button for Refresh">
+  <mat-icon>refresh</mat-icon>
+</button>
+<mat-list>
+  <div class="row">
+    <div class="col-3">
+      <h3 mat-subheader>Internal Checks</h3>
+      <mat-list-item *ngFor="let health of internalHealthList">
+        <mat-icon *ngIf="health.result === 'Checking'" class="warning-icon" mat-list-icon>album
+        </mat-icon>
+        <mat-icon *ngIf="health.result === 'Healthy'" class="success-icon" mat-list-icon>album
+        </mat-icon>
+        <mat-icon *ngIf="health.result === 'Unhealthy'" class="danger-icon" mat-list-icon>
+          album
+        </mat-icon>
+        <h4 mat-line>{{health.item}}</h4>
+        <p mat-line [matTooltip]="health.resultDisplay"> {{health.resultDisplay}} </p>
+      </mat-list-item>
+    </div>
+    <div class="col-3">
+      <h3 mat-subheader>External Checks</h3>
+      <mat-list-item *ngFor="let health of externalHealthList">
+        <mat-icon *ngIf="health.result === 'Checking'" class="warning-icon" mat-list-icon>album
+        </mat-icon>
+        <mat-icon *ngIf="health.result === 'Healthy'" class="success-icon" mat-list-icon>album
+        </mat-icon>
+        <mat-icon *ngIf="health.result === 'Unhealthy'" class="danger-icon" mat-list-icon>
+          album
+        </mat-icon>
+        <h4 mat-line>{{health.item}}</h4>
+        <p mat-line [matTooltip]="health.resultDisplay"> {{health.resultDisplay}} </p>
+      </mat-list-item>
+    </div>
+    <div class="col-3">
+      <h3 mat-subheader>Disk Health Checks</h3>
+      <mat-list-item *ngFor="let health of diskHealthList">
+        <mat-icon *ngIf="health.result === 'Checking'" class="warning-icon" mat-list-icon>album
+        </mat-icon>
+        <mat-icon *ngIf="health.result === 'Healthy'" class="success-icon" mat-list-icon>album
+        </mat-icon>
+        <mat-icon *ngIf="health.result === 'Unhealthy'" class="danger-icon" mat-list-icon>
+          disc_full
+        </mat-icon>
+        <h4 mat-line>{{health.item}}</h4>
+        <p mat-line [matTooltip]="health.resultDisplay"> {{health.resultDisplay}} </p>
+        <mat-progress-bar *ngIf="health.percentage !== undefined" [class.success-progress]="health.result === 'Healthy'"
+          [class.danger-progress]="health.result === 'Unhealthy'" mode="determinate" [value]="health.percentage">
+        </mat-progress-bar>
+      </mat-list-item>
+    </div>
+    <div class="col-3">
+      <h3 mat-subheader>RAM Health Checks</h3>
+      <mat-list-item *ngFor="let health of ramHealthList">
+        <mat-icon *ngIf="health.result === 'Checking'" class="warning-icon" mat-list-icon>album
+        </mat-icon>
+        <mat-icon *ngIf="health.result === 'Healthy'" class="success-icon" mat-list-icon>album
+        </mat-icon>
+        <mat-icon *ngIf="health.result === 'Unhealthy'" class="danger-icon" mat-list-icon>
+          disc_full
+        </mat-icon>
+        <h4 mat-line>{{health.item}}</h4>
+        <p mat-line [matTooltip]="health.resultDisplay"> {{health.resultDisplay}} </p>
+        <mat-progress-bar *ngIf="health.percentage !== undefined" [class.success-progress]="health.result === 'Healthy'"
+          [class.danger-progress]="health.result === 'Unhealthy'" mode="determinate" [value]="health.percentage">
+        </mat-progress-bar>
+      </mat-list-item>
+    </div>
+  </div>
+</mat-list>

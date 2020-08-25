@@ -1,0 +1,36 @@
+<!--
+ Created on Fri Jul 05 2019
+ Created by - 1149: Aashish Kumar
+
+ Copyright (c) 2019 Fortigo Network Logistics Pvt Ltd (4TiGO)
+-->
+
+<app-fortigo-modal-header>{{title}}</app-fortigo-modal-header>
+<mat-dialog-content class="mat-typography">
+  <!-- form field -->
+  <div class="row container-fluid" style="padding-top:9px;">
+    <app-fortigo-form [fields]="fields" [mode]="'auto'" [submitClearButtonEnabled]="false" [userMode]='"filter"'
+      [fieldsFontSize]="fieldsFontSize" (selectChanges)="onSelectChanges($event)" (fileChanges)="onFileChanges($event)"
+      (inputChanges)="inputChanges($event)" (radioSelectionChanges)=radioSelection($event)
+      [checkValidationBeforeSubmit]=true #form>
+    </app-fortigo-form>
+  </div>
+    <mat-spinner  *ngIf=showLoader class="spinner"></mat-spinner>
+  <!-- grid field -->
+  <div>
+    <app-fortigo-grid [isDebug]=false [(columns)]=columnsData [rows]=rowsData
+      [(gridConfiguration)]=gridConfigurationData
+      (actionExtraButtonSelectedIndex)="actionExtraButtonClickedTrip($event)">
+    </app-fortigo-grid>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <div class="row button-cell">
+    <div *ngFor="let button of buttons" style="padding-right: 15px;">
+      <button type="button" mat-raised-button (click)="onSubmit([form],button.name)" [disabled]=button.isDisabled
+        appFortigoSubmitButton>
+        <mat-icon>{{button.icon}}</mat-icon> {{button.name}}
+      </button>
+    </div>
+  </div>
+</mat-dialog-actions>

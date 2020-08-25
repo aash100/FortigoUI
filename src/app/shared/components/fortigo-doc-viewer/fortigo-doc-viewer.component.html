@@ -1,0 +1,89 @@
+<!--
+ Created on Thu Sep 26 2019
+ Created by - 1149: Aashish Kumar
+
+ Copyright (c) 2019 Fortigo Network Logistics Pvt Ltd (4TiGO)
+-->
+<div class="row" style="height: 100%;">
+  <div class="col-md-3" style="min-width: 300px; height: 100%;">
+    <mat-spinner *ngIf="isLoading"></mat-spinner>
+    <mat-tree style="height:100%; overflow: auto;" [dataSource]="dataSource" [treeControl]="treeControl">
+      <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding>
+        <button mat-icon-button (click)="onChildNodeClick(node.item)">
+          {{node.item.key}}
+        </button>
+      </mat-tree-node>
+      <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding matTreeNodeToggle>
+        <button mat-icon-button [attr.aria-label]="'toggle ' + node.filename" (click)=onRootNodeClick(node.item)>
+          <mat-icon class="mat-icon-rtl-mirror">
+            {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
+          </mat-icon>
+        </button>
+        <div style="width: 100%;height: 100%;">
+          <span class="tab-underline fortigo-orange-badge" style="min-height: 50px;
+            margin-right: 50px; top: 12px; cursor: pointer;" [matBadge]=node.item.node.length matBadgeOverlap="false"
+            (click)=onRootNodeClick(node.item)>
+            {{node.item.key}}
+          </span>
+          <div>
+            <mat-icon *ngIf="node.item.value.isChecked && !node.isLoading" [ngStyle]=node.item.value.style>
+              check_circle
+            </mat-icon>
+          </div>
+          <mat-progress-bar *ngIf="node.isLoading" mode="indeterminate" class="example-tree-progress-bar"
+            style="top:10px;">
+          </mat-progress-bar>
+        </div>
+      </mat-tree-node>
+    </mat-tree>
+  </div>
+  <div class="col-md-9" style="height: 420px;">
+    <div style="height: 40px;">
+      <app-fortigo-form [(fields)]=imageFields [submitClearButtonEnabled]=false [fieldsFontSize]=fieldsFontSize>
+      </app-fortigo-form>
+    </div>
+    <div style="text-align: center;height: calc(100% - 50px);">
+      <div *ngIf="hasContent else noContent;" style="height: 100%">
+        <div *ngIf="showImage" style="height: 100%">
+          <ng-container *ngIf="!cropSelected">
+            <div style="height: calc(100% - 20px); overflow: auto;">
+                <img *ngIf="fileType==='image'" class=row [src]="showImageUrl" alt="name" width="500px" height="500px">
+                <img *ngIf="fileType!=='image'" class=row [src]="showImageUrl" alt="name" width="200px" height="200px">
+              <!-- <app-fortigo-image-cropper *ngIf="!cropSelected" [imageSource]="showImageUrl" (undoEdit)=undoEditChanges()
+              (editedImage)=updateImage($event)>
+            </app-fortigo-image-cropper> -->
+            </div>
+          </ng-container>
+          <app-fortigo-image-cropper *ngIf="cropSelected" [imageSource]="showImageUrl" (undoEdit)=undoEditChanges()
+            (editedImage)=updateImage($event)>
+          </app-fortigo-image-cropper>
+          <div style="width: 400px;">
+            <button class="small-button" mat-raised-button *ngIf="!cropSelected" (click)=editImage() matTooltip="Edit"
+              style="top: 31px; float: left; background-color: #E66006;">
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button class="small-button" *ngIf="cropSelected" mat-raised-button
+              style="top: 31px; float: left; background-color: #E66006;" matTooltip="Save" (click)=saveImage()>
+              <mat-icon>save</mat-icon>
+            </button>
+            <a download="custom-filename.jpg" [href]="showImageUrl">
+              <button class="small-button" mat-raised-button style="top: 31px; background-color: #E66006;"
+                matTooltip="Download">
+                <mat-icon>save_alt</mat-icon>
+              </button>
+            </a>
+          </div>
+        </div>
+      </div>
+      <ng-template #noContent>
+        <div style="height: 100%;display: flex;justify-content: center;">
+          <p style="align-self: center;">{{previewTitle}}</p>
+        </div>
+      </ng-template>
+      <div *ngIf="currentNode" style="float: right;width: 100%;
+      padding-left: 388px;">
+        <app-fortigo-form [(fields)]=uploadFields [submitClearButtonEnabled]=false (fileChanges)=uploadDocument($event)>
+        </app-fortigo-form>
+      </div>
+    </div>
+  </div>

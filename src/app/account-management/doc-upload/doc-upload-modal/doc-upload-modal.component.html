@@ -1,0 +1,117 @@
+<div class="doc-upload-modal">
+    <div class="modal-header " style="height: 57px;">
+        <div class="col-md " style="padding-left:1px; ">
+            <p *ngIf="mode=='direct'||mode=='value'"
+                style="border-left: 10px solid #0A50A1;padding: 6px; font-size: 15px;">NEW DOCUMENT</p>
+            <p *ngIf="mode=='edit'" style="border-left: 10px solid #0A50A1;padding: 6px; font-size: 15px;">EDIT
+                DOCUMENT</p>
+        </div>
+        <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')  ">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-bodyborder" style="padding: 1rem;">
+        <form #regiterForm="ngForm" novalidate>
+
+            <div class="row row-sm" >
+                <div class="col-md" *ngIf="mode=='direct'">
+                    <mat-form-field class="input-full-width">
+                        <mat-select placeholder="Select Company" [formControl]="companyCtrl" [(value)]="selectedCompany"
+                            name="companyList" #singleSelect required>
+                            <ngx-mat-select-search [noEntriesFoundLabel]="'No match found'"
+                                [formControl]="companyFilterCtrl" [placeholderLabel]="'search...'">
+                            </ngx-mat-select-search>
+                            <mat-option *ngFor="let company of filteredCompanies | async" [value]="company">
+                                {{company.companyName}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="col-md">
+                    <mat-form-field class="input-full-width">
+                        <input [autofocus]="true" matInput id="docAlias" required #docName="ngModel" name="docAlias"
+                            [(ngModel)]="doc.docAlias" placeholder="Name"
+                            [class.is-invalid]="docName.invalid && docName.touched" autocomplete="off">
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="row row-sm">
+                <div class="col-md">
+                    <mat-form-field class="input-full-width">
+                        <mat-select placeholder="Document Type" [(ngModel)]="selectedDocTypeId"
+                            (selectionChange)="setDocType(selectedDocTypeId)" name="docTypes" required>
+                            <mat-option *ngFor="let docType of docTypes" [value]="docType.id">{{docType.type}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="col-md" *ngIf="mode=='direct' || mode=='value'">
+                    <input style="display: none" type="file" (change)="onFileChanged($event)" #fileInput>
+                    <button (click)="fileInput.click()" class="btn  uploadButton submitButton" type="button">Select File
+                        <i class="fa fa-cloud-upload" aria-hidden="true"></i>
+                    </button><span style="color:gray"> *</span>
+                    
+                        <span style="font-size: 14px">{{fileName}}</span>
+                </div>
+
+            </div>
+            <div class="row row-sm">
+                <div class="col-md">
+                    <mat-form-field class="input-full-width">
+                        <input [autofocus]="true" matInput id="externalRef" #docName="ngModel" name="externalRef"
+                            [(ngModel)]="doc.docExternalNumber" placeholder="External Ref" autocomplete="off">
+                    </mat-form-field>
+                </div>
+                <div class="col-md" *ngIf="mode=='edit'">
+                    <mat-form-field class="input-full-width">
+                        <mat-select placeholder="Document Status" [(value)]="selectedDocStatus" required>
+                            <mat-option *ngFor="let docStatus of docStatuses" [value]="docStatus.id">{{docStatus.name}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="col-md" *ngIf="mode=='direct' || mode=='value'">
+                    <mat-form-field class="input-full-width">
+                        <mat-select placeholder="Fortigo Entity" [(value)]="selectedInternalComp" name="fortigoEntity">
+                            <mat-option *ngFor="let company of internalCompanyList" [value]="company">
+                                {{company.companyName}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="row row-sm">
+                <div class="col-md">
+                    <mat-form-field class="input-full-width">
+                        <input matInput [matDatepicker]="validFromDP" (click)="validFromDP.open()"
+                            [(ngModel)]="doc.docIssueDate" placeholder="Valid From" name="validFrom">
+                        <mat-datepicker-toggle matSuffix [for]="validFromDP"></mat-datepicker-toggle>
+                        <mat-datepicker #validFromDP></mat-datepicker>
+                    </mat-form-field>
+                </div>
+                <div class="col-md">
+                    <mat-form-field class="input-full-width">
+                        <input matInput [matDatepicker]="validTillDP" (click)="validTillDP.open()"
+                            [(ngModel)]="doc.docExpiryDate" placeholder="Valid Till" name="validTill">
+                        <mat-datepicker-toggle matSuffix [for]="validTillDP"></mat-datepicker-toggle>
+                        <mat-datepicker #validTillDP></mat-datepicker>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="row row-sm">
+                <div class="col-md">
+                    <mat-form-field class="input-full-width">
+                        <textarea matInput rows="2" cols="50" id="docDescription" name="docDescription" required
+                            #docDesc="ngModel" [(ngModel)]="doc.docDescription" placeholder="Description"
+                            [class.is-invalid]="docDesc.invalid && docDesc.touched"></textarea>
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn clearButton"
+                    (click)="activeModal.dismiss('Cross click')">Cancel</button>
+                <button type="button" class="btn submitButton" (click)="onSave()">Submit</button>
+            </div>
+        </form>
+    </div>
+
+</div>

@@ -1,0 +1,271 @@
+<!-- Account Table  -->
+<div class="container-fluid" style="padding: 0px">
+  <p-table #dt [value]="fortigoContact" rowExpandMode="single" dataKey="fortigo_contact"
+    [expandedRowKeys]="expandedRows" [ngClass]="'tableHeader'" [scrollable]="true" [multiSortMeta]="multiSortMeta"
+    [scrollHeight]="calcTableHeight" [style]="{width: '100%'}" [paginator]="isPaginating" [rows]="100"
+    sortMode="multiple">
+    <!-- Setting Column Group -->
+    <ng-template pTemplate="colgroup" let-columns>
+      <colgroup>
+        <col style="width: 5px;">
+        <col style="width: 30px;">
+        <col style="width: 40px;">
+        <col style="width: 20px;">
+        <col style="width: 30px;">
+        <col style="width: 55px;">
+        <col style="width: 35px;">
+        <col style="width: 20px;">
+        <col style="width: 40px;">
+        <col style="width: 40px;">
+        <col style="width: 55px;">
+        <col style="width: 20px;">
+        <col style="width: 25px;">
+      </colgroup>
+    </ng-template>
+
+    <!-- Column header and Calculation header -->
+    <ng-template pTemplate="header">
+      <!-- Header -->
+      <tr class="colWidth tableHeader">
+        <th></th>
+        <!-- Meeting 4TiGO Contact -->
+        <th class="header-styling pl-2 line-height:20px">
+          <div [pSortableColumn]="'fortigo_contact'" style="text-align: left;">
+            <span class="text-head">4TiGO Contact</span>
+            <p-sortIcon [field]="'fortigo_contact'" ariaLabel="Activate to sort"
+              ariaLabelDesc="Activate to sort in descending order" ariaLabelAsc="Activate to sort in ascending order">
+            </p-sortIcon>
+          </div>
+        </th>
+        <!-- Meeting 4TiGO Contact company Name -->
+        <th class="header-styling pl-2 line-height:20px">
+          <div [pSortableColumn]="'companyName'" style="text-align: left;">
+            <span class="text-head">Company Name</span>
+          </div>
+        </th>
+
+        <!-- Meeting when -->
+        <th class="header-styling pl-2 line-height:20px">
+          <div [pSortableColumn]="'meetingStartTime'" style="text-align: left;">
+            <span class="text-head">When</span>
+          </div>
+        </th>
+        <!-- Meeting Place Met -->
+        <th class="header-styling pl-2 line-height:20px">
+          <div [pSortableColumn]="'locationName'" style="text-align: left;">
+            <span class="text-head">Place Met</span>
+          </div>
+        </th>
+        <!-- Meeting Purpose -->
+        <th class="header-styling pl-2 line-height:20px">
+          <div [pSortableColumn]="'meetingTitle'" style="text-align: left;">
+            <span class="text-head">Purpose</span>
+          </div>
+        </th>
+        <!-- Meeting Status -->
+        <th class="header-styling pl-2 line-height:20px">
+          <div [pSortableColumn]="'meetingSetupByUserName'" style="text-align: left;">
+            <span class="text-head">Meeting Setup By</span>
+          </div>
+        </th>
+        <!-- Meeting Status -->
+        <th class="header-styling pl-2 line-height:20px">
+          <div [pSortableColumn]="'meetingStatus'" style="text-align: left;">
+            <span class="text-head">Status</span>
+          </div>
+        </th>
+        <!-- Meeting Customer Contacts -->
+        <th class="header-styling pl-2 line-height:20px">
+          <div [pSortableColumn]="'customerContacts'" style="text-align: left;">
+            <span class="text-head">Customer Contacts</span>
+          </div>
+        </th>
+        <!-- Meeting setup remarks -->
+        <th class="header-styling pl-2 line-height:20px">
+          <div style="text-align: left;">
+            <span class="text-head">What Transpired</span>
+          </div>
+        </th>
+
+        <!-- Meeting Next Step -->
+        <th class="header-styling pl-2 line-height:20px">
+          <div [pSortableColumn]="'postMeetingRemark'" style="text-align: left;">
+            <span class="text-head">Next Step</span>
+          </div>
+        </th>
+        <!-- Meeting By When -->
+        <th class="header-styling pl-2 line-height:20px">
+          <div [pSortableColumn]="'nextActionItemDate'" style="text-align: left;">
+            <span class="text-head">By When</span>
+          </div>
+        </th>
+        <!-- Meeting Meeting Type -->
+        <th class="header-styling pl-2 line-height:20px">
+          <div [pSortableColumn]="'meetingType'" style="text-align: left;">
+            <span class="text-head">Meeting Type</span>
+          </div>
+        </th>
+      </tr>
+    </ng-template>
+
+    <!-- Data -->
+    <ng-template pTemplate="body" let-customer let-expanded="expanded" let-columns="columns">
+      <tr class="colWidth">
+        <td class="header-styling" style="text-align: left;">
+          <a href="#" [pRowToggler]="customer" (click)="expandRow(customer)">
+            <i [ngClass]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></i>
+          </a>
+        </td>
+        <td class="header-styling" style="text-align: left;">
+          <span class="text-row row-no-margin " [title]="customer.fortigo_contact">
+            {{customer.fortigo_contact}}
+          </span>
+        </td>
+        <td class="header-styling" style="text-align: left;">
+          <span class="text-row row-no-margin " [title]="">
+            <!-- {{customer.meetingStartTime | date: 'dd/MM/yyyy'}} -->
+          </span>
+        </td>
+        <td class="header-styling" style="text-align: left;">
+          <span class="text-row row-no-margin " [title]="">
+            <!-- {{customer.meetingStartTime | date: 'dd/MM/yyyy'}} -->
+          </span>
+        </td>
+        <td class="header-styling" style="text-align: left;">
+          <span class="text-row row-no-margin " [title]="">
+            <!-- {{customer.meetingStartTime | date: 'dd/MM/yyyy'}} -->
+          </span>
+        </td>
+        <td class="header-styling" style="text-align: left;">
+          <span class="text-row row-no-margin " [title]="">
+            <!-- {{customer.locationName}} -->
+          </span>
+        </td>
+        <td class="header-styling" style="text-align: left;">
+          <span class="text-row row-no-margin " [title]="">
+            <!-- {{customer.meetingTitle}} -->
+          </span>
+        </td>
+        <td class="header-styling" style="text-align: left;">
+          <span class="text-row row-no-margin " [title]="">
+            <!-- {{customer.meetingStatus}} -->
+          </span>
+        </td>
+
+        <td class="header-styling" style="text-align: left;">
+          <span class="text-row row-no-margin " [title]="">
+            <!--  {{customer.customerContacts}} -->
+          </span>
+        </td>
+        <td class="header-styling" style="text-align: left;">
+          <span class="text-row row-no-margin " [title]="">
+            <!-- {{customer.postMeetingRemarks}} -->
+          </span>
+        </td>
+        <td class="header-styling" style="text-align: left;">
+          <span class="text-row row-no-margin " [title]="">
+            <!-- {{customer.nextActionItemDate | date: 'dd/MM/yyyy'}} -->
+          </span>
+        </td>
+        <td class="header-styling" style="text-align: left;">
+          <span class="text-row row-no-margin " [title]="">
+            <!-- {{customer.nextActionItemDate | date: 'dd/MM/yyyy'}} -->
+          </span>
+        </td>
+        <td class="header-styling" style="text-align: left;">
+          <span class="text-row row-no-margin " [title]="">
+            <!-- {{customer.meetingType}} -->
+
+          </span>
+        </td>
+
+        <!-- <td ngClass="icons">
+          <a routerLink="" class="icon-anchor"><i class="fa fa-edit mr-1" title="Edit"
+                (click)="openEditModal(customer)"></i></a>
+            <a routerLink="" class="icon-anchor"><i class="fa fa-trash mr-1" title="Deactivate"
+                (click)="deleteCustomer(customer)"></i></a>
+        </td> -->
+      </tr>
+    </ng-template>
+
+    <!-- No Data -->
+    <ng-template pTemplate="summary" *ngIf="totalRow === 0 && !loading">
+      No Data Found
+    </ng-template>
+    <ng-template pTemplate="rowexpansion" let-customer let-columns="columns">
+      <tr class="colWidth" *ngFor="let customer of fortigoMeeting">
+        <td class="header-row-styling" style="text-align: left;">
+          <!-- <a href="#" [pRowToggler]="customer" (click)="expandRow(customer)">
+                    <i [ngClass]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></i>
+                  </a> -->
+        </td>
+        <td class="header-row-styling" style="text-align: left;">
+          <span class="text-row row-no-margin " [title]="">
+            <!-- {{customer}} -->
+          </span>
+        </td>
+        <td class="header-row-styling hightlighted-cell" style="text-align: left;">
+          <span class="text-row row-no-margin hoverEffect" [title]="customer.companyName"
+            (click)="openCompany(customer.companyStringId, customer.companyName)">
+            {{customer.companyName}}
+          </span>
+        </td>
+        <td class="header-row-styling" style="text-align: left;">
+          <span class="text-row row-no-margin " [title]="customer.meetingStartTime | date: 'dd/MM/yyyy'">
+            {{customer.meetingStartTime | date: 'dd/MM/yyyy'}}
+          </span>
+        </td>
+        <td class="header-row-styling" style="text-align: left;">
+          <span class="text-row row-no-margin " [title]="customer.locationName">
+            {{customer.locationName}}
+          </span>
+        </td>
+        <td class="header-row-styling" style="text-align: left;">
+          <span class="text-row row-no-margin " [title]="customer.meetingTitle">
+            {{customer.meetingTitle}}
+          </span>
+        </td>
+        <td class="header-row-styling" style="text-align: left;">
+          <span class="text-row row-no-margin " [title]="customer.meetingSetupByUserName">
+            {{customer.meetingSetupByUserName}}
+          </span>
+        </td>
+        <td class="header-row-styling hightlighted-cell" style="text-align: left;">
+          <span style="margin-left: auto; margin-right: auto; display: table;" class="text-row row-no-margin "
+            [class]="customer.companyStatusClass" [title]="customer.meetingStatus | titlecase">
+            {{customer.meetingStatus | slice: 0:1 | titlecase }}
+          </span>
+        </td>
+
+        <td class="header-row-styling" style="text-align: left;">
+          <span class="text-row row-no-margin " [title]="customer.customerContacts">
+            {{customer.customerContacts}}
+          </span>
+        </td>
+
+        <td class="header-row-styling" style="text-align: left;">
+          <span class="text-row row-no-margin " [title]="customer.meetingSetupRemarks">
+            {{customer.meetingSetupRemarks}}
+          </span>
+        </td>
+        <td class="header-row-styling" style="text-align: left;">
+          <span class="text-row row-no-margin " [title]="customer.postMeetingRemarks">
+            {{customer.postMeetingRemarks}}
+          </span>
+        </td>
+        <td class="header-row-styling hightlighted-cell " style="text-align: left;">
+          <span class="text-row row-no-margin " [title]="customer.nextActionItemDate| date: 'dd/MM/yyyy'">
+            {{customer.nextActionItemDate | date: 'dd/MM/yyyy'}}
+          </span>
+        </td>
+        <td class="header-row-styling" style="text-align: left;">
+          <span class="text-row row-no-margin " [title]="customer.meetingType">
+            {{customer.meetingType}}
+
+          </span>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+  <div *ngIf="fortigoContact.length === 0 && loading === false" class="no-data-found">No data found</div>
+</div>

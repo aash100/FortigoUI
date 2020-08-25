@@ -1,0 +1,732 @@
+/* You can add global styles to this file, and also import other style files */
+
+@import '~bootstrap/dist/css/bootstrap.min.css';
+:root {
+    --col-min-width: 70px;
+    --table-font: 8px;
+    --larger-font: 15px;
+    --large-font: 14px;
+    --medium-font: 11px;
+    --small-font: 10px;
+    --smaller-font: 9px;
+    --icon-size: 15px;
+    --blue-color: #0a50a1;
+    --maroon-color: #800000;
+    --orange-color: #FFB100;
+    --black-color: black;
+    --green-color: #5CAD00;
+    --red-color: #E60000;
+    --off-white-color: #fafafb;
+    --white-color: #ffffff;
+    --slate-gray-color: #d3dce8;
+    --bold-font-weight: bold;
+    --bolder-font-weight: bolder;
+    --normal-font-weight: normal;
+    --lighter-font-weight: lighter;
+    --margin-small: 10px;
+    --margin-medium: 25px;
+    --margin-large: 35px;
+    --background-light-shade1: #fffaf4;
+    --background-light-shade2: #f4fbff;
+    --primary-color: #007bff;
+    --primary-background-color: #b1d6ff;
+    --secondary-color: #6c757d;
+    --secondary-background-color: #d4d7da;
+    --success-color: #28a745;
+    --success-background-color: #b9eec5;
+    --danger-color: #dc3545;
+    --danger-background-color: #f3bbc0;
+    --warning-color: #ffc107;
+    --warning-background-color: #ffe8a4;
+    --info-color: #17a2b8;
+    --info-background-color: #b1ecf5;
+    --notes-font: 12px;
+    --red-shade-1-color: #ff5d5b;
+    --red-shade-2-color: #ff4846;
+    --red-shade-3-color: #ff0700;
+    --red-shade-4-color: #bd0500;
+    --red-shade-5-color: #760300;
+    --fortigo-orange-color: #E66006;
+    --fortigo-blue-color: #0A50A1;
+    --very-dark-greyish-violet-color: #69656B;
+    --dark-greyish-magenta-color: #989798;
+}
+
+/* Icon Color CSS Starts */
+
+.primary-icon {
+    color: var(--primary-color) !important;
+}
+
+.secondary-icon {
+    color: var(--secondary-color) !important;
+}
+
+.success-icon {
+    color: var(--success-color) !important;
+}
+
+.danger-icon {
+    color: var(--danger-color) !important;
+}
+
+.warning-icon {
+    color: var(--warning-color) !important;
+}
+
+.info-icon {
+    color: var(--info-color) !important;
+}
+
+.fortigo-orange-icon {
+    color: var(--fortigo-orange-color) !important;
+}
+
+.fortigo-blue-icon {
+    color: var(--fortigo-blue-color) !important;
+}
+
+/* Icon Color CSS Ends */
+
+/* Progress Bar Color CSS Starts */
+
+.primary-progress .mat-progress-bar-fill::after {
+    background-color: var(--primary-color) !important;
+}
+
+.secondary-progress .mat-progress-bar-fill::after {
+    background-color: var(--secondary-color) !important;
+}
+
+.success-progress .mat-progress-bar-fill::after {
+    background-color: var(--success-color) !important;
+}
+
+.danger-progress .mat-progress-bar-fill::after {
+    background-color: var(--danger-color) !important;
+}
+
+.warning-progress .mat-progress-bar-fill::after {
+    background-color: var(--warning-color) !important;
+}
+
+.info-progress .mat-progress-bar-fill::after {
+    background-color: var(--info-color) !important;
+}
+
+.fortigo-orange-progress .mat-progress-bar-fill::after {
+    background-color: var(--fortigo-orange-color) !important;
+}
+
+.fortigo-blue-progress .mat-progress-bar-fill::after {
+    background-color: var(--fortigo-blue-color) !important;
+}
+
+/* Progress Bar Color CSS Ends */
+
+/* Badge Color CSS Starts */
+
+.fortigo-orange-badge .mat-badge-content {
+    background-color: var(--fortigo-orange-color) !important;
+}
+
+.fortigo-blue-badge .mat-badge-content {
+    background-color: var(--fortigo-blue-color) !important;
+}
+
+/* Badge Color CSS  Ends */
+
+@font-face {
+    font-family: swis721;
+    src: url(assets/font/Swis721_BT_Roman.ttf) format("opentype");
+}
+
+* {
+    font-family: swis721;
+    /* color:#4d4d4d; */
+}
+
+.material-icons {
+    font-family: 'Material Icons' !important;
+}
+
+.body {
+    background-color: #f2f2f6;
+    font-family: swis721
+}
+
+.fortigo-yellow {
+    background: var(--fortigo-orange-color);
+}
+
+.fortigo-blue {
+    background: var(--fortigo-blue-color) !important;
+}
+
+p {
+    color: #4d4d4d;
+    font-family: swis721
+}
+
+html, body {
+    height: 100%;
+    overflow: hidden;
+}
+
+.submitButton {
+    height: 30px !important;
+    font-weight: bold !important;
+    margin: 0px 10px;
+    background: rgb(230, 96, 6) !important;
+    font-size: 12px !important;
+    border-radius: 0.25rem !important;
+    color: white !important;
+    padding: 0px 10px !important;
+    font-family: swis721 !important;
+    line-height: 2.4 !important;
+    width: 92px !important;
+}
+
+.uploadButton {
+    color: white;
+    background: var(--fortigo-orange-color);
+    border-color: rgb(165, 69, 4);
+}
+
+.uploadButton:hover, .uploadButton:focus {
+    color: white;
+    background: rgb(240, 124, 47);
+    border-color: rgb(175, 84, 24);
+}
+
+.submitButton:hover, .submitButton:focus {
+    background: red !important;
+    color: white !important;
+    /* padding-right: 30px;
+    padding-left: 30px; */
+    /* width: 130px; */
+    /* margin: 10px; */
+    /* font-size: 12px !important; */
+}
+
+.clearButton {
+    width: 100px;
+    background: transparent;
+    color: var(--fortigo-orange-color);
+    padding-right: 30px !important;
+    padding-left: 30px !important;
+    padding-top: 10px !important;
+    padding-bottom: 10px !important;
+    /* margin: 10px !important; */
+    font-size: 12px !important;
+}
+
+.clearButton:hover, .clearButton:focus {
+    /* width: 130px; */
+    background: transparent;
+    color: red;
+    /* padding-right: 30px;
+    padding-left: 30px;
+    padding-top: 10px;
+    padding-bottom: 10px; */
+    /* margin: 10px; */
+    /* font-size: 12px !important; */
+}
+
+.input-full-width {
+    width: 100%;
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}
+
+.icon-button>a {
+    background: var(--fortigo-orange-color);
+    color: white !important;
+}
+
+.icon-button :hover {
+    background: #E60000;
+    color: white;
+}
+
+.filter {
+    font-size: 22px;
+    /* color:#666 !important; */
+    cursor: pointer;
+    opacity: 1;
+}
+
+.filter :hover, .filter :focus {
+    /* color:gray; */
+    opacity: 0.8;
+    text-decoration: none;
+}
+
+.iconField {
+    position: relative;
+    padding-left: 50px !important;
+}
+
+.iconField :before {
+    color: gray;
+    display: inline-block;
+    position: absolute;
+    font-size: 22px;
+    z-index: 1;
+    top: 0px;
+    left: 55px;
+    margin: 0;
+}
+
+.icons>a {
+    color: #4d4d4d !important;
+    font-size: 18px;
+}
+
+/* a:hover {
+  color: white !important;
+} */
+
+a.mat-tab-link:hover {
+    color: #0056b3 !important;
+    text-decoration: none;
+}
+
+.overPane a:hover {
+    color: #0056b3 !important;
+}
+
+ng2-smart-table a:hover {
+    color: #0056b3 !important;
+    text-decoration: none !important;
+}
+
+a.ng2-smart-action:hover {
+    color: #0056b3 !important;
+}
+
+i {
+    cursor: pointer;
+}
+
+.icons>a :hover {
+    color: #0A50A1 !important;
+}
+
+a.icon-anchor:hover {
+    color: #0A50A1 !important;
+}
+
+.mat-nav-list a.mat-list-item:hover {
+    color: #0A50A1 !important;
+}
+
+.ui-table-scrollable-wrapper, .ui-treetable-scrollable-wrapper {
+    border: solid 1px #dad6d6;
+}
+
+.ui-treetable .ui-sortable-column.ui-state-highlight {
+    background-color: transparent !important;
+}
+
+.ui-table .ui-sortable-column.ui-state-highlight {
+    background-color: transparent !important;
+}
+
+.ui-treetable .ui-treetable-thead>tr.tableCalcHeader>th, .ui-treetable .ui-treetable-tfoot>tr>td {
+    background: white;
+    color: black;
+    font-size: 9px;
+    height: 20px;
+    border: none;
+}
+
+.ui-table .ui-table-thead>tr.tableCalcHeader>th, .ui-table .ui-table-tfoot>tr>td {
+    background: white;
+    color: black;
+    font-size: 9px;
+    height: 20px;
+    border: none;
+}
+
+.ui-treetable .ui-treetable-thead>tr.tableHeader>th, .ui-treetable .ui-treetable-tfoot>tr>td {
+    background: #d3dce8;
+    line-height: 1.0;
+}
+
+.ui-table .ui-table-thead>tr.tableHeader>th, .ui-table .ui-table-tfoot>tr>td {
+    background: #d3dce8;
+    line-height: 1.0;
+}
+
+.ui-table .ui-table-tbody>tr>td {
+    line-height: 1.0;
+}
+
+.ui-table .ui-table-thead>tr.tableHeader {
+    box-shadow: 0 3px 7px 0 rgba(0, 0, 0, 0.11);
+    border-radius: 3px;
+}
+
+thead.ui-table-thead {
+    /* border:2px solid red; */
+    border-collapse: separate;
+    /* border-bottom: 10px solid #f2f2f6; */
+    box-shadow: 0 0 7px rgba(0, 0, 0, 0.11);
+}
+
+.search-icon {
+    top: 7px;
+    position: absolute;
+    left: 8px;
+}
+
+.ngx-material-timepicker-toggle {
+    display: inherit !important;
+}
+
+*:focus {
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+.material-timepicker-input {
+    border-left: none;
+    border-top: none;
+    border-right: none;
+    width: calc(100% - 40px);
+}
+
+mat-form-field .mat-form-field-infix {
+    border: none;
+}
+
+.spinner {
+    position: absolute !important;
+    top: 50%;
+    left: 44%;
+    z-index: 99999;
+}
+
+.opaque-body {
+    opacity: 0.2;
+}
+
+/* Material Tab Styling -- starts here */
+
+.mat-tab-label {
+    height: 29px !important;
+}
+
+.mat-tab-labels, .mat-tab-label, .mat-tab-link {
+    color: #4d4d4d;
+    font-family: swis721 !important;
+}
+
+/* Material Modal Window Styling -- starts here */
+
+.modal-footer {
+    padding: 5px !important;
+}
+
+.material-modal-close-button {
+    position: absolute !important;
+    right: 0px;
+    top: -2px;
+}
+
+/* Material Modal Window Styling -- ends here */
+
+.mat-tab-group.mat-primary .mat-ink-bar, .mat-tab-nav-bar.mat-primary .mat-ink-bar {
+    background: white;
+    height: 5px;
+    border-bottom: none !important;
+}
+
+.mat-tab-nav-bar:hover, .mat-background-primary:hover .mat-tab-links:hover {
+    color: black !important;
+}
+
+.mat-ink-bar {
+    background: var(--fortigo-orange-color) !important;
+    height: 2px !important;
+    width: 150px !important;
+}
+
+.mat-tab-link {
+    padding: 0 !important;
+    height: 28px !important;
+    min-width: 146px !important;
+}
+
+a.mat-tab-link:hover {
+    color: #4d4d4d !important;
+    text-decoration: none;
+}
+
+/* Material Tab Styling -- ends here */
+
+/* Material Grid Styling  -- starts here */
+
+.mat-header-cell, .mat-footer-cell, .mat-cell {
+    min-width: var(--col-min-width);
+    box-sizing: border-box;
+}
+
+td.mat-cell, td.mat-footer-cell, th.mat-header-cell {
+    line-height: 1.0;
+}
+
+td.mat-cell {
+    border-top: var(--mat-grid-cell-border-top);
+    border-right: var(--mat-grid-cell-border-right);
+    border-bottom: var(--mat-grid-cell-border-bottom);
+    border-left: var(--mat-grid-cell-border-left);
+    background: var(--mat-grid-cell-background);
+}
+
+td.mat-footer-cell {
+    border-top: var(--mat-grid-footer-border-top);
+    border-right: var(--mat-grid-footer-border-right);
+    border-bottom: var(--mat-grid-footer-border-bottom);
+    border-left: var(--mat-grid-footer-border-left);
+    background: var(--mat-grid-footer-background);
+}
+
+th.mat-header-cell.header {
+    border-top: var(--mat-grid-header-border-top);
+    border-right: var(--mat-grid-header-border-right);
+    border-bottom: var(--mat-grid-header-border-bottom);
+    border-left: var(--mat-grid-header-border-left);
+    background: var(--mat-grid-header-background);
+}
+
+th.mat-header-cell.sub-header-1 {
+    border-top: var(--mat-grid-sub-header-1-border-top);
+    border-right: var(--mat-grid-sub-header-1-border-right);
+    border-bottom: var(--mat-grid-sub-header-1-border-bottom);
+    border-left: var(--mat-grid-sub-header-1-border-left);
+    background: var(--mat-grid-sub-header-1-background);
+}
+
+th.mat-header-cell.sub-header-2 {
+    border-top: var(--mat-grid-sub-header-2-border-top);
+    border-right: var(--mat-grid-sub-header-2-border-right);
+    border-bottom: var(--mat-grid-sub-header-2-border-bottom);
+    border-left: var(--mat-grid-sub-header-2-border-left);
+    background: var(--mat-grid-sub-header-2-background);
+}
+
+th.mat-header-cell.calculated-sub-header {
+    border-top: var(--mat-grid-calculated-header-border-top);
+    border-right: var(--mat-grid-calculated-header-border-right);
+    border-bottom: var(--mat-grid-calculated-header-border-bottom);
+    border-left: var(--mat-grid-calculated-header-border-left);
+    background: var(--mat-grid-calculated-header-background);
+}
+
+.mat-paginator-page-size {
+    display: none !important;
+}
+
+.small-checkbox .mat-checkbox-frame, .small-checkbox .mat-checkbox-inner-container, .small-checkbox mat-pseudo-checkbox {
+    height: 12px !important;
+    width: 12px !important;
+}
+
+.small-checkbox .mat-pseudo-checkbox-checked::after {
+    top: 1px;
+    left: 0px;
+    width: 6px;
+    height: 2px;
+}
+
+.small-checkbox .mat-checkbox-layout {
+    margin-bottom: 0px !important;
+}
+
+.small-checkbox .mat-checkbox-ripple {
+    /*'10px'-same as your required circle radius*/
+    left: calc(50% - 18px) !important;
+    /*'10px'-same as your required circle radius*/
+    top: calc(50% - 18px) !important;
+}
+
+.mat-checkbox .mat-checkbox-ripple {
+    height: 35px !important;
+    width: 35px !important;
+}
+
+.mat-radio-button .mat-radio-ripple {
+    height: 33px !important;
+    width: 33px !important;
+}
+
+.small-radio-button .mat-radio-container, .small-radio-button .mat-radio-outer-circle, .small-radio-button .mat-radio-inner-circle {
+    height: 12px !important;
+    width: 12px !important;
+}
+
+.small-radio-button .mat-radio-ripple {
+    /*'10px'-same as your required circle radius*/
+    left: calc(50% - 17px) !important;
+    /*'10px'-same as your required circle radius*/
+    top: calc(50% - 16px) !important;
+}
+
+/* Material Grid Styling -- ends here */
+
+/* ng2-smart-table pagination -- starts here */
+
+.ng2-smart-pagination-nav {
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 10px;
+}
+
+.page-link-prev {
+    height: 100%;
+}
+
+.page-link-next {
+    height: 100%;
+}
+
+/* ng2-smart-table pagination -- ends here */
+
+/* grid head styling*/
+
+.mat-sort-header-button {
+    margin-bottom: 4px;
+    justify-content: center !important;
+    width: 100% !important;
+}
+
+/* Material Navigation Menu - Starts here */
+
+.navigation-menu-panel {
+    position: absolute;
+    top: 69px;
+    max-width: 300px !important;
+    width: 580px;
+    box-shadow: none;
+}
+
+.navigation-sub-menu-panel {
+    min-height: 35px !important;
+    margin-top: 7px;
+}
+
+/* Material Navigation Menu - Ends here */
+
+.xtra-large .modal-dialog {
+    max-width: 1361px !important;
+}
+
+.mat-menu-content:not(:empty) {
+    padding-top: 0px !important;
+    padding-bottom: 0px !important;
+}
+
+/* modal styling */
+
+.font-small {
+    font-size: 13px !important;
+}
+
+/* .mat-form-field-infix {
+    padding-top: 0px !important;
+} */
+
+.row-sm {
+    height: 46px;
+}
+
+.modal-bodyborder {
+    padding-bottom: 5px !important;
+}
+
+ng2-smart-table>table {
+    line-height: 1.1em !important;
+    font-size: 14px !important;
+}
+
+/*
+remove default mat-ink-bar from tabs  
+ */
+
+mat-ink-bar {
+    display: none !important;
+}
+
+.fortigo-tab mat-ink-bar {
+    display: block !important;
+}
+
+/* mat modal container */
+
+.mat-dialog-container {
+    padding-top: 15px !important;
+    padding-left: 15px !important;
+}
+
+.mat-datepicker-content .mat-calendar {
+    zoom: 0.75;
+}
+
+/* Swal CSS - Starts here */
+
+.swal2-header {
+    font-size: 14px !important;
+}
+
+.swal2-title {
+    font-size: 22px !important;
+}
+
+.swal2-content {
+    font-size: 12px !important;
+}
+
+.swal2-actions {
+    font-size: 14px !important;
+}
+
+/* Swal CSS -  Ends here */
+
+.no-focus .mat-button-focus-overlay {
+    background-color: transparent !important;
+}
+
+/* filter style starts here */
+
+.filter-sidenav .mat-drawer-inner-container {
+    overflow-x: hidden !important;
+}
+
+/* filter style - Ends here */
+
+.no-border {
+    border: none !important;
+}
+
+/* Remove Arrows/Spinners style for number input - Starts here */
+
+/* Chrome, Safari, Edge, Opera */
+
+input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Firefox */
+
+input[type=number] {
+    -moz-appearance: textfield;
+}
+
+/* Remove Arrows/Spinners style for number input -  Ends  here */
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

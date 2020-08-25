@@ -1,0 +1,18 @@
+.collection-entry-card, .instrument-details-card, .remarks-card {
+    padding: 0px 3px 4px 3px;
+    margin-bottom: 10px;
+}
+
+.card-title {
+    text-decoration: underline;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+/* .mat-card-header-text {
+    margin: 0 !important;
+} */
+
+.mat-card-content {
+    margin-top: 3px !important;
+}

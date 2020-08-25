@@ -1,0 +1,14 @@
+<mat-form-field [appearance]="themeAppearance" class="input-full-width">
+    <mat-select [placeholder]="placeholder" [formControl]="selectCtrl" (selectionChange)="valueChanged($event)" #singleSelect [multiple]=multiple>
+        <ngx-mat-select-search [noEntriesFoundLabel]="'No match found'" [formControl]="selectFilterCtrl" [placeholderLabel]="searchPlaceholder">
+        </ngx-mat-select-search>
+        <!-- For None Selected -->
+        <mat-option hidden=true *ngIf="deSelected">None</mat-option>
+        <mat-option class="small-checkbox" *ngFor="let field of filteredData | async" [value]="field[dataValue]">
+            {{field[dataKey]}}
+            <!-- For clear the option -->
+            <mat-icon class="clear-icon-style" *ngIf="field[dataKey] === selectedValue && singleSelect.panelOpen" (click)="removeOption()">clear
+            </mat-icon>
+        </mat-option>
+    </mat-select>
+</mat-form-field>

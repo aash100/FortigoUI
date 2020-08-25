@@ -1,0 +1,17 @@
+<!--
+ Created on Wed Sep 04 2019
+ Created by - 1214: Sachin Sehgal
+
+ Copyright (c) 2019 Fortigo Network Logistics Pvt Ltd (4TiGO)
+-->
+
+<!-- Header -->
+<div class="material-modal-header">
+  <app-fortigo-modal-header (modalClose)="modalClose()">{{ modalHeader}}</app-fortigo-modal-header>
+</div>
+
+<!-- Company at the top of the form -->
+<app-fortigo-form [fields]="fields" [checkValidationBeforeSubmit]=true [isReadOnly]=isReadOnly [mode]="'auto'"
+  [submitClearButtonEnabled]=isSubmitEnabled (formSubmit)="onSubmitDocumentForm($event)"
+  (fileChanges)="onDocumentSelectedFiles($event)" #documentForm>
+</app-fortigo-form>

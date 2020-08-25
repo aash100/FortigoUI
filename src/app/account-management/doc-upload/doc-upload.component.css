@@ -1,0 +1,10 @@
+.button>a,
+.button>a>i {
+    background: #E66006;
+    color: white;
+    cursor: pointer;
+}
+
+.button :hover {
+    background: rgb(252, 104, 5);
+}

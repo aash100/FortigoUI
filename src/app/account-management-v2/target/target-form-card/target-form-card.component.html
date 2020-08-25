@@ -1,0 +1,106 @@
+<div class="mb-1" style="border-radius: 15px;">
+  <mat-card class="pl-3" style="border-radius: 5px; padding-top: 6px; padding-bottom: 0px;">
+    <div *ngIf="mode !== 'edit'" class="action">
+      <button mat-icon-button color="primary" title="Remove" (click)="onRemove()">
+        <mat-icon aria-label="Remove">delete</mat-icon>
+      </button>
+    </div>
+    <form #targetForm="ngForm">
+      <mat-card-content class="m-0" style="padding-left: 10px; font-size: 10px; font-weight: 800">
+        <div class="row">
+          <div class="col-md-2" style="padding: 10px;">
+            <app-fortigo-form [fields]="fields" [mode]="'inline'" [submitClearButtonEnabled]=false
+              (selectChanges)="onSelectChange($event)">
+            </app-fortigo-form>
+          </div>
+          <div class="col-md-10">
+            <div class="row" style="height: 28px;">
+              <span style="color: #0071bb; font-weight: 600" class="ml-3 mt-2" matTooltip="Target - Revenue"
+                matTooltipPosition="right">(T - R) </span>
+              <mat-form-field *ngFor="let monthlyTarget of data?.targetRevenue?.monthly;let i = index"
+                class="m-1 monthly">
+                <input [name]="'monthlyTargetRevenue'+i" matInput class="mr-1" [(ngModel)]="monthlyTarget.data"
+                  (change)="saveData()" [placeholder]="monthlyTarget.placeholder">
+              </mat-form-field>
+              <span class="m-1">-</span>
+              <mat-form-field *ngFor="let quarterlyTarget of data?.targetRevenue?.quarterly;let i = index"
+                class="m-1 quarterly">
+                <input [name]="'quarterlyTargetRevenue'+i" matInput class="quarterly" class="mr-1"
+                  [(ngModel)]="quarterlyTarget.data" (change)="saveData()" [placeholder]="quarterlyTarget.placeholder">
+              </mat-form-field>
+              <span class="m-1">-</span>
+              <mat-form-field *ngFor="let yearlyTarget of data?.targetRevenue?.yearly;let i = index" class="m-1 yearly">
+                <input [name]="'yearlyTargetRevenue'+i" matInput class="mr-1" [(ngModel)]="yearlyTarget.data"
+                  (change)="saveData()" [placeholder]="yearlyTarget.placeholder">
+              </mat-form-field>
+            </div>
+            <div class="row" style="height: 28px;">
+              <span style="color: #0071bb; font-weight: 600" class="ml-3 mt-2" matTooltip="Target - Margin"
+                matTooltipPosition="right">(T - M) </span>
+              <mat-form-field *ngFor="let monthlyTarget of data?.targetMargin?.monthly;let i = index"
+                class="m-1 monthly">
+                <input [name]="'monthlyTargetMargin'+i" matInput class="mr-1" [(ngModel)]="monthlyTarget.data"
+                  (change)="saveData()" [placeholder]="monthlyTarget.placeholder">
+              </mat-form-field>
+              <span class="m-1">-</span>
+              <mat-form-field *ngFor="let quarterlyTarget of data?.targetMargin?.quarterly;let i = index"
+                class="m-1 quarterly">
+                <input [name]="'quarterlyTargetMargin'+i" matInput class="quarterly" class="mr-1"
+                  [(ngModel)]="quarterlyTarget.data" (change)="saveData()" [placeholder]="quarterlyTarget.placeholder">
+              </mat-form-field>
+              <span class="m-1">-</span>
+              <mat-form-field *ngFor="let yearlyTarget of data?.targetMargin?.yearly;let i = index" class="m-1 yearly">
+                <input [name]="'yearlyTargetMargin'+i" matInput class="mr-1" [(ngModel)]="yearlyTarget.data"
+                  (change)="saveData()" [placeholder]="yearlyTarget.placeholder">
+              </mat-form-field>
+            </div>
+            <div class="row" style="height: 28px;">
+              <span style="color: #0071bb; font-weight: 600" class="ml-3 mt-2" matTooltip="Estimate - Revenue"
+                matTooltipPosition="right">(E - R) </span>
+              <mat-form-field *ngFor="let monthlyEstimate of data?.estimateRevenue?.monthly;let i = index"
+                class="m-1 monthly">
+                <input [name]="'monthlyEstimateRevenue'+i" matInput class="mr-1" [(ngModel)]="monthlyEstimate.data"
+                  (change)="saveData()" [placeholder]="monthlyEstimate.placeholder">
+              </mat-form-field>
+              <span class="m-1">-</span>
+              <mat-form-field *ngFor="let quarterlyEstimate of data?.estimateRevenue?.quarterly;let i = index"
+                class="m-1 quarterly">
+                <input [name]="'quarterlyEstimateRevenue'+i" matInput class="quarterly" class="mr-1"
+                  [(ngModel)]="quarterlyEstimate.data" (change)="saveData()"
+                  [placeholder]="quarterlyEstimate.placeholder">
+              </mat-form-field>
+              <span class="m-1">-</span>
+              <mat-form-field *ngFor="let yearlyEstimate of data?.estimateRevenue?.yearly;let i = index"
+                class="m-1 yearly">
+                <input [name]="'yearlyEstimateRevenue'+i" matInput class="mr-1" [(ngModel)]="yearlyEstimate.data"
+                  (change)="saveData()" [placeholder]="yearlyEstimate.placeholder">
+              </mat-form-field>
+            </div>
+            <div class="row" style="height: 28px;">
+              <span style="color: #0071bb; font-weight: 600" class="ml-3 mt-2" matTooltip="Estimate - Margin"
+                matTooltipPosition="right">(E - M) </span>
+              <mat-form-field *ngFor="let monthlyEstimate of data?.estimateMargin?.monthly;let i = index"
+                class="m-1 monthly">
+                <input [name]="'monthlyEstimateMargin'+i" matInput class="mr-1" [(ngModel)]="monthlyEstimate.data"
+                  (change)="saveData()" [placeholder]="monthlyEstimate.placeholder">
+              </mat-form-field>
+              <span class="m-1">-</span>
+              <mat-form-field *ngFor="let quarterlyEstimate of data?.estimateMargin?.quarterly;let i = index"
+                class="m-1 quarterly">
+                <input [name]="'quarterlyEstimateMargin'+i" matInput class="quarterly" class="mr-1"
+                  [(ngModel)]="quarterlyEstimate.data" (change)="saveData()"
+                  [placeholder]="quarterlyEstimate.placeholder">
+              </mat-form-field>
+              <span class="m-1">-</span>
+              <mat-form-field *ngFor="let yearlyEstimate of data?.estimateMargin?.yearly;let i = index"
+                class="m-1 yearly">
+                <input [name]="'yearlyEstimateMargin'+i" matInput class="mr-1" [(ngModel)]="yearlyEstimate.data"
+                  (change)="saveData()" [placeholder]="yearlyEstimate.placeholder">
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+      </mat-card-content>
+    </form>
+  </mat-card>
+</div>

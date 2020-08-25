@@ -1,0 +1,27 @@
+<!--
+ Created on Mon Sep 30 2019
+ Created by - 1149: Aashish Kumar
+
+ Copyright (c) 2019 Fortigo Network Logistics Pvt Ltd (4TiGO)
+-->
+<div class="row">
+    <div class="img-container col-md-8">
+        <img #image [src]="imageSource" crossorigin>
+    </div>
+    <!-- <img [src]="imageDestination" class="img-preview"> -->
+    <div style="width: 200px; padding-left: 30px;" class="col-md-4">
+        <button mat-raised-button class="small-button" style="background-color: #E66006;float: left;"
+            (click)=undoChanges() matTooltip="Undo">
+            <mat-icon>undo</mat-icon>
+        </button>
+
+        <button mat-raised-button class="small-button" style="background-color: #E66006;"
+            (click)="rotateImage('anti-clock-wise')" matTooltip="Rotate Left">
+            <mat-icon>rotate_left</mat-icon>
+        </button>
+        <button mat-raised-button class="small-button" style="background-color: #E66006;float: right;"
+            (click)="rotateImage('clock-wise')" matTooltip="Rotate Right">
+            <mat-icon>rotate_right</mat-icon>
+        </button>
+    </div>
+</div>

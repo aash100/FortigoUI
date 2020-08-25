@@ -1,0 +1,18 @@
+<!--
+ Created on Tue Aug 20 2019
+ Created by - 1214: Sachin Sehgal
+
+ Copyright (c) 2019 Fortigo Network Logistics Pvt Ltd (4TiGO)
+-->
+<!-- Loader -->
+<mat-spinner *ngIf="showModalLoader" class="spinner"></mat-spinner>
+<app-fortigo-modal-header>{{title}}</app-fortigo-modal-header>
+<div class="container-fluid">
+  <!-- form -->
+  <mat-dialog-content class="mat-typography">
+    <app-fortigo-form [(groups)]=groups [submitClearButtonEnabled]=true [submitClearButtonEnabled]=false
+      [isReadOnly]=false [(fields)]=fields (fileChanges)="onFileChanges($event)" [isSubmitDisabled]=isSubmitDisabled
+      (formSubmit)="_data.type === 'banner' ? onSubmitBanner($event) : onSubmit($event)" [mode]="'auto'" [checkValidationBeforeSubmit]=true #mediaform>
+    </app-fortigo-form>
+  </mat-dialog-content>
+</div>

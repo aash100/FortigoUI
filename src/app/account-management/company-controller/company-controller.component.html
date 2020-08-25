@@ -1,0 +1,86 @@
+<div class="container-fluid" style="box-sizing: border-box; padding-top: 10px">
+  <div class="row">
+    <div class="col-md-3 " style="padding-left:15px; ">
+      <p style="border-left: 10px solid #0A50A1;padding-left: 10px; font-size: 14px;"><span
+          style="font-size: 15px; color: #0A50A1;">ACCOUNT
+          NAME</span><br>
+        <span style="font-size: 15px;">{{selectedCompanyName}}</span>
+      </p>
+    </div>
+    <ng-container *ngIf="selectedTab !== 'ACCOUNT SUMMARY' && selectedTab !== ''">
+      <div class="col-md-1 icon-button "></div>
+      <div class="col-md-1 icon-button "></div>
+      <div class="col-md-1 icon-button " style="margin-top: 6px;">
+        <a class="btn" routerLink="#" style="position: absolute;" (click)="openSelectedModal()">
+          <i class="fa fa-plus"></i>
+          {{selectedTab}}</a>
+      </div>
+
+      <div class="col-md-3 iconField">
+        <i class="fa fa-search search-icon"></i>
+        <input #search maxlength=20 class="search form-control iconField" type="text" [(ngModel)]="searchValue"
+          placeholder="Search..." (keyup.enter)="onSearch(search.value)"
+          [appInputValidator]="{text:search.value,pattern:'^[a-zA-Z0-9_. -]*$',allowKeyInput:false}">
+        <span *ngIf=" isBelowSearchMinLen" style="color: red">Minimum 3 characters are required</span>
+        <div *ngIf="search.value.length == 20" style="color: red">Maximum characters limit reached.</div>
+      </div>
+      <div class="col-md-2  m-0 p-0" style="display: inline-flex; ">
+        <div class="p-0 mr-3 ml-0" style="display: inline-flex;">
+          <a class="filter" (click)="refresh()"> <i class="fa fa-refresh"></i>
+          </a>
+        </div>
+        <div class="p-0 m-0" style="display: inline-flex;">
+          <a (click)="filterClicked()" class="filter"
+            [ngStyle]="isFilterApplied ? {'color': '#E66006'}:{'color':'#4d4d4d'}"> <i class="fa  fa-filter "></i>
+          </a>
+          <ng-container *ngFor="let key of filterFieldsKey; let i=index;">
+
+            <!-- <mat-chip-list style="display: inline-grid" #accountfilterChipList>
+              <mat-chip color="primary" (removed)="removeFilter(filterField)" [title]="filterFieldsData.placeholder[i]"
+                *ngIf="filterFieldsData.value[key] !== undefined && filterFieldsData.value[key] !== null && !isFilterCleared && isFilterApplied"
+                selected>
+                {{ filterFieldsData.placeholder[i] }}: {{ filterFieldsData.value[key] | date: 'dd/MM/yyyy' }}
+                <mat-icon matChipRemove>cancel</mat-icon>
+              </mat-chip>
+            </mat-chip-list> -->
+
+          </ng-container>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+  <div class="row">
+    <button (click)="back()" class="btn submitButton mt-0 mb-0"
+      style="width: 83px; padding: 2px 2px;margin-left: 15px;"> Back</button>
+  </div>
+</div>
+
+
+<div class='container-fluid' style=" margin-top: 1px;">
+  <nav mat-tab-nav-bar>
+    <a mat-tab-link (click)="tabClicked(link.label)" *ngFor="let link of navLinks" [routerLink]="link.path"
+      routerLinkActive #rla="routerLinkActive" [active]="rla.isActive">
+      {{link.label}}
+    </a>
+  </nav>
+
+  <router-outlet></router-outlet>
+</div>
+<p-sidebar [showCloseIcon]="false" [(visible)]="displayFilter" position="right" styleClass="ui-sidebar-sm">
+  <div *ngIf="selectedTab === 'MEETINGS'">
+    <app-meeting-filter (backIsClicked)=" displayFilter = false" (isFilterApplied)="isFilterApplied = $event;"
+      (isFilterCleared)="isFilterCleared =$event"></app-meeting-filter>
+  </div>
+  <div *ngIf="selectedTab === 'CONTACTS'">
+    <app-contact-filter (backIsClicked)=" displayFilter = false" (isFilterApplied)="isFilterApplied = $event;"
+      (isFilterCleared)="isFilterCleared =$event"></app-contact-filter>
+  </div>
+  <div *ngIf="selectedTab === 'DOCUMENTS'">
+    <app-doc-filter (backIsClicked)=" displayFilter = false" (isFilterApplied)="isFilterApplied = $event">
+    </app-doc-filter>
+  </div>
+  <div *ngIf="selectedTab === 'TARGETS'">
+    <app-target-filter (backIsClicked)="displayFilter = false" [clearFilter]="!isFilterApplied"
+      (isFilterApplied)="isFilterApplied = $event"></app-target-filter>
+  </div>
+</p-sidebar>

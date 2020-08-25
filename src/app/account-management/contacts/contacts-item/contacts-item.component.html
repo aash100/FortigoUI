@@ -1,0 +1,292 @@
+<div role="document">
+    <div class="modal-content" style="border: 0; height: 494px;">
+        <div class="modal-header shadow-sm" style="height: 57px;">
+            <p style="border-left: 10px solid #0A50A1;padding: 6px; font-size: 15px;">{{title}}</p>
+            <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-bodyborder" style="padding: 1rem;">
+            <form #contactForm="ngForm" (ngSubmit)="onSubmit()">
+                <div class=" col-md">
+                    <span class="font-small">Company Name</span >
+                    <ngx-select-dropdown name="company" [disabled]="readOnlyContact || isCompanySelectDisabled"
+                        [config]="CompanyFilter" [options]="companyList" (change)="selectCompany(selectedCompany)"
+                        [(ngModel)]="selectedCompany" [multiple]="false"></ngx-select-dropdown>
+                </div>
+                <mat-tab-group class="fortigo-tab" #matTabGroup>
+                    <mat-tab label="Contact">
+                        <div class="row row-sm mt-3">
+                            <div class=" col-md">
+                                <mat-form-field class="input-full-width">
+                                    <input matInput id="contactFirstName" name="contactFirstName"
+                                        #contactFirstName="ngModel" placeholder="First Name"
+                                        [(ngModel)]='editContact.contactFirstName' [disabled]="readOnlyContact" required
+                                        appAutofocus>
+                                </mat-form-field>
+                            </div>
+                            <div class=" col-md">
+                                <mat-form-field class="input-full-width">
+                                    <input matInput id="contactMiddleName" name="contactMiddleName"
+                                        #contactMiddleName="ngModel" placeholder="Middle Name"
+                                        [(ngModel)]='editContact.contactMiddleName' [disabled]="readOnlyContact">
+                                </mat-form-field>
+                            </div>
+                            <div class=" col-md">
+                                <mat-form-field class="input-full-width">
+                                    <input matInput id="contactLastName" name="contactLastName"
+                                        #contactLastName="ngModel" placeholder="Last Name"
+                                        [(ngModel)]='editContact.contactLastName' [disabled]="readOnlyContact">
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="row row-sm">
+                            <div class=" col-md">
+                                <mat-form-field class="input-full-width">
+                                    <input matInput id="contactMobileNumber" name="contactMobileNumber"
+                                        #contactMobileNumber="ngModel" placeholder="Mobile Number"
+                                        [(ngModel)]='editContact.contactMobileNumber' [disabled]="readOnlyContact">
+                                </mat-form-field>
+                            </div>
+                            <div class=" col-md">
+                                <mat-form-field class="input-full-width">
+                                    <input matInput id="contactPhoneNumber" name="contactPhoneNumber"
+                                        #contactPhoneNumber="ngModel" placeholder="Phone Number"
+                                        [(ngModel)]='editContact.contactPhoneNumber' [disabled]="readOnlyContact">
+                                </mat-form-field>
+                            </div>
+                            <div class="col-md" *ngIf="this.mode !== 'create'">
+                                <mat-form-field class="input-full-width">
+                                    <mat-select placeholder="Status" required #contactStatus="ngModel"
+                                        name="contactStatus" [(ngModel)]='editContact.contactStatus'
+                                        [disabled]="readOnlyContact">
+                                        <mat-option *ngFor="let contactstatus of ContactStatus"
+                                            [value]=contactstatus.name>{{contactstatus.alias}}</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                                <!-- <div *ngIf="contactStatus.touched && contactStatus.value ==='#'">
+                                    <span style="color: red;">Please select a valid contact status</span>
+                                </div> -->
+                            </div>
+                        </div>
+                        <div class="row row-sm">
+                            <!-- <div class=" col-md">
+                                <mat-form-field class="input-full-width">
+                                    <input  matInput id="contactPersonalEmail" name="contactPersonalEmail"
+                                        #contactPersonalEmail="ngModel" placeholder="Personal Email Address"
+                                        [(ngModel)]='editContact.contactPersonalEmail' [disabled]="readOnlyContact">
+                                </mat-form-field>
+                            </div> -->
+                            <div class=" col-md">
+                                <mat-form-field class="input-full-width">
+                                    <input matInput id="contactAlias" name="contactAlias" #contactAlias="ngModel"
+                                        placeholder="Alias" [(ngModel)]='editContact.contactAlias'
+                                        [disabled]="readOnlyContact">
+                                </mat-form-field>
+                            </div>
+                            <div class=" col-md">
+                                <mat-form-field class="input-full-width">
+                                    <input matInput id="contactEmail" name="contactEmail" #contactEmail="ngModel"
+                                        placeholder="Email Address" [(ngModel)]='editContact.contactEmail'
+                                        [disabled]="readOnlyContact">
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="row row-sm">
+                            <div class=" col-md">
+                                <mat-form-field class="input-full-width">
+                                    <input matInput id="contactDepartment" name="contactDepartment"
+                                        #contactDepartment="ngModel" placeholder="Department"
+                                        [(ngModel)]='editContact.contactDepartment' [disabled]="readOnlyContact">
+                                </mat-form-field>
+                            </div>
+                            <div class=" col-md">
+                                <mat-form-field class="input-full-width">
+                                    <input matInput id="contactDesignation" name="contactDesignation"
+                                        #contactDesignation="ngModel" placeholder="Designation"
+                                        [(ngModel)]='editContact.contactDesignation' [disabled]="readOnlyContact">
+                                </mat-form-field>
+                            </div>
+                        </div>
+
+                        <!-- <div *ngIf="this.mode !== 'create'" class="row row-sm"> -->
+                            <!-- <div class=" col-md">
+                                <mat-form-field class="input-full-width">
+                                    <input  matInput id="contactAlias" name="contactAlias"
+                                        #contactAlias="ngModel" placeholder="Alias" [(ngModel)]='editContact.contactAlias'
+                                        [disabled]="readOnlyContact">
+                                </mat-form-field>
+                            </div> -->
+                    
+                        <!-- </div> -->
+                        <div class="row row-sm">
+                            <div class=" col-md">
+                                <mat-form-field class="input-full-width">
+                                    <mat-select placeholder="Category" required #contactCategory="ngModel"
+                                        name="contactCategory" [(ngModel)]='editContact.contactCategory'
+                                        [disabled]="readOnlyContact">
+                                        <mat-option *ngFor="let contactcategory of ContactCategory"
+                                            [value]="contactcategory.name">{{contactcategory.alias}}</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                                <!-- <div *ngIf="contactCategory.touched && contactCategory.value ==='#'">
+                                    <span style="color: red;">Please select a valid contact category.</span>
+                                </div> -->
+                            </div>
+                            <div class=" col-md">
+                                <mat-form-field class="input-full-width">
+                                    <mat-select placeholder="Role" required #contactRole="ngModel" name="contactRole"
+                                        [(ngModel)]='editContact.contactRole' [disabled]="readOnlyContact">
+                                        <mat-option *ngFor="let contactrole of ContactRole" [value]=contactrole.name>
+                                            {{contactrole.alias}}</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                                <!-- <div *ngIf="contactRole.touched && contactRole.value ==='#'">
+                                    <span style="color: red;">Please select a valid contact role</span>
+                                </div> -->
+                            </div>
+                            <div class=" col-md">
+                                <!-- <label>Contact Orientation</label>
+                                <select class="form-control custom-select" required #contactOrientation="ngModel" name="contactOrientation"
+                                    [(ngModel)]='editContact.contactOrientation' [disabled]="readOnlyContact">
+                                    <option value="#" selected>Please select the valid contact orientation</option>
+                                    <option *ngFor="let contactorientation of ContactOrientation" [value]=contactorientation.name
+                                        >{{contactorientation.alias}}</option>
+                                </select> -->
+                                <mat-form-field class="input-full-width">
+                                    <mat-select placeholder="Orientation" required #contactOrientation="ngModel"
+                                        name="contactOrientation" [(ngModel)]='editContact.contactOrientation'
+                                        [disabled]="readOnlyContact">
+                                        <mat-option *ngFor="let contactorientation of ContactOrientation"
+                                            [value]=contactorientation.name>{{contactorientation.alias}}</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                                <!-- <div *ngIf="contactOrientation.touched && contactOrientation.value ==='#'">
+                                    <span style="color: red;">Please select a valid contact orientation.</span>
+                                </div> -->
+                            </div>
+
+                        </div>
+                        <div class="row row-sm">
+                            <div class="col-md">
+                                <mat-form-field class="from-control input-full-width">
+                                    <input type="text" matInput id="contactRoleAdditionalDetails"
+                                        name="contactRoleAdditionalDetails" #contactRoleAdditionalDetails="ngModel"
+                                        placeholder=" Role-Additional details"
+                                        [(ngModel)]='editContact.contactRoleAdditionalDetails'
+                                        [disabled]="readOnlyContact">
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn submitButton" (click)="nextTab()">
+                                <span>Next</span></button>
+                        </div>
+
+                    </mat-tab>
+
+                    <!-- <mat-tab label="Company">
+                        <div class="row row-sm mt-4">
+                            <div class=" col-md">
+                                <label>Company Name</label>
+                                <ngx-select-dropdown name="company"
+                                    [disabled]="readOnlyContact || isCompanySelectDisabled" [config]="CompanyFilter"
+                                    [options]="companyList" (change)="selectCompany(selectedCompany)"
+                                    [(ngModel)]="selectedCompany" [multiple]="false"></ngx-select-dropdown>
+                                <div *ngIf="!isCompanySelected && this.mode !== 'view'">
+                                    <span style="color: red;">Please select a company.</span>
+                                </div>
+                            </div>
+                            <div *ngIf="userList?.length > 0 || this.mode !== 'view'" class=" col-md">
+                                <label>User Name</label>
+                                <div *ngIf="userList?.length > 0 ; else noUser" required name="userId">
+                                    <ngx-select-dropdown [disabled]="readOnlyContact" name="user" [config]="UserFilter"
+                                        [options]="userList" (change)="addUser(selectedUser)" [(ngModel)]="selectedUser"
+                                        [multiple]="false"></ngx-select-dropdown>
+                                </div>
+                                <ng-template #noUser> <span class="row row-sm text-danger"><b>No User found.</b></span>
+                                </ng-template>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn submitButton" (click)="backClicked()"> Back</button>
+
+                            <button type="button" class="btn submitButton" (click)="nextTab()">
+                                <span>Next</span></button>
+                        </div>
+                    </mat-tab> -->
+
+                    <mat-tab label="Address">
+                        <div class="row form-group">
+                            <div class="col-md">
+                                <span class="font-small">City *</span>
+                                <ngx-select-dropdown [disabled]="readOnlyContact" name="location"
+                                    [config]="LocationFilter" [options]="locationList"
+                                    (change)="selectLocation(selectedLocation)" [(ngModel)]="selectedLocation"
+                                    [multiple]="false">
+                                </ngx-select-dropdown>
+                                <!-- <div *ngIf="!isLocationSelected && this.mode !== 'view'">
+                                    <span style="color: red;">Please select a location.</span>
+                                </div> -->
+                            </div>
+                            <!-- <div class=" col-md">
+                                <label>Location Status</label>
+                                <select class="form-control" required #contactLocationMapStatus="ngModel" name="contactLocationMapStatus"
+                                    [(ngModel)]='editContact.contactLocationMapStatus' [disabled]="readOnlyContact">
+                                    <option value="#" disabled hidden selected>Please select the valid contact status</option>
+                                    <option *ngFor="let contactlocationMapStatus of ContactLocationMapStatus" [value]=contactlocationMapStatus.name>{{contactlocationMapStatus.alias}}</option>
+                                </select>
+                                <div *ngIf="contactLocationMapStatus.touched && contactLocationMapStatus.value === '#'">
+                                    <span style="color: red;">Please select a valid contact status</span>
+                                </div>
+                            </div> -->
+                        </div>
+                        <!-- <div class=" col-md">
+                                <mat-form-field class="from-control input-full-width">
+                                    <input type="text" matInput id="contactLocationRole" name="contactLocationRole"
+                                        #contactLocationRole="ngModel" placeholder=" Role-Additional details" [(ngModel)]='editContact.contactLocationRole'
+                                        [disabled]="readOnlyContact">
+                                </mat-form-field>
+                        </div> -->
+                        <div>
+                            <mat-form-field class="from-control input-full-width">
+                                <textarea matInput id="postalAddress" name="postalAddress" #postalAddress="ngModel"
+                                    placeholder="Postal Address" [(ngModel)]='editContact.postalAddress'
+                                    [disabled]="readOnlyContact" required>
+                                </textarea>
+                                <!-- <div *ngIf="postalAddress.invalid && (postalAddress.dirty || postalAddress.touched)">
+                                    <span style="color: red;">Please Enter the postal address. </span>
+                                </div> -->
+                            </mat-form-field>
+                        </div>
+                        <div>
+                            <mat-form-field class="from-control input-full-width">
+                                <input matInput id="otherAddressDetails" name="otherAddressDetails"
+                                    #otherAddressDetails="ngModel" placeholder="Other Address Detail"
+                                    [(ngModel)]='editContact.otherAddressDetails' [disabled]="readOnlyContact">
+                            </mat-form-field>
+                        </div>
+                        <div>
+                            <mat-form-field class="from-control input-full-width">
+                                <input type="number" matInput id="pinCode" name="pinCode" #pinCode="ngModel"
+                                    placeholder="Pin Code" [(ngModel)]='editContact.pinCode'
+                                    [disabled]="readOnlyContact">
+                            </mat-form-field>
+                        </div>
+                        <div class="modal-footer"  style="margin-top: 48px;">
+                            <button type="button" class="btn clearButton" (click)="activeModal.dismiss('Cross click')">
+                                Cancel
+                            </button>
+                            <button type="button" class="btn submitButton" (click)="backClicked()">
+                                Back
+                            </button>
+                            <button *ngIf="mode !=='view'" type="submit" class="btn submitButton">
+                                Submit
+                            </button>
+                        </div>
+                    </mat-tab>
+                </mat-tab-group>
+            </form>
+        </div>
+    </div>
+</div>

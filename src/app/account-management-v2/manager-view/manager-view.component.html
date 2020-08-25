@@ -1,0 +1,5 @@
+<!-- Creates manager view table -->
+<div class="container-fluid">
+  <app-fortigo-grid [columns]="columnsData" [isDebug]="true" [rows]="rowsData" [extraRows]=extraRows [gridConfiguration]="gridConfiguration" (cellClick)="onCellClick($event)">
+  </app-fortigo-grid>
+</div>

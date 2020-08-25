@@ -1,0 +1,22 @@
+:host /deep/ .ui-sidebar {
+  padding: 0;
+}
+.view-h-style{
+  color: rgb(10, 80, 161);
+  font-weight: 700;
+  margin-bottom: 4px;
+ }
+.view-p-style{
+  /* color: rgb(10, 80, 161); */
+  /* font-weight: 700; */
+  margin-bottom: 4px;
+ }
+.spinner {
+  position: absolute;
+  top: 50%;
+  left: 44%;
+  z-index: 99;
+}
+.col-md{
+ font-size:  .875em
+}

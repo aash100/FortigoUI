@@ -1,0 +1,8 @@
+ /* clear icon style */
+ 
+ .clear-icon-style {
+     float: right;
+     position: absolute;
+     right: -16px;
+     line-height: 1.75em;
+ }

@@ -1,0 +1,315 @@
+<!--
+ Created on Thu Jan 31 2019
+ Created by - 1191: Ritesh Kant
+ Copyright (c) 2019 Fortigo Network Logistics Pvt Ltd (4TiGO)
+-->
+<div class="container-fluid pr-0 pl-0" [ngStyle]="formConfiguration?.style?.containerDiv">
+
+    <!-- create a field provided by user -->
+    <app-fortigo-tabs *ngIf="displayTab" [tabList]="tabList" [selectTab]="selectTab" [hideTab]="hideTab"
+        (tabClicked)="onTabClicked($event)" [isForm]=true>
+    </app-fortigo-tabs>
+    <!-- create form defined by user -->
+    <form [formGroup]="fortigoForm" (ngSubmit)="submit()" id="ngform" #form>
+        <!-- create group of fields -->
+        <ng-container *ngIf="groups">
+            <div [class.row]="isCustomGroupAlignment">
+                <ng-container *ngFor="let group of groups, let groupIndex = index">
+                    <div [ngClass]="group.groupCSSClass">
+                        <app-fortigo-card *ngIf="group.id !== -1 || groups.length === 1" [card]="cards[groupIndex]"
+                            [cardConfiguration]=cardConfigurations[groupIndex]>
+                            <ng-container *ngIf="fields?.length !== 0">
+                                <div class="row">
+                                    <ng-container *ngFor="let field of fields; let i = index" [ngSwitch]="field?.type">
+                                        <ng-container *ngIf="field?.groupId===group?.id">
+                                            <!-- hidden input fields -->
+                                            <input type="hidden" *ngSwitchCase="'hidden'"
+                                                [placeholder]="field?.placeholder" [formControlName]="field?.name" />
+                                            <!-- searchable multi-select component -->
+                                            <ng-container
+                                                *ngIf="field?.displayInTabIndex === selectTab || field?.displayInTabIndex === undefined">
+                                                <div [ngStyle]="filterStyle" [ngClass]="field?.elementAlignment"
+                                                    *ngSwitchCase="'multiselect'">
+                                                    <!-- custom searchable select component -->
+                                                    <div
+                                                        *ngIf="field?.option?.data?.length > searchableThresholdValue; else selectInputField">
+                                                        <app-fortigo-searchable-select [formControlName]="field?.name"
+                                                            [limit]="field?.displayLimit"
+                                                            [themeAppearance]="themeAppearance"
+                                                            (selectFieldChanged)="onSearchableSelectChange($event, field?.name)"
+                                                            [input]="field" [multiple]="field?.multi"
+                                                            [isSearchPlaceHolder]="field?.isSearchPlaceHolder"
+                                                            class="input-full-width">
+                                                        </app-fortigo-searchable-select>
+                                                    </div>
+                                                    <!-- for select input field if field options list is less than or equal to searchableThresholdValue -->
+                                                    <ng-template #selectInputField>
+                                                        <mat-form-field [appearance]="themeAppearance"
+                                                            class="input-full-width">
+                                                            <mat-select disableOptionCentering panelClass="myPanelClass"
+                                                                [placeholder]="field?.placeholder"
+                                                                [formControlName]="field?.name"
+                                                                (selectionChange)="onSelectChange($event)"
+                                                                [required]="fortigoForm?.controls[field?.name]?.errors?.required"
+                                                                [multiple]=field?.multi>
+                                                                <mat-option *ngFor="let option of field?.option?.data"
+                                                                    [value]="option[field?.option?.value]">
+                                                                    {{ option[field?.option.key] }}</mat-option>
+                                                            </mat-select>
+                                                        </mat-form-field>
+                                                    </ng-template>
+                                                </div>
+                                            </ng-container>
+                                            <!-- text input field -->
+                                            <ng-container
+                                                *ngIf="field?.displayInTabIndex === selectTab || field?.displayInTabIndex === undefined">
+                                                <div [ngStyle]="filterStyle" [ngClass]="field?.elementAlignment"
+                                                    *ngSwitchCase="'text'">
+                                                    <mat-form-field [appearance]="themeAppearance"
+                                                        [hintLabel]=field?.hintLabel class="input-full-width">
+                                                        <input #textInput type="text" matInput
+                                                            [class.right-aligned-text]="field?.alignment === 'right'"
+                                                            [class.left-aligned-text]="field?.alignment === 'left'"
+                                                            [placeholder]="field?.placeholder"
+                                                            [formControlName]="field?.name"
+                                                            (change)="onInputChanges($event, 'text',field?.name)"
+                                                            [required]="fortigoForm?.controls[field?.name]?.errors?.required"
+                                                            [appInputValidator]="{text:textInput?.value,pattern:field?.validations?.pattern?.regex, allowKeyInput:field?.validations?.allowKeyInput}" />
+                                                        <span [class.blur-text]="isReadOnly || field?.isReadOnly"
+                                                            *ngIf="field?.prefixContent"
+                                                            matPrefix>{{field?.prefixContent}}&nbsp;</span>
+                                                        <span [class.blur-text]="isReadOnly || field?.isReadOnly"
+                                                            *ngIf="field?.suffixContent"
+                                                            matSuffix>&nbsp;{{field?.suffixContent}}</span>
+                                                        <mat-error
+                                                            *ngIf="field?.validations?.showError && fortigoForm?.controls[field?.name]?.errors?.pattern">
+                                                            {{field?.errorMessage}}
+                                                        </mat-error>
+                                                        <mat-hint align="end" *ngIf="field?.validations?.showHint">
+                                                            {{fortigoForm ?.controls[field ?.name].value ?.length || 0 }}{{field?.hintMessage}}
+                                                        </mat-hint>
+                                                    </mat-form-field>
+                                                </div>
+                                            </ng-container>
+                                            <!-- number input field -->
+                                            <ng-container
+                                                *ngIf="field?.displayInTabIndex === selectTab || field?.displayInTabIndex === undefined">
+                                                <div [ngStyle]="filterStyle" [ngClass]="field?.elementAlignment"
+                                                    *ngSwitchCase="'number'">
+                                                    <mat-form-field [appearance]="themeAppearance"
+                                                        class="input-full-width">
+                                                        <input #numberInput type="number" matInput
+                                                            [class.right-aligned-text]="field?.alignment === 'right'"
+                                                            [class.left-aligned-text]="field?.alignment === 'left'"
+                                                            [placeholder]="field?.placeholder"
+                                                            [formControlName]="field?.name"
+                                                            (change)="onInputChanges($event, 'number',field?.name)"
+                                                            [required]=" fortigoForm?.controls[field?.name]?.errors?.required"
+                                                            [appInputValidator]="{text:numberInput?.value,pattern:field?.validations?.pattern?.regex, allowKeyInput:field?.validations?.allowKeyInput}" />
+                                                        <span [class.blur-text]="isReadOnly || field?.isReadOnly"
+                                                            *ngIf="field?.prefixContent"
+                                                            matPrefix>{{field?.prefixContent}}&nbsp;</span>
+                                                        <span [class.blur-text]="isReadOnly || field?.isReadOnly"
+                                                            *ngIf="field?.suffixContent"
+                                                            matSuffix>&nbsp;{{field?.suffixContent}}</span>
+                                                        <!-- TODO : please implement the button. -->
+                                                        <!-- <button mat-button *ngIf="field?.suffixContent" matSuffix mat-icon-button aria-label="Clear" (click)="value=''">
+                                                            <mat-icon>close</mat-icon>
+                                                          </button> -->
+                                                        <mat-error
+                                                            *ngIf="field?.validations?.showError && fortigoForm?.controls[field?.name]?.errors?.pattern">
+                                                            {{field?.errorMessage}}
+                                                        </mat-error>
+                                                        <mat-hint align="end" *ngIf="field?.validations?.showHint">
+                                                            {{fortigoForm ?.controls[field ?.name].value ?.length || 0 }}{{field?.hintMessage}}
+                                                        </mat-hint>
+                                                    </mat-form-field>
+                                                </div>
+                                            </ng-container>
+                                            <!-- email input field -->
+                                            <ng-container
+                                                *ngIf="field?.displayInTabIndex === selectTab || field?.displayInTabIndex === undefined">
+                                                <div [ngStyle]=filterStyle [ngClass]="field?.elementAlignment"
+                                                    *ngSwitchCase="'email'">
+                                                    <mat-form-field [appearance]="themeAppearance"
+                                                        class="input-full-width">
+                                                        <input #emailInput type="email" matInput
+                                                            [class.right-aligned-text]="field?.alignment === 'right'"
+                                                            [class.left-aligned-text]="field?.alignment === 'left'"
+                                                            [placeholder]="field?.placeholder"
+                                                            [formControlName]="field?.name"
+                                                            [required]="fortigoForm?.controls[field?.name]?.errors?.required"
+                                                            [appInputValidator]="{text:emailInput?.value,pattern:field?.validations?.pattern?.regex, allowKeyInput:field?.validations?.allowKeyInput}" />
+                                                        <span [class.blur-text]="isReadOnly || field?.isReadOnly"
+                                                            *ngIf="field?.prefixContent"
+                                                            matPrefix>{{field?.prefixContent}}&nbsp;</span>
+                                                        <span [class.blur-text]="isReadOnly || field?.isReadOnly"
+                                                            *ngIf="field?.suffixContent"
+                                                            matSuffix>&nbsp;{{field?.suffixContent}}</span>
+                                                        <mat-error
+                                                            *ngIf="field?.validations?.showError && fortigoForm?.controls[field?.name]?.errors?.pattern">
+                                                            {{field?.errorMessage}}
+                                                        </mat-error>
+                                                        <mat-hint align="end" *ngIf="field?.validations?.showHint">
+                                                            {{fortigoForm ?.controls[field ?.name].value ?.length || 0 }}{{field?.hintMessage}}
+                                                        </mat-hint>
+                                                    </mat-form-field>
+                                                </div>
+                                            </ng-container>
+                                            <!-- select input field -->
+                                            <ng-container
+                                                *ngIf="field?.displayInTabIndex === selectTab || field?.displayInTabIndex === undefined">
+                                                <div [ngStyle]=filterStyle [ngClass]="field?.elementAlignment"
+                                                    *ngSwitchCase="'select'">
+                                                    <mat-form-field [appearance]="themeAppearance"
+                                                        class="input-full-width">
+                                                        <mat-select disableOptionCentering panelClass="myPanelClass"
+                                                            [placeholder]="field?.placeholder"
+                                                            [formControlName]="field?.name"
+                                                            (selectionChange)="onSelectChange($event)"
+                                                            [required]="fortigoForm?.controls[field?.name]?.errors?.required">
+                                                            <mat-option *ngFor="let option of field?.option?.data"
+                                                                [value]="option[field?.option?.value]">
+                                                                {{ option[field?.option.key] }}</mat-option>
+                                                        </mat-select>
+                                                    </mat-form-field>
+                                                </div>
+                                            </ng-container>
+                                            <!-- date input field -->
+                                            <ng-container
+                                                *ngIf="field?.displayInTabIndex === selectTab || field?.displayInTabIndex === undefined">
+                                                <div [ngStyle]=filterStyle [ngClass]="field?.elementAlignment"
+                                                    *ngSwitchCase="'date'">
+                                                    <mat-form-field [appearance]="themeAppearance"
+                                                        class="input-full-width">
+                                                        <input matInput [formControlName]="field?.name"
+                                                            [min]="field?.minDate" [max]="field?.maxDate"
+                                                            [matDatepicker]="picker"
+                                                            placeholder="{{ field?.placeholder }}"
+                                                            (click)="picker.open()"
+                                                            [required]="fortigoForm?.controls[field?.name]?.errors?.required"
+                                                            (dateChange)="onInputChanges($event, 'date',field?.name)" />
+                                                        <mat-datepicker-toggle matSuffix [for]="picker">
+                                                        </mat-datepicker-toggle>
+                                                        <mat-datepicker #picker></mat-datepicker>
+                                                    </mat-form-field>
+                                                </div>
+                                            </ng-container>
+                                            <!-- checkbox input  -->
+                                            <ng-container
+                                                *ngIf="field?.displayInTabIndex === selectTab || field?.displayInTabIndex === undefined">
+                                                <div [ngStyle]=filterStyle [ngClass]="field?.elementAlignment"
+                                                    *ngSwitchCase="'checkBox'">
+                                                    <mat-checkbox [formControlName]="field?.name" class="small-checkbox"
+                                                        [required]="fortigoForm?.controls[field?.name]?.errors?.required"
+                                                        color='primary' (change)="checkBoxChanges($event,field?.name)">
+                                                        {{field?.placeholder}}</mat-checkbox>
+                                                </div>
+                                            </ng-container>
+                                            <!-- text area input field -->
+                                            <ng-container
+                                                *ngIf="field?.displayInTabIndex === selectTab || field?.displayInTabIndex === undefined">
+                                                <div [ngStyle]=filterStyle [ngClass]="field?.elementAlignment"
+                                                    *ngSwitchCase="'textArea'">
+                                                    <mat-form-field [appearance]="themeAppearance"
+                                                        [hintLabel]=field?.hintLabel class="input-full-width">
+                                                        <textarea #textAreaInput matInput
+                                                            [placeholder]="field?.placeholder"
+                                                            (change)="onInputChanges($event, 'text-area',field?.name)"
+                                                            [formControlName]="field?.name"
+                                                            [required]="fortigoForm?.controls[field?.name]?.errors?.required"
+                                                            [appInputValidator]="{text:textAreaInput?.value,pattern:field?.validations?.pattern?.regex, allowKeyInput:field?.validations?.allowKeyInput}">
+                                                </textarea>
+                                                        <mat-error
+                                                            *ngIf="field?.validations?.showError && fortigoForm?.controls[field?.name]?.errors?.pattern">
+                                                            {{field?.errorMessage}}
+                                                        </mat-error>
+                                                        <mat-hint align="end" *ngIf="field?.validations?.showHint">
+                                                            {{fortigoForm ?.controls[field ?.name].value ?.length || 0 }}{{field?.hintMessage}}
+                                                        </mat-hint>
+                                                    </mat-form-field>
+                                                </div>
+                                            </ng-container>
+                                            <!-- used for upload functionality  -->
+                                            <ng-container
+                                                *ngIf="field?.displayInTabIndex === selectTab || field?.displayInTabIndex === undefined">
+                                                <div [ngStyle]=filterStyle [ngClass]="field?.elementAlignment"
+                                                    *ngSwitchCase="'upload'">
+                                                    <div class="input-full-width-col-md-2">
+                                                        <button type="button" mat-raised-button
+                                                            (click)="fileInput.click()" appFortigoSubmitButton>
+                                                            <mat-icon style="height: 18px;font-size: 16px;width: 19px;">
+                                                                upload_file</mat-icon>
+                                                            Upload:
+                                                        </button>
+                                                        <input hidden type="file" [multiple]=field?.multipleFileSelect
+                                                            (change)="onSelectedFile($event,field?.multipleFileSelect,field)"
+                                                            [formControlName]="field?.name" [accept]="field?.fileFormat"
+                                                            #fileInput>
+                                                        <label>{{field?.defaultValue}}</label>
+                                                        <tr>
+                                                            <mat-error
+                                                                *ngIf="field?.validations?.showError && field?.sizeLimitExceeded">
+                                                                {{field?.errorMessage}}
+                                                            </mat-error>
+                                                            <mat-hint align="end" *ngIf="field?.validations?.showHint">
+                                                                {{field?.hintMessage}}
+                                                            </mat-hint>
+                                                        </tr>
+                                                    </div>
+                                                </div>
+                                            </ng-container>
+                                            <!-- used for radio button functionality -->
+                                            <ng-container
+                                                *ngIf="field?.displayInTabIndex === selectTab || field?.displayInTabIndex === undefined">
+                                                <div [ngStyle]=filterStyle [ngClass]="field?.elementAlignment"
+                                                    *ngSwitchCase="'radio'">
+                                                    <mat-radio-group [formControlName]="field?.name"
+                                                        [required]="fortigoForm?.controls[field?.name]?.errors?.required">
+                                                        <mat-radio-button class="small-radio-button" color="primary"
+                                                            *ngFor="let radioButton of field?.option?.data"
+                                                            (change)="radioSelectionChange(radioButton?.action , field?.name)"
+                                                            [checked]="radioButton?.action===field?.defaultValue"
+                                                            [value]=radioButton.name>
+                                                            {{radioButton.name}}&nbsp;</mat-radio-button>
+                                                    </mat-radio-group>
+                                                </div>
+                                            </ng-container>
+                                            <!-- space field (used for blank space) -->
+                                            <ng-container *ngIf="userMode === 'filter-theme2'">
+                                                <div class="col-6 p-1">
+                                                    <mat-chip-list #chipList
+                                                        *ngIf="field?.type === 'multiselect' && field?.multi">
+                                                        <span *ngIf="chipsData[field?.name].length !== 0"
+                                                            class="input-full-width"
+                                                            style="font-size: 13px;">Filters:</span><br>
+                                                        <mat-chip
+                                                            *ngFor="let each of chipsData[field?.name]; let i = index"
+                                                            style="background-color: #1f50a1; color: white;"
+                                                            [selectable]="true" [removable]="true"
+                                                            (removed)="removeChip(field?.name,each['id'])">
+                                                            {{each['name']}}
+                                                            <mat-icon matChipRemove style="color:white;">cancel
+                                                            </mat-icon>
+                                                        </mat-chip>
+                                                    </mat-chip-list>
+                                                </div>
+                                            </ng-container>
+                                        </ng-container>
+                                    </ng-container>
+                                </div>
+                            </ng-container>
+                        </app-fortigo-card>
+                    </div>
+                </ng-container>
+            </div>
+        </ng-container>
+
+        <!-- custom button group -->
+        <app-fortigo-button-group *ngIf="submitClearButtonEnabled" [clear]="displayClear" [submit]="displaySubmit"
+            [back]="displayBack" [next]="displayNext" [apply]="displayApply" [formRef]="form"
+            [isSubmitDisabled]=isSubmitDisabled [isDisabled]=isDisabled
+            (buttonClicked)="controlButtonVisibility($event)">
+        </app-fortigo-button-group>
+    </form>
+</div>

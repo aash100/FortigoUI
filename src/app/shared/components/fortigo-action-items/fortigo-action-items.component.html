@@ -1,0 +1,15 @@
+<!--
+ Created on Fri Feb 01 2019
+ Created by - 1149: Aashish Kumar
+
+ Copyright (c) 2019 Fortigo Network Logistics Pvt Ltd (4TiGO)
+-->
+
+<mat-icon mat-button [matMenuTriggerFor]="menu" (click)=onMenuClick()>more_horiz</mat-icon>
+<mat-menu #menu="matMenu">
+  <button mat-menu-item *ngFor="let eachMenu of actionMenu; let i =index" (click)="itemClicked(i)"
+    [disabled]="eachMenu.isDisabled" class="over-pane" [ngStyle]="eachMenu['style']">
+    <mat-icon *ngIf="eachMenu.icon" class="action-icon">{{ eachMenu.icon }}</mat-icon>
+    <span>{{ eachMenu.placeholder }}</span>
+  </button>
+</mat-menu>

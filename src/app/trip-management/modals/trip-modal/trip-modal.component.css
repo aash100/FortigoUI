@@ -1,0 +1,42 @@
+/*
+ * Created on Fri Jul 05 2019
+ * Created by - 1149: Aashish Kumar
+ *
+ * Copyright (c) 2019 Fortigo Network Logistics Pvt Ltd (4TiGO)
+ */
+
+/* TODO remove css, and make global styling */
+.card {
+    display: block;
+    background: #FFFFFF;
+    width: 300px;
+    height: 300px;
+    border-radius: 2px;
+    margin: 10px;
+    display: inline-block;
+    transition: all .25s linear;
+    box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.4);
+}
+
+.card:hover {
+    box-shadow: -1px 10px 29px 0px rgba(0, 0, 0, 0.8);
+}
+
+.customer-card,
+.consignee-card,
+.consignor-card {
+    height: 200px;
+}
+
+mat-card {
+    padding: 10px;
+}
+
+.button-cell {
+    float: right;
+    padding: 21px;
+}
+
+.header {
+    border-bottom: 1px solid #e9ecef;
+}

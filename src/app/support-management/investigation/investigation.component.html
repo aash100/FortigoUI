@@ -1,0 +1,17 @@
+<br>
+<div>
+  <div class="row">
+    <div class="col-6"></div>
+    <div class="col-6">
+      <app-fortigo-form style="margin-top: 50px" [fields]="fields" [mode]="'auto'" [submitClearButtonEnabled]="false"
+        (selectChanges)="onSubmit($event)" #issueForm>
+      </app-fortigo-form>
+    </div>
+  </div>
+</div>
+<p class="ml-2" *ngIf="truckList.length > 0"> linked Acc. Balance:{{linkedAccountBalance}} | Wallet
+  Balance:{{walletBalance}}</p>
+<mat-spinner *ngIf="isLoading" class="spinner"></mat-spinner>
+<app-fortigo-grid [columns]="columnsData" [rows]="truckList" [gridConfiguration]="investigationGridconfiguration"
+  (actionExtraButtonSelectedIndex)="viewMiniStatement($event)">
+</app-fortigo-grid>

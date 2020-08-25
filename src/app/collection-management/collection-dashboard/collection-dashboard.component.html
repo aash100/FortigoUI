@@ -1,0 +1,24 @@
+<!--
+ Created on Mon Feb 04 2019
+ Created by - 1149: Aashish Kumar
+
+ Copyright (c) 2019 Fortigo Network Logistics Pvt Ltd (4TiGO)
+-->
+
+<app-fortigo-filter [groups]="collectionFilterGroup" [(fields)]="filterFields" (selectChange)="onCompanyChange($event);"
+    (filterSubmit)="submitFilterForm($event)" (clearClicked)="clearFilter()" [data]="data" [filterFontSize]=filterFontSize>
+    <!-- page header -->
+    <app-fortigo-head [headerStyle]=headerStyle [title]=pageTitle [buttons]=buttons
+        [isFilterApplied]=showFilterApplied (refreshClicked)=onRefresh() (searchClicked)=onSearch($event)
+        (buttonClicked)='onHeadButtonClick($event)' [searchText]="requestPayload.search_text"
+        [searchTextMaxLength]=searchTextMaxLength [pattern]="searchRegexPatternCollections">
+    </app-fortigo-head>
+    <div class="container-fluid">
+        <!-- grid component -->
+        <app-fortigo-grid [selectedTabIndex]=selectedTabIndex [(columns)]="columnsData" [rows]="rowsData"
+            (actionExtraButtonSelectedIndex)="onActionItemClick($event)"
+            (checkbox1SelectedRow)="onCheckboxSelection($event)" [(gridConfiguration)]="gridConfiguration"
+            (filterTabSelectedIndex)="onGridFilterTabSelection($event)">
+        </app-fortigo-grid>
+    </div>
+</app-fortigo-filter>

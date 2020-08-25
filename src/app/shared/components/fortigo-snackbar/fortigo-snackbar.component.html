@@ -1,0 +1,21 @@
+<div class="center-wrapper-div">
+  <mat-icon *ngIf="snackbar?.icon?.alignment === 'left' && snackbar?.action?.icon?.name"
+    [ngStyle]="snackbar?.icon?.style">{{snackbar?.icon?.name}}
+  </mat-icon>
+  <span>
+    {{snackbar?.message}}
+  </span>
+  <mat-icon *ngIf="snackbar?.icon?.alignment === 'right' && snackbar?.action?.icon?.name"
+    [ngStyle]="snackbar?.icon?.style">{{snackbar?.icon?.name}}
+  </mat-icon>
+  <button *ngIf="snackbar?.action?.label || snackbar?.action?.icon?.name" [ngStyle]="snackbar?.action?.button"
+    mat-button (click)="onActionButtonClick()">
+    <mat-icon *ngIf="snackbar?.action?.icon?.alignment === 'left'" [ngStyle]="snackbar?.action?.icon?.style">
+      {{snackbar?.action?.icon?.name}}
+    </mat-icon>
+    {{snackbar?.action?.label}}
+    <mat-icon *ngIf="snackbar?.action?.icon?.alignment === 'right'" [ngStyle]="snackbar?.action?.icon?.style">
+      {{snackbar?.action?.icon?.name}}
+    </mat-icon>
+  </button>
+</div>
